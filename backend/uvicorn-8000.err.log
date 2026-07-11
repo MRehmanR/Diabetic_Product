@@ -1,0 +1,890 @@
+INFO:     Started server process [23012]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 8000): [winerror 10048] only one usage of each socket address (protocol/network address/port) is normally permitted
+INFO:     Waiting for application shutdownINFO:diabetic-buyback-api:GET /health 200 5.09ms
+INFO:diabetic-buyback-api:OPTIONS /api/supplies/dexcom-g7-sensors 200 0.51ms
+INFO:diabetic-buyback-api:OPTIONS /api/supplies/dexcom-g7-sensors 400 0.47ms
+INFO:diabetic-buyback-api:OPTIONS /api/supplies/dexcom-g7-sensors 200 0.97ms
+INFO:diabetic-buyback-api:GET /api/supplies/dexcom-g7-sensors 200 7093.59ms
+INFO:diabetic-buyback-api:GET /api/supplies 200 6764.10ms
+INFO:diabetic-buyback-api:GET /api/supplies 200 1864.15ms
+INFO:diabetic-buyback-api:GET /api/supplies/dexcom-g7-sensors 200 1641.89ms
+INFO:diabetic-buyback-api:GET /api/supplies 200 1634.17ms
+INFO:diabetic-buyback-api:GET /api/supplies/freestyle-libre-sensors 200 1391.08ms
+INFO:diabetic-buyback-api:GET /api/supplies 200 1623.90ms
+INFO:diabetic-buyback-api:GET /api/supplies 200 1628.36ms
+ERROR:diabetic-buyback-api:Unhandled error: [Errno 11001] getaddrinfo failed
+  + Exception Group Traceback (most recent call last):
+  |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_utils.py", line 76, in collapse_excgroups
+  |     yield
+  |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 186, in __call__
+  |     async with anyio.create_task_group() as task_group:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 811, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    |     await self.app(scope, receive, _send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 185, in __call__
+    |     with collapse_excgroups():
+    |          ~~~~~~~~~~~~~~~~~~^^
+    |   File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 162, in __exit__
+    |     self.gen.throw(value)
+    |     ~~~~~~~~~~~~~~^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_utils.py", line 82, in collapse_excgroups
+    |     raise exc
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 187, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\app\main.py", line 38, in logging_middleware
+    |     start = time.perf_counter()
+    |                ~~~~~~~~~~~~~~^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    |     raise app_exc
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 185, in __call__
+    |     with collapse_excgroups():
+    |          ~~~~~~~~~~~~~~~~~~^^
+    |   File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 162, in __exit__
+    |     self.gen.throw(value)
+    |     ~~~~~~~~~~~~~~^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_utils.py", line 82, in collapse_excgroups
+    |     raise exc
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 187, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\slowapi\middleware.py", line 136, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    |     raise app_exc
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    |     await route.handle(scope, receive, send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    |     await self.app(scope, receive, send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\app\api\products.py", line 66, in list_supplies
+    |     rows, _ = await product_service.list_products(db, page, page_size, search, category, status, sort)
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\app\services\product_service.py", line 53, in list_products
+    |     total = (await db.execute(count_query)).scalar_one()
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 461, in execute
+    |     result = await greenlet_spawn(
+    |              ^^^^^^^^^^^^^^^^^^^^^
+    |     ...<6 lines>...
+    |     )
+    |     ^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    |     result = context.throw(*sys.exc_info())
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2362, in execute
+    |     return self._execute_internal(
+    |            ~~~~~~~~~~~~~~~~~~~~~~^
+    |         statement,
+    |         ^^^^^^^^^^
+    |     ...<4 lines>...
+    |         _add_event=_add_event,
+    |         ^^^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2237, in _execute_internal
+    |     conn = self._connection_for_bind(bind)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2106, in _connection_for_bind
+    |     return trans._connection_for_bind(engine, execution_options)
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "<string>", line 2, in _connection_for_bind
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    |     ret_value = fn(self, *arg, **kw)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1189, in _connection_for_bind
+    |     conn = bind.connect()
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3278, in connect
+    |     return self._connection_cls(self)
+    |            ~~~~~~~~~~~~~~~~~~~~^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 146, in __init__
+    |     self._dbapi_connection = engine.raw_connection()
+    |                              ~~~~~~~~~~~~~~~~~~~~~^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3302, in raw_connection
+    |     return self.pool.connect()
+    |            ~~~~~~~~~~~~~~~~~^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 449, in connect
+    |     return _ConnectionFairy._checkout(self)
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1344, in _checkout
+    |     with util.safe_reraise():
+    |          ~~~~~~~~~~~~~~~~~^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    |     raise exc_value.with_traceback(exc_tb)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1341, in _checkout
+    |     fairy._connection_record.get_connection()
+    |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 837, in get_connection
+    |     self.__connect()
+    |     ~~~~~~~~~~~~~~^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    |     with util.safe_reraise():
+    |          ~~~~~~~~~~~~~~~~~^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    |     raise exc_value.with_traceback(exc_tb)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    |     self.dbapi_connection = connection = pool._invoke_creator(self)
+    |                                          ~~~~~~~~~~~~~~~~~~~~^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\create.py", line 643, in connect
+    |     return dialect.connect(*cargs, **cparams)
+    |            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 621, in connect
+    |     return self.loaded_dbapi.connect(*cargs, **cparams)
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 949, in connect
+    |     await_only(creator_fn(*arg, **kw)),
+    |     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    |     return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+    |            ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    |     value = await result
+    |             ^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connection.py", line 2421, in connect
+    |     return await connect_utils._connect(
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<20 lines>...
+    |     )
+    |     ^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1075, in _connect
+    |     raise last_error or exceptions.TargetServerAttributeNotMatched(
+    |     ...<2 lines>...
+    |     )
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1049, in _connect
+    |     conn = await _connect_addr(
+    |            ^^^^^^^^^^^^^^^^^^^^
+    |     ...<6 lines>...
+    |     )
+    |     ^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 886, in _connect_addr
+    |     return await __connect_addr(params, True, *args)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 931, in __connect_addr
+    |     tr, pr = await connector
+    |              ^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 802, in _create_ssl_connection
+    |     tr, pr = await loop.create_connection(
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<2 lines>...
+    |         host, port)
+    |         ^^^^^^^^^^^
+    |   File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1122, in create_connection
+    |     infos = await self._ensure_resolved(
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         (host, port), family=family,
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         type=socket.SOCK_STREAM, proto=proto, flags=flags, loop=self)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1519, in _ensure_resolved
+    |     return await loop.getaddrinfo(host, port, family=family, type=type,
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |                                   proto=proto, flags=flags)
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 939, in getaddrinfo
+    |     return await self.run_in_executor(
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         None, getaddr_func, host, port, family, type, proto, flags)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    |     result = self.fn(*self.args, **self.kwargs)
+    |   File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\socket.py", line 977, in getaddrinfo
+    |     for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+    |                ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    | socket.gaierror: [Errno 11001] getaddrinfo failed
+    +------------------------------------
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 185, in __call__
+    with collapse_excgroups():
+         ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 187, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\app\main.py", line 38, in logging_middleware
+    start = time.perf_counter()
+               ~~~~~~~~~~~~~~^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 185, in __call__
+    with collapse_excgroups():
+         ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 187, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\slowapi\middleware.py", line 136, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\app\api\products.py", line 66, in list_supplies
+    rows, _ = await product_service.list_products(db, page, page_size, search, category, status, sort)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\app\services\product_service.py", line 53, in list_products
+    total = (await db.execute(count_query)).scalar_one()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 461, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2362, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2237, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2106, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1189, in _connection_for_bind
+    conn = bind.connect()
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3278, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 146, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3302, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 449, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1344, in _checkout
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1341, in _checkout
+    fairy._connection_record.get_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 837, in get_connection
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\create.py", line 643, in connect
+    return dialect.connect(*cargs, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 621, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 949, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connection.py", line 2421, in connect
+    return await connect_utils._connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<20 lines>...
+    )
+    ^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1075, in _connect
+    raise last_error or exceptions.TargetServerAttributeNotMatched(
+    ...<2 lines>...
+    )
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1049, in _connect
+    conn = await _connect_addr(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 886, in _connect_addr
+    return await __connect_addr(params, True, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 931, in __connect_addr
+    tr, pr = await connector
+             ^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 802, in _create_ssl_connection
+    tr, pr = await loop.create_connection(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        host, port)
+        ^^^^^^^^^^^
+  File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1122, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        (host, port), family=family,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        type=socket.SOCK_STREAM, proto=proto, flags=flags, loop=self)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1519, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                  proto=proto, flags=flags)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+ERROR:    Exception in ASGI application
+  + Exception Group Traceback (most recent call last):
+  |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_utils.py", line 76, in collapse_excgroups
+  |     yield
+  |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 186, in __call__
+  |     async with anyio.create_task_group() as task_group:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 811, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 409, in run_asgi
+    |     result = await app(  # type: ignore[func-returns-value]
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         self.scope, self.receive, self.send
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    |     return await self.app(scope, receive, send)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    |     await super().__call__(scope, receive, send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\applications.py", line 113, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 187, in __call__
+    |     raise exc
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    |     await self.app(scope, receive, _send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 185, in __call__
+    |     with collapse_excgroups():
+    |          ~~~~~~~~~~~~~~~~~~^^
+    |   File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 162, in __exit__
+    |     self.gen.throw(value)
+    |     ~~~~~~~~~~~~~~^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_utils.py", line 82, in collapse_excgroups
+    |     raise exc
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 187, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\app\main.py", line 38, in logging_middleware
+    |     start = time.perf_counter()
+    |                ~~~~~~~~~~~~~~^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    |     raise app_exc
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 185, in __call__
+    |     with collapse_excgroups():
+    |          ~~~~~~~~~~~~~~~~~~^^
+    |   File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 162, in __exit__
+    |     self.gen.throw(value)
+    |     ~~~~~~~~~~~~~~^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_utils.py", line 82, in collapse_excgroups
+    |     raise exc
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 187, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\slowapi\middleware.py", line 136, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    |     raise app_exc
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    |     await route.handle(scope, receive, send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    |     await self.app(scope, receive, send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\app\api\products.py", line 66, in list_supplies
+    |     rows, _ = await product_service.list_products(db, page, page_size, search, category, status, sort)
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\app\services\product_service.py", line 53, in list_products
+    |     total = (await db.execute(count_query)).scalar_one()
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 461, in execute
+    |     result = await greenlet_spawn(
+    |              ^^^^^^^^^^^^^^^^^^^^^
+    |     ...<6 lines>...
+    |     )
+    |     ^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    |     result = context.throw(*sys.exc_info())
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2362, in execute
+    |     return self._execute_internal(
+    |            ~~~~~~~~~~~~~~~~~~~~~~^
+    |         statement,
+    |         ^^^^^^^^^^
+    |     ...<4 lines>...
+    |         _add_event=_add_event,
+    |         ^^^^^^^^^^^^^^^^^^^^^^
+    |     )
+    |     ^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2237, in _execute_internal
+    |     conn = self._connection_for_bind(bind)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2106, in _connection_for_bind
+    |     return trans._connection_for_bind(engine, execution_options)
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "<string>", line 2, in _connection_for_bind
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    |     ret_value = fn(self, *arg, **kw)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1189, in _connection_for_bind
+    |     conn = bind.connect()
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3278, in connect
+    |     return self._connection_cls(self)
+    |            ~~~~~~~~~~~~~~~~~~~~^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 146, in __init__
+    |     self._dbapi_connection = engine.raw_connection()
+    |                              ~~~~~~~~~~~~~~~~~~~~~^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3302, in raw_connection
+    |     return self.pool.connect()
+    |            ~~~~~~~~~~~~~~~~~^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 449, in connect
+    |     return _ConnectionFairy._checkout(self)
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1344, in _checkout
+    |     with util.safe_reraise():
+    |          ~~~~~~~~~~~~~~~~~^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    |     raise exc_value.with_traceback(exc_tb)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1341, in _checkout
+    |     fairy._connection_record.get_connection()
+    |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 837, in get_connection
+    |     self.__connect()
+    |     ~~~~~~~~~~~~~~^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    |     with util.safe_reraise():
+    |          ~~~~~~~~~~~~~~~~~^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    |     raise exc_value.with_traceback(exc_tb)
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    |     self.dbapi_connection = connection = pool._invoke_creator(self)
+    |                                          ~~~~~~~~~~~~~~~~~~~~^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\create.py", line 643, in connect
+    |     return dialect.connect(*cargs, **cparams)
+    |            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 621, in connect
+    |     return self.loaded_dbapi.connect(*cargs, **cparams)
+    |            ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 949, in connect
+    |     await_only(creator_fn(*arg, **kw)),
+    |     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    |     return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+    |            ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    |     value = await result
+    |             ^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connection.py", line 2421, in connect
+    |     return await connect_utils._connect(
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<20 lines>...
+    |     )
+    |     ^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1075, in _connect
+    |     raise last_error or exceptions.TargetServerAttributeNotMatched(
+    |     ...<2 lines>...
+    |     )
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1049, in _connect
+    |     conn = await _connect_addr(
+    |            ^^^^^^^^^^^^^^^^^^^^
+    |     ...<6 lines>...
+    |     )
+    |     ^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 886, in _connect_addr
+    |     return await __connect_addr(params, True, *args)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 931, in __connect_addr
+    |     tr, pr = await connector
+    |              ^^^^^^^^^^^^^^^
+    |   File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 802, in _create_ssl_connection
+    |     tr, pr = await loop.create_connection(
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<2 lines>...
+    |         host, port)
+    |         ^^^^^^^^^^^
+    |   File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1122, in create_connection
+    |     infos = await self._ensure_resolved(
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         (host, port), family=family,
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         type=socket.SOCK_STREAM, proto=proto, flags=flags, loop=self)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1519, in _ensure_resolved
+    |     return await loop.getaddrinfo(host, port, family=family, type=type,
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |                                   proto=proto, flags=flags)
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 939, in getaddrinfo
+    |     return await self.run_in_executor(
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |         None, getaddr_func, host, port, family, type, proto, flags)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    |     result = self.fn(*self.args, **self.kwargs)
+    |   File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\socket.py", line 977, in getaddrinfo
+    |     for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+    |                ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    | socket.gaierror: [Errno 11001] getaddrinfo failed
+    +------------------------------------
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 187, in __call__
+    raise exc
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 185, in __call__
+    with collapse_excgroups():
+         ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 187, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\app\main.py", line 38, in logging_middleware
+    start = time.perf_counter()
+               ~~~~~~~~~~~~~~^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 185, in __call__
+    with collapse_excgroups():
+         ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 187, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\slowapi\middleware.py", line 136, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\app\api\products.py", line 66, in list_supplies
+    rows, _ = await product_service.list_products(db, page, page_size, search, category, status, sort)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\app\services\product_service.py", line 53, in list_products
+    total = (await db.execute(count_query)).scalar_one()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 461, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2362, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2237, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2106, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1189, in _connection_for_bind
+    conn = bind.connect()
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3278, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 146, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3302, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 449, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1344, in _checkout
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1341, in _checkout
+    fairy._connection_record.get_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 837, in get_connection
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\create.py", line 643, in connect
+    return dialect.connect(*cargs, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 621, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 949, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connection.py", line 2421, in connect
+    return await connect_utils._connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<20 lines>...
+    )
+    ^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1075, in _connect
+    raise last_error or exceptions.TargetServerAttributeNotMatched(
+    ...<2 lines>...
+    )
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1049, in _connect
+    conn = await _connect_addr(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 886, in _connect_addr
+    return await __connect_addr(params, True, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 931, in __connect_addr
+    tr, pr = await connector
+             ^^^^^^^^^^^^^^^
+  File "D:\My Projects\Diabetic_Product\backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 802, in _create_ssl_connection
+    tr, pr = await loop.create_connection(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        host, port)
+        ^^^^^^^^^^^
+  File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1122, in create_connection
+    infos = await self._ensure_resolved(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        (host, port), family=family,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        type=socket.SOCK_STREAM, proto=proto, flags=flags, loop=self)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1519, in _ensure_resolved
+    return await loop.getaddrinfo(host, port, family=family, type=type,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                  proto=proto, flags=flags)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 939, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        None, getaddr_func, host, port, family, type, proto, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\AbdulRehman\AppData\Local\Programs\Python\Python313\Lib\socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed

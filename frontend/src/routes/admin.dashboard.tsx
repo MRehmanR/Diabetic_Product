@@ -1,0 +1,534 @@
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Clock,
+  ClipboardList,
+  DollarSign,
+  LayoutDashboard,
+  LogOut,
+  Package,
+  Pencil,
+  Plus,
+  Search,
+  Trash2,
+  TrendingUp,
+  X,
+} from "lucide-react";
+import { toast } from "sonner";
+import { adminApi } from "@/lib/admin-api";
+import type { Offer, Supply, SupplyFormData } from "@/lib/admin-types";
+import { AdminSupplyForm } from "@/components/AdminSupplyForm";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+export const Route = createFileRoute("/admin/dashboard")({
+  head: () => ({
+    meta: [{ title: "Admin Dashboard - Diabaticking" }],
+  }),
+  component: AdminDashboardPage,
+});
+
+const offerStatusConfig: Record<string, { label: string; className: string }> = {
+  pending: { label: "Pending", className: "bg-amber-100 text-amber-800" },
+  quoted: { label: "Quoted", className: "bg-blue-100 text-blue-800" },
+  accepted: { label: "Accepted", className: "bg-emerald-100 text-emerald-800" },
+  declined: { label: "Declined", className: "bg-red-100 text-red-800" },
+  completed: { label: "Completed", className: "bg-primary/10 text-primary" },
+};
+
+const splitCsv = (value: string) =>
+  value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+const formatMoney = (value: number | null | undefined) =>
+  value === null || value === undefined ? "Custom" : `Rs ${Number(value).toLocaleString("en-PK")}`;
+
+function AdminDashboardPage() {
+  const navigate = useNavigate();
+  const [supplies, setSupplies] = useState<Supply[]>([]);
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [search, setSearch] = useState("");
+  const [offerSearch, setOfferSearch] = useState("");
+  const [formOpen, setFormOpen] = useState(false);
+  const [editingSupply, setEditingSupply] = useState<Supply | null>(null);
+  const [deleteSupply, setDeleteSupply] = useState<Supply | null>(null);
+  const [formLoading, setFormLoading] = useState(false);
+  const [editingOffer, setEditingOffer] = useState<Offer | null>(null);
+  const [quoteAmount, setQuoteAmount] = useState("");
+
+  useEffect(() => {
+    async function checkAuth() {
+      const {
+        data: { session },
+      } = await adminApi.auth.getSession();
+      if (!session) {
+        navigate({ to: "/admin/login", replace: true });
+        return;
+      }
+      setAuthChecked(true);
+    }
+    checkAuth();
+  }, [navigate]);
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    const [suppliesRes, offersRes] = await Promise.all([
+      adminApi.from("supplies").select("*").order("created_at", { ascending: false }),
+      adminApi.from("offers").select("*").order("created_at", { ascending: false }),
+    ]);
+
+    if (suppliesRes.error) toast.error("Could not load products", { description: suppliesRes.error.message });
+    if (offersRes.error) toast.error("Could not load offers", { description: offersRes.error.message });
+
+    setSupplies((suppliesRes.data as Supply[]) || []);
+    setOffers((offersRes.data as Offer[]) || []);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (authChecked) fetchData();
+  }, [authChecked, fetchData]);
+
+  async function handleLogout() {
+    await adminApi.auth.signOut();
+    navigate({ to: "/admin/login", replace: true });
+  }
+
+  async function handleFormSubmit(formData: SupplyFormData) {
+    setFormLoading(true);
+    const payload = {
+      name: formData.name,
+      slug: formData.slug,
+      short_description: formData.short_description,
+      full_description: formData.full_description,
+      category: formData.category,
+      payout_min: formData.payout_min || null,
+      payout_max: formData.payout_max || null,
+      requirements: splitCsv(formData.requirements),
+      models: splitCsv(formData.models),
+      image_url: formData.image_url || null,
+      features: splitCsv(formData.features),
+      is_active: formData.is_active,
+      status: formData.is_active ? "active" : "inactive",
+    };
+
+    const result = editingSupply
+      ? await adminApi.from("supplies").update(payload).eq("id", editingSupply.id)
+      : await adminApi.from("supplies").insert(payload);
+
+    setFormLoading(false);
+
+    if (result.error) {
+      toast.error(editingSupply ? "Failed to update product" : "Failed to add product", {
+        description: result.error.message,
+      });
+      return;
+    }
+
+    toast.success(editingSupply ? "Product updated" : "Product added");
+    setFormOpen(false);
+    setEditingSupply(null);
+    fetchData();
+  }
+
+  async function handleDelete() {
+    if (!deleteSupply) return;
+    const { error } = await adminApi.from("supplies").delete().eq("id", deleteSupply.id);
+    if (error) {
+      toast.error("Failed to delete product", { description: error.message });
+    } else {
+      toast.success("Product deleted");
+      fetchData();
+    }
+    setDeleteSupply(null);
+  }
+
+  async function updateOfferStatus(offer: Offer, status: Offer["status"], quotedAmount?: number) {
+    const update: Record<string, unknown> = { status };
+    if (quotedAmount !== undefined) update.quoted_amount = quotedAmount;
+    const { error } = await adminApi.from("offers").update(update).eq("id", offer.id);
+    if (error) {
+      toast.error("Failed to update offer", { description: error.message });
+      return;
+    }
+    toast.success(`Offer marked ${status}`);
+    setEditingOffer(null);
+    setQuoteAmount("");
+    fetchData();
+  }
+
+  const filteredSupplies = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return supplies;
+    return supplies.filter((supply) => `${supply.name} ${supply.category}`.toLowerCase().includes(q));
+  }, [supplies, search]);
+
+  const filteredOffers = useMemo(() => {
+    const q = offerSearch.trim().toLowerCase();
+    if (!q) return offers;
+    return offers.filter((offer) =>
+      `${offer.name} ${offer.email || ""} ${offer.phone || ""} ${offer.supply_type}`.toLowerCase().includes(q),
+    );
+  }, [offers, offerSearch]);
+
+  const stats = [
+    { label: "Total Products", value: supplies.length, icon: Package, color: "text-primary" },
+    { label: "Active", value: supplies.filter((s) => s.is_active).length, icon: TrendingUp, color: "text-emerald-600" },
+    { label: "Pending Offers", value: offers.filter((o) => o.status === "pending").length, icon: Clock, color: "text-amber-600" },
+    { label: "Completed", value: offers.filter((o) => o.status === "completed").length, icon: CheckCircle2, color: "text-primary" },
+  ];
+
+  if (!authChecked) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-background">
+        <div className="h-8 w-48 animate-pulse rounded bg-muted" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+              <LayoutDashboard className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight">Admin Dashboard</h1>
+              <p className="text-sm text-muted-foreground">Manage backend products and customer offers</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => navigate({ to: "/products" })}>
+              <ArrowLeft className="h-3.5 w-3.5" /> View Site
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleLogout}>
+              <LogOut className="h-3.5 w-3.5" /> Sign Out
+            </Button>
+          </div>
+        </div>
+
+        <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          {stats.map((stat) => (
+            <Card key={stat.label} className="border-border/50">
+              <CardContent className="flex items-center gap-3 p-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted/80">
+                  <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                  <p className="text-xl font-bold">{stat.value}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <Tabs defaultValue="products" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="products" className="gap-1.5">
+              <Package className="h-3.5 w-3.5" /> Products
+            </TabsTrigger>
+            <TabsTrigger value="offers" className="gap-1.5">
+              <ClipboardList className="h-3.5 w-3.5" /> Offers
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="products" className="space-y-4">
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Search products..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+              <Button onClick={() => { setEditingSupply(null); setFormOpen(true); }}>
+                <Plus className="h-4 w-4" /> Add Product
+              </Button>
+            </div>
+
+            {loading ? (
+              <LoadingRows />
+            ) : filteredSupplies.length === 0 ? (
+              <EmptyState icon={Package} text="No products found" />
+            ) : (
+              <ProductsTable
+                supplies={filteredSupplies}
+                onEdit={(supply) => { setEditingSupply(supply); setFormOpen(true); }}
+                onDelete={setDeleteSupply}
+              />
+            )}
+          </TabsContent>
+
+          <TabsContent value="offers" className="space-y-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search offers by name, email, phone, or product..."
+                value={offerSearch}
+                onChange={(e) => setOfferSearch(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+
+            {loading ? (
+              <LoadingRows />
+            ) : filteredOffers.length === 0 ? (
+              <EmptyState icon={ClipboardList} text="No offers found" />
+            ) : (
+              <OffersTable
+                offers={filteredOffers}
+                onQuote={(offer) => {
+                  setEditingOffer(offer);
+                  setQuoteAmount(offer.quoted_amount ? String(offer.quoted_amount) : "");
+                }}
+                onStatus={updateOfferStatus}
+              />
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      <AdminSupplyForm
+        supply={editingSupply}
+        open={formOpen}
+        onClose={() => { setFormOpen(false); setEditingSupply(null); }}
+        onSubmit={handleFormSubmit}
+        loading={formLoading}
+      />
+
+      <AlertDialog open={!!deleteSupply} onOpenChange={(open) => !open && setDeleteSupply(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Product</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{deleteSupply?.name}"? This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={!!editingOffer} onOpenChange={(open) => !open && setEditingOffer(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Send Quote to {editingOffer?.name}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {editingOffer?.supply_type} - Qty: {editingOffer?.quantity}
+              {editingOffer?.condition_description ? ` - ${editingOffer.condition_description}` : ""}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="space-y-3 py-2">
+            <Label htmlFor="quoteAmount">Quote Amount (Rs)</Label>
+            <Input
+              id="quoteAmount"
+              type="number"
+              step="0.01"
+              min="0"
+              placeholder="0.00"
+              value={quoteAmount}
+              onChange={(e) => setQuoteAmount(e.target.value)}
+            />
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setEditingOffer(null)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                const amount = Number(quoteAmount);
+                if (!editingOffer || amount <= 0) {
+                  toast.error("Enter a quote amount greater than zero");
+                  return;
+                }
+                updateOfferStatus(editingOffer, "quoted", amount);
+              }}
+            >
+              Send Quote
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
+
+function ProductsTable({
+  supplies,
+  onEdit,
+  onDelete,
+}: {
+  supplies: Supply[];
+  onEdit: (supply: Supply) => void;
+  onDelete: (supply: Supply) => void;
+}) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-border/50">
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-muted/30">
+            <TableHead>Product</TableHead>
+            <TableHead>Category</TableHead>
+            <TableHead>Payout Range</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {supplies.map((supply) => (
+            <TableRow key={supply.id}>
+              <TableCell className="max-w-[260px] font-medium">
+                <span className="line-clamp-1">{supply.name}</span>
+              </TableCell>
+              <TableCell className="text-muted-foreground">{supply.category}</TableCell>
+              <TableCell className="font-semibold text-emerald-600">
+                {supply.payout_min !== null && supply.payout_max !== null
+                  ? `${formatMoney(supply.payout_min)} - ${formatMoney(supply.payout_max)}`
+                  : formatMoney(supply.payout_max ?? supply.payout_min)}
+              </TableCell>
+              <TableCell>
+                <Badge className={supply.is_active ? "bg-emerald-100 text-emerald-800" : "bg-muted text-muted-foreground"}>
+                  {supply.is_active ? "Active" : "Inactive"}
+                </Badge>
+              </TableCell>
+              <TableCell className="text-right">
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(supply)}>
+                  <Pencil className="h-3.5 w-3.5" />
+                </Button>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => onDelete(supply)}>
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
+function OffersTable({
+  offers,
+  onQuote,
+  onStatus,
+}: {
+  offers: Offer[];
+  onQuote: (offer: Offer) => void;
+  onStatus: (offer: Offer, status: Offer["status"], quotedAmount?: number) => void;
+}) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-border/50">
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-muted/30">
+            <TableHead>Name</TableHead>
+            <TableHead>Product</TableHead>
+            <TableHead>Qty</TableHead>
+            <TableHead>Expiration</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Quoted</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {offers.map((offer) => {
+            const status = offerStatusConfig[offer.status] || offerStatusConfig.pending;
+            return (
+              <TableRow key={offer.id}>
+                <TableCell>
+                  <div>
+                    <p className="font-medium">{offer.name}</p>
+                    <p className="text-xs text-muted-foreground">{offer.email || "No email provided"}</p>
+                  </div>
+                </TableCell>
+                <TableCell>{offer.supply_type}</TableCell>
+                <TableCell>{offer.quantity}</TableCell>
+                <TableCell className="text-muted-foreground">{offer.expiration_date || "N/A"}</TableCell>
+                <TableCell><Badge className={status.className}>{status.label}</Badge></TableCell>
+                <TableCell className="font-semibold">{offer.quoted_amount ? formatMoney(offer.quoted_amount) : "-"}</TableCell>
+                <TableCell className="text-right">
+                  <div className="flex flex-wrap justify-end gap-1">
+                    {offer.status === "pending" && (
+                      <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => onQuote(offer)}>
+                        <DollarSign className="h-3 w-3" /> Quote
+                      </Button>
+                    )}
+                    {offer.status === "quoted" && (
+                      <>
+                        <Button variant="ghost" size="sm" className="h-7 text-xs text-emerald-600" onClick={() => onStatus(offer, "accepted", offer.quoted_amount || undefined)}>
+                          <CheckCircle2 className="h-3 w-3" /> Accept
+                        </Button>
+                        <Button variant="ghost" size="sm" className="h-7 text-xs text-red-600" onClick={() => onStatus(offer, "declined")}>
+                          <X className="h-3 w-3" /> Decline
+                        </Button>
+                      </>
+                    )}
+                    {offer.status === "accepted" && (
+                      <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => onStatus(offer, "completed", offer.quoted_amount || undefined)}>
+                        <CheckCircle2 className="h-3 w-3" /> Complete
+                      </Button>
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
+function LoadingRows() {
+  return (
+    <div className="space-y-3">
+      {Array.from({ length: 5 }).map((_, index) => (
+        <div key={index} className="h-16 animate-pulse rounded-lg bg-muted" />
+      ))}
+    </div>
+  );
+}
+
+function EmptyState({ icon: Icon, text }: { icon: React.ComponentType<{ className?: string }>; text: string }) {
+  return (
+    <div className="py-12 text-center">
+      <Icon className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
+      <p className="text-muted-foreground">{text}</p>
+    </div>
+  );
+}
