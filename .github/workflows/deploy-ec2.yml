@@ -126,16 +126,12 @@ jobs:
       name: production
       url: https://diabeticking.com
 
-    env:
-      EC2_HOST: ${{ vars.EC2_HOST }}
-      EC2_PORT: ${{ vars.EC2_PORT || '22' }}
-      EC2_USER: ${{ vars.EC2_USER }}
-      EC2_PROJECT_PATH: ${{ vars.EC2_PROJECT_PATH }}
-      VITE_BUSINESS_PHONE: ${{ vars.VITE_BUSINESS_PHONE }}
-
     steps:
       - name: Validate deployment configuration
         env:
+          EC2_HOST: ${{ vars.EC2_HOST || secrets.EC2_HOST }}
+          EC2_USER: ${{ vars.EC2_USER || secrets.EC2_USER }}
+          EC2_PROJECT_PATH: ${{ vars.EC2_PROJECT_PATH || secrets.EC2_PROJECT_PATH }}
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           EC2_KNOWN_HOSTS: ${{ secrets.EC2_KNOWN_HOSTS }}
           BACKEND_ENV: ${{ secrets.BACKEND_ENV }}
@@ -154,9 +150,9 @@ jobs:
             fi
           }
 
-          require_value "Repository variable EC2_HOST" "$EC2_HOST"
-          require_value "Repository variable EC2_USER" "$EC2_USER"
-          require_value "Repository variable EC2_PROJECT_PATH" "$EC2_PROJECT_PATH"
+          require_value "GitHub variable or secret EC2_HOST" "$EC2_HOST"
+          require_value "GitHub variable or secret EC2_USER" "$EC2_USER"
+          require_value "GitHub variable or secret EC2_PROJECT_PATH" "$EC2_PROJECT_PATH"
           require_value "Repository secret EC2_SSH_KEY" "$EC2_SSH_KEY"
           require_value "Repository secret BACKEND_ENV" "$BACKEND_ENV"
 
@@ -167,8 +163,8 @@ jobs:
 
       - name: Configure SSH
         env:
-          EC2_HOST: ${{ vars.EC2_HOST }}
-          EC2_PORT: ${{ vars.EC2_PORT || '22' }}
+          EC2_HOST: ${{ vars.EC2_HOST || secrets.EC2_HOST }}
+          EC2_PORT: ${{ vars.EC2_PORT || secrets.EC2_PORT || '22' }}
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           EC2_KNOWN_HOSTS: ${{ secrets.EC2_KNOWN_HOSTS }}
         run: |
@@ -189,6 +185,10 @@ jobs:
 
       - name: Upload production environment files
         env:
+          EC2_HOST: ${{ vars.EC2_HOST || secrets.EC2_HOST }}
+          EC2_PORT: ${{ vars.EC2_PORT || secrets.EC2_PORT || '22' }}
+          EC2_USER: ${{ vars.EC2_USER || secrets.EC2_USER }}
+          VITE_BUSINESS_PHONE: ${{ vars.VITE_BUSINESS_PHONE || secrets.VITE_BUSINESS_PHONE || '+16786580698' }}
           BACKEND_ENV: ${{ secrets.BACKEND_ENV }}
         run: |
           set -euo pipefail
@@ -216,6 +216,11 @@ jobs:
           rm -f /tmp/backend.env /tmp/frontend.env.production
 
       - name: Deploy application
+        env:
+          EC2_HOST: ${{ vars.EC2_HOST || secrets.EC2_HOST }}
+          EC2_PORT: ${{ vars.EC2_PORT || secrets.EC2_PORT || '22' }}
+          EC2_USER: ${{ vars.EC2_USER || secrets.EC2_USER }}
+          EC2_PROJECT_PATH: ${{ vars.EC2_PROJECT_PATH || secrets.EC2_PROJECT_PATH }}
         run: |
           set -euo pipefail
 
