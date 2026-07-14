@@ -133,14 +133,14 @@ function Home() {
         <MedicalBackground />
         <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 md:py-20">
           <div className="space-y-6 animate-fade-in">
-            <span className="inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground shadow-soft">
-              <ShieldCheck className="h-4 w-4" /> {BUSINESS.tagline}
+            <span className="inline-flex items-center gap-1 rounded-lg bg-accent px-3 py-1 text-sm font-bold text-accent-foreground">
+              <ShieldCheck className="h-4 w-4" /> Verified buyer • Fast payment
             </span>
             <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl">
-              We Buy Your Unused Diabetic Products with Care
+              Sell your diabetes care products at the best price
             </h1>
             <p className="max-w-lg text-lg text-muted-foreground">
-              Tell us what sealed diabetic supplies you have. Share the brand, quantity, condition, and expiry, and our team will follow up on WhatsApp with a fair next step.
+              Unused strips, monitors and CGM sensors — get a fair offer in a simple, trusted flow.
             </p>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg">
