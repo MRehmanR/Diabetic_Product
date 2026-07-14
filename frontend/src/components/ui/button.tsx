@@ -9,11 +9,11 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow-soft hover:bg-primary/90 hover:shadow-card",
+        default: "bg-secondary text-secondary-foreground shadow-soft hover:bg-secondary/90 hover:shadow-card",
         destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 hover:shadow-md",
         outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground hover:border-primary/40",
-        secondary: "bg-secondary text-secondary-foreground shadow-soft hover:bg-secondary/85 hover:shadow-card",
+          "border border-input bg-background shadow-sm hover:border-primary/50 hover:bg-primary/10 hover:text-primary",
+        secondary: "bg-primary text-primary-foreground shadow-soft hover:bg-primary/90 hover:shadow-card",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         whatsapp: "bg-whatsapp text-whatsapp-foreground shadow-soft hover:bg-whatsapp/90 hover:shadow-card",
