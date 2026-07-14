@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import * as Icons from "lucide-react";
 import {
   ShieldCheck,
   Award,
@@ -21,6 +20,9 @@ import { ProductCard } from "@/components/ProductCard";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { MedicalBackground } from "@/components/MedicalBackground";
 import { BUSINESS, categoriesFromProducts, loadProducts } from "@/lib/data";
+import heroImage from "@/assets/hero.jpg";
+import heroImageTwo from "@/assets/hero-2.jpg";
+import heroImageThree from "@/assets/hero-3.jpg";
 
 export const Route = createFileRoute("/")({
   loader: () => loadProducts(),
@@ -38,12 +40,12 @@ export const Route = createFileRoute("/")({
 });
 
 const whyChoose = [
-  { icon: ShieldCheck, title: "Verified Process", text: "Your offer is saved directly to our review system." },
-  { icon: PackageCheck, title: "Clear Product Review", text: "We check the brand, condition, quantity, and expiry details before following up." },
-  { icon: Award, title: "Focused Buying", text: "Browse only the product types we are actively reviewing." },
-  { icon: Lock, title: "Secure Submission", text: "Your details are saved for our review team before WhatsApp opens." },
-  { icon: MessageCircle, title: "WhatsApp Follow-Up", text: "Continue the conversation immediately after submitting." },
-  { icon: Zap, title: "Fast Response", text: "Our team receives your product details with every offer." },
+  { icon: ShieldCheck, title: "Respectful Review", text: "We look at your supply details carefully before following up." },
+  { icon: PackageCheck, title: "Clear Product Details", text: "Brand, condition, quantity, and expiry are kept easy to understand." },
+  { icon: Award, title: "Focused Buying", text: "You only see the product types we are currently reviewing." },
+  { icon: Lock, title: "Private Submission", text: "Your information is handled with care before the WhatsApp conversation starts." },
+  { icon: MessageCircle, title: "Real WhatsApp Follow-Up", text: "A real person can continue the conversation with the details you already sent." },
+  { icon: Zap, title: "Quick Next Step", text: "The form gives our team what they need to respond without back-and-forth confusion." },
 ];
 
 const brandNames = [
@@ -92,11 +94,29 @@ const whySellHere = [
   },
 ];
 
+const categoryImageFallbacks: Record<string, string> = {
+  "glucose-meters": heroImageTwo,
+  "test-strips": heroImage,
+  lancets: heroImageThree,
+  "insulin-supplies": heroImageTwo,
+  "sugar-free-foods": heroImageThree,
+  "medicine-accessories": heroImage,
+  "foot-care": heroImageTwo,
+  "bp-monitors": heroImageThree,
+  supplements: heroImage,
+  "medical-equipment": heroImageTwo,
+};
+
 function Home() {
   const { products, error } = Route.useLoaderData();
   const activeProducts = products.filter((product) => product.isActive);
   const featured = activeProducts.slice(0, 8);
   const categories = categoriesFromProducts(activeProducts);
+
+  const imageForCategory = (slug: string) =>
+    activeProducts.find((product) => product.category === slug && product.image)?.image ||
+    categoryImageFallbacks[slug] ||
+    heroImage;
 
   return (
     <Layout>
@@ -108,10 +128,10 @@ function Home() {
               <ShieldCheck className="h-4 w-4" /> {BUSINESS.tagline}
             </span>
             <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl">
-              We Buy your Diabetic Unused Products on Top Dollars
+              We Buy Your Unused Diabetic Products with Care
             </h1>
             <p className="max-w-lg text-lg text-muted-foreground">
-              Tell us what sealed diabetic products you have, share the condition and expiry, and we will follow up on WhatsApp with a fair offer.
+              Tell us what sealed diabetic supplies you have. Share the brand, quantity, condition, and expiry, and our team will follow up on WhatsApp with a fair next step.
             </p>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg">
@@ -130,28 +150,35 @@ function Home() {
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
         {error && <ProductListError message={error} />}
-        <SectionHeading title="Browse by Category" subtitle="Choose the type of unused diabetic product you want to sell." />
+        <SectionHeading title="Browse by Category" subtitle="Start with the supply type you have, then send the details in a few simple steps." />
         {categories.length === 0 ? (
           <EmptyState text="No active product categories are available yet." />
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {categories.map((c) => {
-              const Icon = (Icons[c.icon as keyof typeof Icons] ?? Icons.Package) as React.ComponentType<{ className?: string }>;
+              const categoryImage = imageForCategory(c.slug);
               return (
                 <Link
                   key={c.slug}
                   to="/products"
                   search={{ category: c.slug }}
-                  className="group rounded-3xl border border-border/60 bg-card p-6 shadow-soft transition-all hover:-translate-y-1.5 hover:border-secondary/50 hover:shadow-card"
+                  className="group overflow-hidden rounded-3xl border border-border/60 bg-card shadow-soft transition-all hover:-translate-y-1.5 hover:border-secondary/50 hover:shadow-card"
                 >
-                  <div className="flex items-center gap-4">
-                    <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-accent text-secondary transition-colors group-hover:gradient-hero group-hover:text-primary-foreground">
-                      <Icon className="h-7 w-7" />
+                  <div className="relative h-44 overflow-hidden">
+                    <img
+                      src={categoryImage}
+                      alt={`${c.name} diabetic supplies`}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/75 via-foreground/20 to-transparent" />
+                    <span className="absolute left-4 top-4 rounded-full bg-background/90 px-3 py-1 text-xs font-extrabold text-secondary shadow-soft backdrop-blur">
+                      Category
                     </span>
-                    <div className="text-left">
-                      <h3 className="font-bold leading-tight">{c.name}</h3>
-                      <p className="mt-1 text-sm text-muted-foreground">View products in this category</p>
-                    </div>
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-xl font-extrabold leading-tight">{c.name}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">See the products we review in this category.</p>
                   </div>
                 </Link>
               );
@@ -179,7 +206,7 @@ function Home() {
       <section className="py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="mb-8 flex items-end justify-between gap-4">
-            <SectionHeading title="Products We Buy" subtitle="A current buying list for unused diabetic products." align="left" />
+            <SectionHeading title="Products We Buy" subtitle="Choose the item that matches what you have at home." align="left" />
             <Button asChild variant="ghost" className="shrink-0">
               <Link to="/products">View all <ArrowRight className="h-4 w-4" /></Link>
             </Button>
@@ -196,7 +223,7 @@ function Home() {
 
       <section className="bg-muted/40 py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <SectionHeading title="What Our Sellers Say" subtitle="Real experiences from people who sold their unused diabetic supplies." />
+          <SectionHeading title="What Our Sellers Say" subtitle="Simple, human experiences from people who had extra diabetic supplies." />
           <div className="grid gap-5 md:grid-cols-3">
             {sellerReviews.map((review) => (
               <article key={review.name} className="rounded-3xl border border-border/60 bg-card p-6 shadow-soft">
@@ -225,7 +252,7 @@ function Home() {
             </span>
             <h2 className="mt-4 text-3xl font-extrabold">Turn extra diabetic supplies into a helpful second chance.</h2>
             <p className="mt-3 text-muted-foreground">
-              Many people receive more supplies than they can use, switch devices, or have sealed boxes sitting at home. Diabetics King gives you a simple way to send those details to a real team and keep usable products from going to waste.
+              Many people receive more supplies than they can use, switch devices, or have sealed boxes sitting at home. Diabetics King gives you a simple, respectful way to send those details to a real team and keep usable products from going to waste.
             </p>
             <Button asChild size="lg" className="mt-6">
               <Link to="/products">Start with your product <ArrowRight className="h-4 w-4" /></Link>
@@ -248,7 +275,7 @@ function Home() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-        <SectionHeading title="Why Choose Diabetics King" subtitle="A simple, friendly way to send your product details." />
+        <SectionHeading title="Why Choose Diabetics King" subtitle="A warmer way to share your product details and get a clear follow-up." />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {whyChoose.map((w) => (
             <div key={w.title} className="flex gap-4 rounded-2xl border border-border/60 bg-card p-5 shadow-soft">
@@ -266,9 +293,9 @@ function Home() {
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <div className="relative overflow-hidden rounded-3xl gradient-hero px-6 py-12 text-center text-primary-foreground shadow-card sm:px-12">
-          <h2 className="text-3xl font-extrabold">Have Diabetes Products to Sell?</h2>
+          <h2 className="text-3xl font-extrabold">Have Diabetic Supplies to Sell?</h2>
           <p className="mx-auto mt-3 max-w-xl text-primary-foreground/90">
-            Pick a product from our current buying list, submit your details, and continue on WhatsApp.
+            Pick a product from our current buying list, send the details once, and continue on WhatsApp with a real person.
           </p>
           <Button asChild size="lg" variant="secondary" className="mt-6">
             <Link to="/products">Browse Products <ArrowRight className="h-4 w-4" /></Link>

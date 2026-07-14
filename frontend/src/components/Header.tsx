@@ -22,7 +22,7 @@ export function Header() {
           <img src={logoUrl} alt={`${BUSINESS.name} logo`} className="h-11 w-11 rounded-xl object-contain" />
           <span className="flex flex-col leading-none">
             <span className="font-display text-lg font-extrabold tracking-tight">{BUSINESS.name}</span>
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-secondary">Diabetes Care Buyers</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-secondary">Friendly Supply Buyers</span>
           </span>
         </Link>
 
@@ -42,7 +42,7 @@ export function Header() {
 
         <div className="hidden items-center gap-2 md:flex">
           <Button asChild variant="default" size="sm">
-            <Link to="/products"><Search className="h-4 w-4" /> Browse Products</Link>
+            <Link to="/products"><Search className="h-4 w-4" /> Start Your Offer</Link>
           </Button>
         </div>
 
@@ -71,7 +71,7 @@ export function Header() {
               </Link>
             ))}
             <Button asChild className="mt-2" onClick={() => setOpen(false)}>
-              <Link to="/products">Browse Products</Link>
+              <Link to="/products">Start Your Offer</Link>
             </Button>
           </nav>
         </div>

@@ -77,7 +77,7 @@ const businessWhatsapp = businessPhone.replace(/\D/g, "") || DEFAULT_BUSINESS_PH
 
 export const BUSINESS = {
   name: "Diabetics King",
-  tagline: "We Buy your Diabetic Unused Products on Top Dollars",
+  tagline: "Turn unused diabetic supplies into a fair, friendly offer",
   whatsapp: businessWhatsapp,
   phone: businessPhone,
   email: "info@diabaticking.com",

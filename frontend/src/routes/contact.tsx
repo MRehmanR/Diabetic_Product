@@ -15,7 +15,7 @@ export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       { title: `Contact Us - ${BUSINESS.name}` },
-      { name: "description", content: "Contact Diabetics King by phone or WhatsApp." },
+      { name: "description", content: "Contact Diabetics King by phone or WhatsApp for friendly help with unused diabetic supplies." },
       { property: "og:title", content: "Contact Diabetics King" },
       { property: "og:url", content: "/contact" },
     ],
@@ -59,8 +59,8 @@ ${result.data.message}`;
           <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground shadow-soft">
             <MessageCircle className="h-4 w-4" /> We reply fast on WhatsApp
           </span>
-          <h1 className="text-4xl font-extrabold sm:text-5xl">Get in <span className="text-gradient">Touch</span></h1>
-          <p className="mt-3 text-muted-foreground">Reach us directly using the contact details below.</p>
+          <h1 className="text-4xl font-extrabold sm:text-5xl">Talk with a <span className="text-gradient">real person</span></h1>
+          <p className="mt-3 text-muted-foreground">Have a question or want to sell supplies? Send a message and we’ll help you with the next step.</p>
         </div>
       </section>
 
@@ -91,7 +91,7 @@ ${result.data.message}`;
         </div>
 
         <form onSubmit={submit} className="space-y-4 rounded-2xl border border-border/60 bg-card p-6 shadow-soft">
-          <h2 className="text-xl font-bold">Send us a WhatsApp message</h2>
+          <h2 className="text-xl font-bold">Send us a quick WhatsApp message</h2>
           <div>
             <Label htmlFor="name">Name</Label>
             <Input id="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your name" className="mt-1" />
@@ -102,7 +102,7 @@ ${result.data.message}`;
           </div>
           <div>
             <Label htmlFor="message">Message</Label>
-            <Textarea id="message" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="How can we help?" rows={5} className="mt-1" />
+            <Textarea id="message" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Tell us what you have or how we can help." rows={5} className="mt-1" />
           </div>
           <Button type="submit" className="w-full" size="lg">Open WhatsApp</Button>
         </form>

@@ -28,7 +28,7 @@ export const Route = createFileRoute("/products/")({
   head: () => ({
     meta: [
       { title: `Products We Buy - ${BUSINESS.name}` },
-      { name: "description", content: "Browse unused diabetic products Diabetics King is currently buying and submit an offer." },
+      { name: "description", content: "Browse unused diabetic supplies Diabetics King is currently reviewing and start a friendly offer." },
       { property: "og:title", content: "Products We Buy" },
       { property: "og:url", content: "/products" },
     ],
@@ -74,7 +74,7 @@ function ProductsPage() {
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
           <h1 className="text-3xl font-extrabold">Products We Buy</h1>
           <p className="mt-1 text-muted-foreground">
-            {error ? "Products could not be loaded" : `${filtered.length} products available for review`}
+            {error ? "Products could not be loaded" : `${filtered.length} products ready for a friendly review`}
           </p>
         </div>
       </section>
@@ -82,10 +82,10 @@ function ProductsPage() {
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[260px_1fr]">
         <aside className={`${showFilters ? "block" : "hidden"} space-y-6 lg:block`}>
           <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft">
-            <h3 className="mb-3 font-bold">Search</h3>
+            <h3 className="mb-3 font-bold">Find your supply</h3>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search products..." className="pl-9" />
+              <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search by product or brand..." className="pl-9" />
             </div>
           </div>
 
@@ -124,7 +124,7 @@ function ProductsPage() {
 
           {filtered.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-border p-12 text-center text-muted-foreground">
-              No products match your filters.
+              No products match your filters yet.
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">

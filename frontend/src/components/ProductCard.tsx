@@ -33,7 +33,7 @@ export function ProductCard({ product }: { product: Product }) {
         <p className="line-clamp-2 text-sm text-muted-foreground">{product.description}</p>
 
         <div className="text-xs font-medium text-muted-foreground">
-          {product.isActive ? "Currently buying" : "Not currently active"}
+          {product.isActive ? "Ready for review" : "Not currently active"}
         </div>
 
         <div className="mt-auto grid grid-cols-1 gap-2 pt-2 sm:grid-cols-2">

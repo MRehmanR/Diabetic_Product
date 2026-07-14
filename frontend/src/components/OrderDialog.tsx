@@ -126,7 +126,7 @@ export function OrderDialog({
       await submitOffer({ product, details });
       window.open(buildWhatsappLink(product, url, details), "_blank", "noopener");
       close(false);
-      toast.success("Offer saved. Opening WhatsApp with your product details...");
+      toast.success("Details saved. Opening WhatsApp so we can continue with you...");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Could not submit your offer.");
     } finally {
@@ -141,7 +141,7 @@ export function OrderDialog({
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle className="leading-snug">Product offer details</DialogTitle>
+          <DialogTitle className="leading-snug">Tell us about your supplies</DialogTitle>
           <DialogDescription>
             Step {step + 1} of {steps.length}: {steps[step]}
           </DialogDescription>

@@ -13,7 +13,7 @@ export function Footer() {
             <span className="font-display text-lg font-extrabold">{BUSINESS.name}</span>
           </Link>
           <p className="text-sm text-muted-foreground">
-            {BUSINESS.tagline}. Share your product details through our quick offer form, then continue on WhatsApp.
+            {BUSINESS.tagline}. Share what you have, then continue on WhatsApp with a real person from our team.
           </p>
           <a
             href={BUSINESS.facebook}
@@ -28,7 +28,7 @@ export function Footer() {
         <div>
           <h4 className="mb-3 text-sm font-bold">Quick Links</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/products" className="hover:text-primary">All Products</Link></li>
+            <li><Link to="/products" className="hover:text-primary">Products We Buy</Link></li>
             <li><Link to="/about" className="hover:text-primary">About Us</Link></li>
             <li><Link to="/contact" className="hover:text-primary">Contact</Link></li>
           </ul>
@@ -37,7 +37,7 @@ export function Footer() {
         <div>
           <h4 className="mb-3 text-sm font-bold">Support</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/products" className="hover:text-primary">Product Catalog</Link></li>
+            <li><Link to="/products" className="hover:text-primary">Start an Offer</Link></li>
             <li><Link to="/contact" className="hover:text-primary">WhatsApp Support</Link></li>
             <li><Link to="/about" className="hover:text-primary">How It Works</Link></li>
           </ul>

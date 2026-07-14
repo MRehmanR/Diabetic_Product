@@ -25,11 +25,11 @@ function About() {
         <MedicalBackground />
         <div className="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6 animate-fade-in">
           <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground shadow-soft">
-            <HeartHandshake className="h-4 w-4" /> Trusted Diabetes Care Buyers
+            <HeartHandshake className="h-4 w-4" /> Friendly Diabetes Supply Buyers
           </span>
           <h1 className="text-4xl font-extrabold sm:text-5xl">About <span className="text-gradient">{BUSINESS.name}</span></h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-            We help people turn unused diabetic products into fair offers. Choose a product, submit your details, and our team will follow up with care.
+            We help people turn sealed, unused diabetic supplies into fair offers. Choose the product you have, send the details once, and our team will follow up with care.
           </p>
         </div>
       </section>
@@ -37,9 +37,9 @@ function About() {
       <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
         <div className="grid gap-6 md:grid-cols-3">
           {[
-            { icon: Target, title: "Our Mission", text: "Make it simple for people to send unused diabetic products for review and pricing." },
-            { icon: Eye, title: "Our Process", text: "You share the product details once, then our team reviews the offer and continues on WhatsApp." },
-            { icon: ClipboardCheck, title: "Our Buying List", text: "Products, categories, brand details and requirements stay current for the items we are reviewing." },
+            { icon: Target, title: "Our Mission", text: "Make it simple and respectful for people to sell sealed diabetic supplies they no longer need." },
+            { icon: Eye, title: "Our Process", text: "You share the product details once, then a real person reviews them and continues on WhatsApp." },
+            { icon: ClipboardCheck, title: "Our Buying List", text: "Products, categories, brand details, and requirements stay easy to understand." },
           ].map((c) => (
             <div key={c.title} className="group rounded-2xl border border-border/60 bg-card p-6 shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-card">
               <span className="grid h-12 w-12 place-items-center rounded-xl gradient-hero text-primary-foreground transition-transform duration-300 group-hover:scale-110"><c.icon className="h-6 w-6" /></span>
@@ -53,15 +53,15 @@ function About() {
       <section className="bg-muted/40 py-14">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
           <span className="grid mx-auto h-14 w-14 place-items-center rounded-2xl bg-accent text-secondary"><HeartHandshake className="h-7 w-7" /></span>
-          <h2 className="mt-4 text-3xl font-extrabold">Simple Offer Flow</h2>
+          <h2 className="mt-4 text-3xl font-extrabold">A Simple, Human Offer Flow</h2>
           <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
-            Each product offer is saved for our review team before WhatsApp opens, so the conversation starts with the details we need.
+            Your product details are saved before WhatsApp opens, so the conversation starts with context and less back-and-forth.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <span className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 text-sm font-medium shadow-soft"><ShieldCheck className="h-4 w-4 text-secondary" /> Current Buying List</span>
             <span className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 text-sm font-medium shadow-soft"><Award className="h-4 w-4 text-primary" /> Saved Offers</span>
           </div>
-          <Button asChild size="lg" className="mt-8"><Link to="/products">Explore Products</Link></Button>
+          <Button asChild size="lg" className="mt-8"><Link to="/products">Start Your Offer</Link></Button>
         </div>
       </section>
     </Layout>

@@ -116,7 +116,7 @@ function ProductDetails() {
               <Badge className="bg-accent text-accent-foreground">{categoryName(product.category)}</Badge>
               <Badge variant="secondary">Brand: {product.brand}</Badge>
               <Badge variant={product.isActive ? "default" : "secondary"}>
-                {product.isActive ? "Currently buying" : product.status}
+                {product.isActive ? "Ready for review" : product.status}
               </Badge>
             </div>
             <h1 className="text-3xl font-extrabold leading-tight">{product.name}</h1>
@@ -134,9 +134,9 @@ function ProductDetails() {
             </div>
 
             <div className="rounded-2xl border border-border/60 bg-card p-4">
-              <div className="flex items-center gap-2 text-sm font-bold"><ShieldCheck className="h-4 w-4 text-secondary" /> Review team ready</div>
+              <div className="flex items-center gap-2 text-sm font-bold"><ShieldCheck className="h-4 w-4 text-secondary" /> Friendly review team ready</div>
               <p className="mt-2 text-sm text-muted-foreground">
-                This product is part of our current buying list. Offer details are saved for review before WhatsApp opens.
+                This product is part of our current buying list. Your details are saved before WhatsApp opens, so our team can respond with context.
               </p>
             </div>
           </div>
