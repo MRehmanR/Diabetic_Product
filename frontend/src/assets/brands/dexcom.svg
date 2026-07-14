@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 260" role="img" aria-labelledby="title desc">
+  <title id="title">Dexcom brand card</title>
+  <desc id="desc">A blue medical-style brand image for Dexcom supplies.</desc>
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#e0f2fe"/>
+      <stop offset="1" stop-color="#2563eb"/>
+    </linearGradient>
+  </defs>
+  <rect width="480" height="260" rx="34" fill="url(#g)"/>
+  <circle cx="398" cy="56" r="86" fill="#ffffff" opacity=".2"/>
+  <circle cx="84" cy="202" r="72" fill="#22d3ee" opacity=".24"/>
+  <circle cx="105" cy="128" r="55" fill="#ffffff" opacity=".92"/>
+  <circle cx="105" cy="128" r="32" fill="#38bdf8"/>
+  <path d="M76 128h58" stroke="#08345f" stroke-width="8" stroke-linecap="round"/>
+  <path d="M105 99v58" stroke="#08345f" stroke-width="8" stroke-linecap="round"/>
+  <text x="180" y="121" fill="#082f6f" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="800">DEXCOM</text>
+  <text x="183" y="158" fill="#0f4c81" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700">CGM supplies</text>
+</svg>

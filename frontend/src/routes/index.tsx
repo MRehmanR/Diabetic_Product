@@ -23,6 +23,13 @@ import { BUSINESS, categoriesFromProducts, loadProducts } from "@/lib/data";
 import heroImage from "@/assets/hero.jpg";
 import heroImageTwo from "@/assets/hero-2.jpg";
 import heroImageThree from "@/assets/hero-3.jpg";
+import freestyleImage from "@/assets/brands/freestyle.svg";
+import dexcomImage from "@/assets/brands/dexcom.svg";
+import omnipodImage from "@/assets/brands/omnipod.svg";
+import bayerImage from "@/assets/brands/bayer.svg";
+import oneTouchImage from "@/assets/brands/one-touch.svg";
+import medtronicImage from "@/assets/brands/medtronic.svg";
+import accuChekImage from "@/assets/brands/accu-chek.svg";
 
 export const Route = createFileRoute("/")({
   loader: () => loadProducts(),
@@ -48,14 +55,14 @@ const whyChoose = [
   { icon: Zap, title: "Quick Next Step", text: "The form gives our team what they need to respond without back-and-forth confusion." },
 ];
 
-const brandNames = [
-  "FREESTYLE",
-  "DEXCOM",
-  "OMNIPOD",
-  "BAYER",
-  "ONE TOUCH",
-  "MEDTRONIC",
-  "ACCU-CHEK",
+const brandImages = [
+  { name: "FREESTYLE", image: freestyleImage },
+  { name: "DEXCOM", image: dexcomImage },
+  { name: "OMNIPOD", image: omnipodImage },
+  { name: "BAYER", image: bayerImage },
+  { name: "ONE TOUCH", image: oneTouchImage },
+  { name: "MEDTRONIC", image: medtronicImage },
+  { name: "ACCU-CHEK", image: accuChekImage },
 ];
 
 const sellerReviews = [
@@ -190,13 +197,18 @@ function Home() {
       <section className="bg-muted/40 py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <SectionHeading title="Brands We Buy" subtitle="We review sealed, unused diabetic supplies from trusted major brands." />
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-7">
-            {brandNames.map((brand) => (
-              <div
-                key={brand}
-                className="rounded-2xl border border-border/60 bg-card px-4 py-5 text-center text-sm font-extrabold tracking-wide text-secondary shadow-soft"
-              >
-                {brand}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
+            {brandImages.map((brand) => (
+              <div key={brand.name} className="group overflow-hidden rounded-3xl border border-border/60 bg-card shadow-soft transition-all hover:-translate-y-1 hover:border-secondary/50 hover:shadow-card">
+                <img
+                  src={brand.image}
+                  alt={`${brand.name} diabetic supply brand`}
+                  loading="lazy"
+                  className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="border-t border-border/60 px-3 py-3 text-center text-xs font-extrabold tracking-wide text-secondary">
+                  {brand.name}
+                </div>
               </div>
             ))}
           </div>
