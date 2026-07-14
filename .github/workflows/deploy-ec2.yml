@@ -142,15 +142,33 @@ jobs:
         run: |
           set -euo pipefail
 
-          test -n "$EC2_HOST"
-          test -n "$EC2_USER"
-          test -n "$EC2_PROJECT_PATH"
-          test -n "$EC2_SSH_KEY"
-          test -n "$EC2_KNOWN_HOSTS"
-          test -n "$BACKEND_ENV"
+          missing=0
+
+          require_value() {
+            name="$1"
+            value="$2"
+
+            if [ -z "$value" ]; then
+              echo "::error::$name is not configured."
+              missing=1
+            fi
+          }
+
+          require_value "Repository variable EC2_HOST" "$EC2_HOST"
+          require_value "Repository variable EC2_USER" "$EC2_USER"
+          require_value "Repository variable EC2_PROJECT_PATH" "$EC2_PROJECT_PATH"
+          require_value "Repository secret EC2_SSH_KEY" "$EC2_SSH_KEY"
+          require_value "Repository secret BACKEND_ENV" "$BACKEND_ENV"
+
+          if [ "$missing" -ne 0 ]; then
+            echo "Add the missing values in GitHub Settings -> Secrets and variables -> Actions."
+            exit 1
+          fi
 
       - name: Configure SSH
         env:
+          EC2_HOST: ${{ vars.EC2_HOST }}
+          EC2_PORT: ${{ vars.EC2_PORT || '22' }}
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           EC2_KNOWN_HOSTS: ${{ secrets.EC2_KNOWN_HOSTS }}
         run: |
@@ -159,7 +177,12 @@ jobs:
 
           mkdir -p ~/.ssh
           printf '%s\n' "$EC2_SSH_KEY" > ~/.ssh/ec2_deploy_key
-          printf '%s\n' "$EC2_KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+          if [ -n "$EC2_KNOWN_HOSTS" ]; then
+            printf '%s\n' "$EC2_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else
+            ssh-keyscan -p "$EC2_PORT" -H "$EC2_HOST" > ~/.ssh/known_hosts
+          fi
 
           chmod 600 ~/.ssh/ec2_deploy_key
           chmod 600 ~/.ssh/known_hosts
