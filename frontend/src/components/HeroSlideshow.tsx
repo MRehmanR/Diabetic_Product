@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, ShieldCheck } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import freestyleProducts from "@/assets/download (8).png";
 import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
 import omnipodProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.44.29.jpeg";
@@ -98,20 +98,6 @@ export function HeroSlideshow() {
               fetchPriority={i === 0 ? "high" : "low"}
               className="h-full w-full object-cover transition-transform duration-[6000ms] ease-out motion-safe:group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-
-            {/* Captions: always visible on mobile, reveal on hover/focus on larger screens */}
-            <div className="absolute inset-x-0 bottom-0 p-5 pb-14 text-left text-white">
-              <span className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm">
-                <ShieldCheck className="h-3.5 w-3.5" /> Verified buyer
-              </span>
-              <h3 className="text-lg font-bold sm:translate-y-2 sm:opacity-0 sm:transition-all sm:duration-500 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 sm:group-focus-within:translate-y-0 sm:group-focus-within:opacity-100 sm:text-xl">
-                {s.title}
-              </h3>
-              <p className="text-sm text-white/85 sm:translate-y-2 sm:opacity-0 sm:transition-all sm:delay-100 sm:duration-500 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 sm:group-focus-within:translate-y-0 sm:group-focus-within:opacity-100">
-                {s.caption}
-              </p>
-            </div>
           </div>
         ))}
 

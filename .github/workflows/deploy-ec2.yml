@@ -25,6 +25,7 @@ jobs:
 
     env:
       VITE_API_URL: /api
+      VITE_INTERNAL_API_URL: http://127.0.0.1:8000/api
       VITE_BUSINESS_PHONE: ${{ vars.VITE_BUSINESS_PHONE }}
 
     steps:
@@ -211,6 +212,7 @@ jobs:
 
           {
             printf 'VITE_API_URL=/api\n'
+            printf 'VITE_INTERNAL_API_URL=http://127.0.0.1:8000/api\n'
             printf 'VITE_BUSINESS_PHONE=%s\n' "$VITE_BUSINESS_PHONE"
           } > /tmp/frontend.env.production
 

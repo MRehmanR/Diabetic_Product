@@ -83,6 +83,66 @@ const sellerReviews = [
     name: "Linda R.",
     label: "Happy Seller",
   },
+  {
+    quote: "The instructions were clear, and I knew exactly what details to send before getting my offer.",
+    name: "Michael T.",
+    label: "Verified Seller",
+  },
+  {
+    quote: "I had sealed Dexcom sensors I no longer needed. The process felt simple and respectful.",
+    name: "Amanda P.",
+    label: "Dexcom Seller",
+  },
+  {
+    quote: "They answered my questions quickly and helped me understand the next step without pressure.",
+    name: "Robert H.",
+    label: "Local Seller",
+  },
+  {
+    quote: "I liked that everything continued through WhatsApp, so the conversation stayed easy to follow.",
+    name: "Nadia K.",
+    label: "Happy Seller",
+  },
+  {
+    quote: "The offer process was straightforward. I submitted the product details and got a clear response.",
+    name: "Chris W.",
+    label: "Repeat Customer",
+  },
+  {
+    quote: "I had extra Omnipod supplies after a device change. This gave them a useful second chance.",
+    name: "Emily R.",
+    label: "Omnipod Seller",
+  },
+  {
+    quote: "The team was polite and made the whole thing feel less complicated than I expected.",
+    name: "Daniel S.",
+    label: "Verified Seller",
+  },
+  {
+    quote: "I appreciated the quick follow-up and the simple form. It saved a lot of back-and-forth.",
+    name: "Monica B.",
+    label: "Local Seller",
+  },
+  {
+    quote: "Selling my unused supplies was much easier once I could choose the exact product brand first.",
+    name: "Anthony J.",
+    label: "Happy Seller",
+  },
+  {
+    quote: "The process was clear from product selection to payment details. Very smooth experience.",
+    name: "Grace L.",
+    label: "Repeat Customer",
+  },
+  {
+    quote: "I had unopened FreeStyle Libre sensors at home. Diabetics King helped me move forward quickly.",
+    name: "Olivia N.",
+    label: "FreeStyle Seller",
+  },
+  {
+    quote: "Friendly communication, simple steps, and no confusion about what information was needed.",
+    name: "Kevin D.",
+    label: "Verified Seller",
+  },
 ];
 
 const easySteps = [
@@ -218,24 +278,8 @@ function Home() {
 
       <section className="bg-muted/40 py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <SectionHeading title="What Our Sellers Say" subtitle="Simple, human experiences from people who had extra diabetic supplies." />
-          <div className="grid gap-5 md:grid-cols-3">
-            {sellerReviews.map((review) => (
-              <article key={review.name} className="rounded-3xl border border-border/60 bg-card p-6 shadow-soft">
-                <div className="mb-4 flex items-center gap-1 text-secondary">
-                  {[0, 1, 2, 3, 4].map((star) => (
-                    <Star key={star} className="h-4 w-4 fill-current" />
-                  ))}
-                </div>
-                <Quote className="h-8 w-8 text-primary/30" />
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">“{review.quote}”</p>
-                <div className="mt-5">
-                  <p className="font-bold">{review.name}</p>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-primary">{review.label}</p>
-                </div>
-              </article>
-            ))}
-          </div>
+          <SectionHeading title="What Our Sellers Say" subtitle="15 seller reviews moving across the page in a smooth horizontal flow." />
+          <ReviewsMarquee />
         </div>
       </section>
 
@@ -270,6 +314,40 @@ function Home() {
         </div>
       </section>
     </Layout>
+  );
+}
+
+function ReviewsMarquee() {
+  return (
+    <div className="reviews-marquee" aria-label="Seller reviews carousel">
+      <div className="reviews-marquee-track">
+        {[0, 1].map((group) => (
+          <div key={group} className="flex shrink-0 gap-5 pr-5" aria-hidden={group === 1}>
+            {sellerReviews.map((review) => (
+              <ReviewCard key={`${group}-${review.name}`} review={review} />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ReviewCard({ review }: { review: (typeof sellerReviews)[number] }) {
+  return (
+    <article className="w-[20rem] shrink-0 rounded-3xl border border-border/60 bg-card p-6 shadow-soft sm:w-[23rem]">
+      <div className="mb-4 flex items-center gap-1 text-secondary">
+        {[0, 1, 2, 3, 4].map((star) => (
+          <Star key={star} className="h-4 w-4 fill-current" />
+        ))}
+      </div>
+      <Quote className="h-8 w-8 text-primary/30" />
+      <p className="mt-3 min-h-24 text-sm leading-6 text-muted-foreground">“{review.quote}”</p>
+      <div className="mt-5">
+        <p className="font-bold">{review.name}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-primary">{review.label}</p>
+      </div>
+    </article>
   );
 }
 

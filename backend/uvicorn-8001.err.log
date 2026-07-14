@@ -1,6 +1,0 @@
-INFO:     Started server process [3644]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
-INFO:diabetic-buyback-api:GET /health 200 0.70ms
-INFO:diabetic-buyback-api:GET /api/supplies 200 7541.24ms
