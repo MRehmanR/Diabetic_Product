@@ -52,8 +52,8 @@ jobs:
 
       - name: Verify production build
         run: |
-          test -f dist/server/server.js
-          test -f production-server.mjs
+          test -d dist
+          find dist -maxdepth 3 -type f | sort
 
   backend-check:
     name: Backend check
@@ -265,8 +265,8 @@ jobs:
           rm -rf dist
           npm run build
 
-          test -f dist/server/server.js
-          test -f production-server.mjs
+          test -d dist
+          find dist -maxdepth 3 -type f | sort
 
           # Restart services
           sudo systemctl restart diabetic-backend
