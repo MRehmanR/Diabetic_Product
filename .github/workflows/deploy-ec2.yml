@@ -234,16 +234,18 @@ jobs:
           EC2_PORT: ${{ vars.EC2_PORT || secrets.EC2_PORT || '22' }}
           EC2_USER: ${{ vars.EC2_USER || secrets.EC2_USER }}
           EC2_PROJECT_PATH: ${{ vars.EC2_PROJECT_PATH || secrets.EC2_PROJECT_PATH }}
+          PUBLIC_HEALTH_URL: ${{ vars.PUBLIC_HEALTH_URL || secrets.PUBLIC_HEALTH_URL }}
         run: |
           set -euo pipefail
 
           PROJECT_PATH_Q=$(printf '%q' "$EC2_PROJECT_PATH")
+          PUBLIC_HEALTH_URL_Q=$(printf '%q' "$PUBLIC_HEALTH_URL")
 
           ssh \
             -i ~/.ssh/ec2_deploy_key \
             -p "$EC2_PORT" \
             "$EC2_USER@$EC2_HOST" \
-            "PROJECT_PATH=$PROJECT_PATH_Q bash -se" <<'REMOTE'
+            "PROJECT_PATH=$PROJECT_PATH_Q PUBLIC_HEALTH_URL=$PUBLIC_HEALTH_URL_Q bash -se" <<'REMOTE'
           set -Eeuo pipefail
 
           export NVM_DIR="$HOME/.nvm"
@@ -336,15 +338,19 @@ jobs:
             http://127.0.0.1:3000/ \
             >/dev/null
 
-          # Public health check
-          curl \
-            --fail \
-            --silent \
-            --show-error \
-            --retry 10 \
-            --retry-delay 2 \
-            --retry-all-errors \
-            https://diabeticking.com/health
+          # Optional public health check. Keep this empty until DNS/HTTPS is ready.
+          if [ -n "$PUBLIC_HEALTH_URL" ]; then
+            curl \
+              --fail \
+              --silent \
+              --show-error \
+              --retry 10 \
+              --retry-delay 2 \
+              --retry-all-errors \
+              "$PUBLIC_HEALTH_URL"
+          else
+            echo "PUBLIC_HEALTH_URL is empty; skipping public health check."
+          fi
 
           echo "Deployment completed successfully."
           REMOTE
