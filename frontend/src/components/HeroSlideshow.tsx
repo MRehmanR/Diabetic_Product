@@ -1,27 +1,34 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ShieldCheck } from "lucide-react";
-import heroImg from "@/assets/hero.jpg";
-import hero2 from "@/assets/hero-2.jpg";
-import hero3 from "@/assets/hero-3.jpg";
+import freestyleProducts from "@/assets/download (8).png";
+import dexcomG7 from "@/assets/g7-15-day-sensor.webp";
+import omnipodPods from "@/assets/hero-4.jpeg";
+import oneTouchProducts from "@/assets/download (14).png";
 
 const slides = [
   {
-    src: heroImg,
-    alt: "Boxed glucose monitors and continuous glucose monitoring (CGM) sensors on a clean medical surface",
-    title: "Glucose Monitors & CGM Sensors",
-    caption: "We buy Dexcom, Freestyle Libre and more with fair, friendly offers.",
+    src: freestyleProducts,
+    alt: "FreeStyle Libre and FreeStyle diabetic testing supply boxes",
+    title: "FreeStyle & Libre Supplies",
+    caption: "We review sealed FreeStyle boxes and sensors with fair, friendly follow-up.",
   },
   {
-    src: hero2,
-    alt: "Blood glucose monitor with test strips and an insulin pen arranged neatly",
-    title: "Test Strips & Insulin Supplies",
-    caption: "Sealed, in-date boxes wanted with quick WhatsApp follow-up.",
+    src: dexcomG7,
+    alt: "Dexcom G7 continuous glucose monitoring sensor box",
+    title: "Dexcom G7 Sensors",
+    caption: "Have unopened Dexcom supplies? Send the details and we will take a look.",
   },
   {
-    src: hero3,
-    alt: "Healthcare worker holding a boxed glucose monitor kit",
-    title: "Trusted, Fast & Fair",
-    caption: "Share your product details and get a clear offer from our team.",
+    src: omnipodPods,
+    alt: "Omnipod 5 pod supply box",
+    title: "Omnipod Pod Supplies",
+    caption: "We review sealed Omnipod boxes and continue the offer conversation on WhatsApp.",
+  },
+  {
+    src: oneTouchProducts,
+    alt: "OneTouch Verio and OneTouch Ultra test strip boxes",
+    title: "OneTouch Test Strips",
+    caption: "Share brand, quantity, and expiry so our team can respond with context.",
   },
 ];
 

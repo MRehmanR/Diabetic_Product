@@ -20,9 +20,11 @@ import { ProductCard } from "@/components/ProductCard";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { MedicalBackground } from "@/components/MedicalBackground";
 import { BUSINESS, categoriesFromProducts, loadProducts } from "@/lib/data";
-import heroImage from "@/assets/hero.jpg";
+import freestyleProducts from "@/assets/download (8).png";
+import oneTouchProducts from "@/assets/download (14).png";
+import dexcomG7 from "@/assets/g7-15-day-sensor.webp";
 import heroImageTwo from "@/assets/hero-2.jpg";
-import heroImageThree from "@/assets/hero-3.jpg";
+import omnipodPods from "@/assets/hero-4.jpeg";
 import freestyleImage from "@/assets/brands/freestyle.svg";
 import dexcomImage from "@/assets/brands/dexcom.svg";
 import omnipodImage from "@/assets/brands/omnipod.svg";
@@ -102,16 +104,16 @@ const whySellHere = [
 ];
 
 const categoryImageFallbacks: Record<string, string> = {
-  "glucose-meters": heroImageTwo,
-  "test-strips": heroImage,
-  lancets: heroImageThree,
+  "glucose-meters": dexcomG7,
+  "test-strips": oneTouchProducts,
+  lancets: heroImageTwo,
   "insulin-supplies": heroImageTwo,
-  "sugar-free-foods": heroImageThree,
-  "medicine-accessories": heroImage,
+  "sugar-free-foods": freestyleProducts,
+  "medicine-accessories": freestyleProducts,
   "foot-care": heroImageTwo,
-  "bp-monitors": heroImageThree,
-  supplements: heroImage,
-  "medical-equipment": heroImageTwo,
+  "bp-monitors": heroImageTwo,
+  supplements: freestyleProducts,
+  "medical-equipment": omnipodPods,
 };
 
 function Home() {
@@ -123,7 +125,7 @@ function Home() {
   const imageForCategory = (slug: string) =>
     activeProducts.find((product) => product.category === slug && product.image)?.image ||
     categoryImageFallbacks[slug] ||
-    heroImage;
+    freestyleProducts;
 
   return (
     <Layout>
