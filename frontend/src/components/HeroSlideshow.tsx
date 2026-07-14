@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import freestyleProducts from "@/assets/download (8).png";
+import freestyleProducts from "@/assets/WhatsApp Image 2026-07-14 at 20.38.19.jpeg";
 import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
 import omnipodProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.44.29.jpeg";
 import oneTouchProducts from "@/assets/download (14).png";

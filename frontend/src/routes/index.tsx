@@ -21,7 +21,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { MedicalBackground } from "@/components/MedicalBackground";
 import { BUSINESS, loadProducts } from "@/lib/data";
-import freestyleProducts from "@/assets/download (8).png";
+import freestyleProducts from "@/assets/WhatsApp Image 2026-07-14 at 20.38.19.jpeg";
 import oneTouchProducts from "@/assets/download (14).png";
 import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
 import omnipodProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.44.29.jpeg";
