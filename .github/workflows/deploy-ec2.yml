@@ -177,7 +177,20 @@ jobs:
           if [ -n "$EC2_KNOWN_HOSTS" ]; then
             printf '%s\n' "$EC2_KNOWN_HOSTS" > ~/.ssh/known_hosts
           else
-            ssh-keyscan -p "$EC2_PORT" -H "$EC2_HOST" > ~/.ssh/known_hosts
+            echo "EC2_KNOWN_HOSTS is empty. Fetching SSH host key from $EC2_HOST:$EC2_PORT."
+
+            if ! ssh-keyscan -T 30 -p "$EC2_PORT" -H "$EC2_HOST" > ~/.ssh/known_hosts; then
+              echo "::error::Could not fetch the SSH host key from $EC2_HOST:$EC2_PORT."
+              echo "Check that EC2_HOST is the public IP or DNS name, EC2_PORT is the SSH port, the instance is running, and the security group allows inbound SSH from GitHub-hosted runners."
+              echo "You can also set EC2_KNOWN_HOSTS manually with:"
+              echo "ssh-keyscan -p \"$EC2_PORT\" -H \"$EC2_HOST\""
+              exit 1
+            fi
+
+            if [ ! -s ~/.ssh/known_hosts ]; then
+              echo "::error::ssh-keyscan succeeded but returned no host keys for $EC2_HOST:$EC2_PORT."
+              exit 1
+            fi
           fi
 
           chmod 600 ~/.ssh/ec2_deploy_key
