@@ -110,8 +110,15 @@ jobs:
       - name: Run database migrations
         run: alembic upgrade head
 
-      - name: Run backend tests
-        run: python -m pytest -q
+      - name: Run backend tests if present
+        run: |
+          set -euo pipefail
+
+          if find . -type f \( -name 'test_*.py' -o -name '*_test.py' \) | grep -q .; then
+            python -m pytest -q
+          else
+            echo "No backend tests found; skipping pytest."
+          fi
 
   deploy:
     name: Deploy to production EC2
