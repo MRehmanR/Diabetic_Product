@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { categoriesFromProducts, loadProducts, type Product } from "@/lib/data";
+import { BUSINESS, categoriesFromProducts, loadProducts, type Product } from "@/lib/data";
 
 type ProductSearch = {
   category?: string;
@@ -27,8 +27,8 @@ export const Route = createFileRoute("/products/")({
   }),
   head: () => ({
     meta: [
-      { title: "Products We Buy - Diabaticking" },
-      { name: "description", content: "Browse active diabetes care products loaded from the backend catalog and submit an offer." },
+      { title: `Products We Buy - ${BUSINESS.name}` },
+      { name: "description", content: "Browse unused diabetic products Diabetics King is currently buying and submit an offer." },
       { property: "og:title", content: "Products We Buy" },
       { property: "og:url", content: "/products" },
     ],
@@ -74,7 +74,7 @@ function ProductsPage() {
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
           <h1 className="text-3xl font-extrabold">Products We Buy</h1>
           <p className="mt-1 text-muted-foreground">
-            {error ? "Backend products could not be loaded" : `${filtered.length} products loaded from the backend`}
+            {error ? "Products could not be loaded" : `${filtered.length} products available for review`}
           </p>
         </div>
       </section>
@@ -104,7 +104,7 @@ function ProductsPage() {
         <div>
           {error && (
             <div className="mb-5 rounded-2xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-              Backend connection issue: {error}
+              Product list issue: {error}
             </div>
           )}
           <div className="mb-5 flex items-center justify-between gap-3">
@@ -124,7 +124,7 @@ function ProductsPage() {
 
           {filtered.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-border p-12 text-center text-muted-foreground">
-              No backend products match your filters.
+              No products match your filters.
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">

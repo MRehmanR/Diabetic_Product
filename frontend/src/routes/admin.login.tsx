@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/admin/login")({
   head: () => ({
-    meta: [{ title: "Admin Login - Diabaticking" }],
+    meta: [{ title: "Admin Login - Diabetics King" }],
   }),
   component: AdminLoginPage,
 });

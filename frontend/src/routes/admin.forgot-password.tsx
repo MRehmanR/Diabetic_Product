@@ -11,7 +11,7 @@ import { adminApi } from "@/lib/admin-api";
 
 export const Route = createFileRoute("/admin/forgot-password")({
   head: () => ({
-    meta: [{ title: "Forgot Password - Diabaticking" }],
+    meta: [{ title: "Forgot Password - Diabetics King" }],
   }),
   component: ForgotPasswordPage,
 });

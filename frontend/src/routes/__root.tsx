@@ -11,6 +11,7 @@ import type { ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
+import { BUSINESS } from "@/lib/data";
 
 function NotFoundComponent() {
   return (
@@ -74,13 +75,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Diabaticking" },
-      { name: "description", content: "Browse backend-managed diabetes care products, submit your offer details, and continue on WhatsApp." },
-      { name: "author", content: "Diabaticking" },
-      { property: "og:title", content: "Diabaticking" },
-      { property: "og:description", content: "Backend-managed diabetes care product buyback catalog and offer flow." },
+      { title: BUSINESS.name },
+      { name: "description", content: "Sell unused diabetic products to Diabetics King. Share your details and continue on WhatsApp for a friendly follow-up." },
+      { name: "author", content: BUSINESS.name },
+      { property: "og:title", content: BUSINESS.name },
+      { property: "og:description", content: "Friendly diabetic product buyback offers with quick WhatsApp follow-up." },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "Diabaticking" },
+      { property: "og:site_name", content: BUSINESS.name },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [

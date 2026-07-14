@@ -9,19 +9,19 @@ const slides = [
     src: heroImg,
     alt: "Boxed glucose monitors and continuous glucose monitoring (CGM) sensors on a clean medical surface",
     title: "Glucose Monitors & CGM Sensors",
-    caption: "We buy Dexcom, Freestyle Libre and more — top prices paid.",
+    caption: "We buy Dexcom, Freestyle Libre and more with fair, friendly offers.",
   },
   {
     src: hero2,
     alt: "Blood glucose monitor with test strips and an insulin pen arranged neatly",
     title: "Test Strips & Insulin Supplies",
-    caption: "Sealed, in-date boxes wanted — quick WhatsApp quotes.",
+    caption: "Sealed, in-date boxes wanted with quick WhatsApp follow-up.",
   },
   {
     src: hero3,
     alt: "Healthcare worker holding a boxed glucose monitor kit",
     title: "Trusted, Fast & Fair",
-    caption: "Share your product details and get paid the best price.",
+    caption: "Share your product details and get a clear offer from our team.",
   },
 ];
 

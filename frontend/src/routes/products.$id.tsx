@@ -35,7 +35,7 @@ export const Route = createFileRoute("/products/$id")({
     const p = loaderData?.product;
     return {
       meta: [
-        { title: p ? `${p.name} - Diabaticking` : "Product - Diabaticking" },
+        { title: p ? `${p.name} - Diabetics King` : "Product - Diabetics King" },
         { name: "description", content: p?.description ?? "" },
         { property: "og:title", content: p?.name ?? "Product" },
         { property: "og:description", content: p?.description ?? "" },
@@ -74,7 +74,7 @@ function ProductDetails() {
         <div className="mx-auto max-w-2xl px-4 py-24 text-center">
           <h1 className="text-2xl font-bold">Product could not load</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            {error ? `Backend connection issue: ${error}` : "The product is unavailable."}
+            {error ? `Product list issue: ${error}` : "The product is unavailable."}
           </p>
           <Button asChild className="mt-6"><Link to="/products">Back to products</Link></Button>
         </div>
@@ -135,9 +135,9 @@ function ProductDetails() {
             </div>
 
             <div className="rounded-2xl border border-border/60 bg-card p-4">
-              <div className="flex items-center gap-2 text-sm font-bold"><ShieldCheck className="h-4 w-4 text-secondary" /> Backend connected</div>
+              <div className="flex items-center gap-2 text-sm font-bold"><ShieldCheck className="h-4 w-4 text-secondary" /> Review team ready</div>
               <p className="mt-2 text-sm text-muted-foreground">
-                This product is loaded from the backend catalog. Offer submissions are saved to the backend before WhatsApp opens.
+                This product is part of our current buying list. Offer details are saved for review before WhatsApp opens.
               </p>
             </div>
           </div>

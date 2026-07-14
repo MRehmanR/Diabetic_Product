@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { MessageCircle, Mail, Phone, MapPin, Facebook } from "lucide-react";
+import { MessageCircle, Phone, MapPin, Facebook } from "lucide-react";
 import { BUSINESS } from "@/lib/data";
 import logoUrl from "@/assets/logo.png";
 
@@ -9,11 +9,11 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-4">
         <div className="space-y-3">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logoUrl} alt="Diabaticking logo" className="h-10 w-10 rounded-xl object-contain" />
+            <img src={logoUrl} alt={`${BUSINESS.name} logo`} className="h-10 w-10 rounded-xl object-contain" />
             <span className="font-display text-lg font-extrabold">{BUSINESS.name}</span>
           </Link>
           <p className="text-sm text-muted-foreground">
-            {BUSINESS.tagline}. Submit product details through the backend form, then continue on WhatsApp.
+            {BUSINESS.tagline}. Share your product details through our quick offer form, then continue on WhatsApp.
           </p>
           <a
             href={BUSINESS.facebook}
@@ -48,7 +48,6 @@ export function Footer() {
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /> {BUSINESS.phone}</li>
             <li className="flex items-center gap-2"><MessageCircle className="h-4 w-4 text-secondary" /> WhatsApp: {BUSINESS.phone}</li>
-            <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-primary" /> {BUSINESS.email}</li>
             <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" /> {BUSINESS.city}</li>
           </ul>
         </div>

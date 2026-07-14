@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BUSINESS } from "@/lib/data";
 import logoUrl from "@/assets/logo.png";
 
 const nav = [
@@ -18,9 +19,9 @@ export function Header() {
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link to="/" className="flex shrink-0 items-center gap-2">
-          <img src={logoUrl} alt="Diabaticking logo" className="h-11 w-11 rounded-xl object-contain" />
+          <img src={logoUrl} alt={`${BUSINESS.name} logo`} className="h-11 w-11 rounded-xl object-contain" />
           <span className="flex flex-col leading-none">
-            <span className="font-display text-lg font-extrabold tracking-tight">Diabaticking</span>
+            <span className="font-display text-lg font-extrabold tracking-tight">{BUSINESS.name}</span>
             <span className="text-[10px] font-semibold uppercase tracking-widest text-secondary">Diabetes Care Buyers</span>
           </span>
         </Link>

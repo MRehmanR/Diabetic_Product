@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Phone, Mail, MessageCircle, Clock, MapPin } from "lucide-react";
+import { Phone, MessageCircle, Clock, MapPin } from "lucide-react";
 import { z } from "zod";
 import { Layout } from "@/components/Layout";
 import { MedicalBackground } from "@/components/MedicalBackground";
@@ -14,9 +14,9 @@ import { BUSINESS } from "@/lib/data";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact Us - Diabaticking" },
-      { name: "description", content: "Contact Diabaticking by phone, email or WhatsApp." },
-      { property: "og:title", content: "Contact Diabaticking" },
+      { title: `Contact Us - ${BUSINESS.name}` },
+      { name: "description", content: "Contact Diabetics King by phone or WhatsApp." },
+      { property: "og:title", content: "Contact Diabetics King" },
       { property: "og:url", content: "/contact" },
     ],
     links: [{ rel: "canonical", href: "/contact" }],
@@ -68,7 +68,6 @@ ${result.data.message}`;
         <div className="space-y-4">
           {[
             { icon: Phone, label: "Phone", value: BUSINESS.phone },
-            { icon: Mail, label: "Email", value: BUSINESS.email },
             { icon: MessageCircle, label: "WhatsApp", value: BUSINESS.phone },
             { icon: Clock, label: "Business Hours", value: "Contact us on WhatsApp" },
             { icon: MapPin, label: "Location", value: BUSINESS.city },
@@ -83,7 +82,7 @@ ${result.data.message}`;
           ))}
           <div className="overflow-hidden rounded-2xl border border-border/60 shadow-soft">
             <iframe
-              title="Diabaticking location"
+              title={`${BUSINESS.name} location`}
               src={`https://www.google.com/maps?q=${encodeURIComponent(BUSINESS.city)}&output=embed`}
               className="h-56 w-full"
               loading="lazy"

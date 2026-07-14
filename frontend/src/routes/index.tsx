@@ -21,10 +21,10 @@ export const Route = createFileRoute("/")({
   loader: () => loadProducts(),
   head: () => ({
     meta: [
-      { title: "Diabaticking" },
-      { name: "description", content: "Sell diabetes care products through Diabaticking. Browse active products, submit details, and continue on WhatsApp." },
-      { property: "og:title", content: "Diabaticking" },
-      { property: "og:description", content: "We buy diabetes care products at the best price." },
+      { title: BUSINESS.name },
+      { name: "description", content: "Sell unused diabetic products to Diabetics King. Share product details and continue on WhatsApp for a friendly follow-up." },
+      { property: "og:title", content: "Diabetics King" },
+      { property: "og:description", content: "We buy unused diabetic products on top dollars." },
       { property: "og:url", content: "/" },
     ],
     links: [{ rel: "canonical", href: "/" }],
@@ -34,9 +34,9 @@ export const Route = createFileRoute("/")({
 
 const whyChoose = [
   { icon: ShieldCheck, title: "Verified Process", text: "Your offer is saved directly to our review system." },
-  { icon: Tag, title: "Clear Payouts", text: "Product payout ranges come from the current backend catalog." },
+  { icon: Tag, title: "Clear Payouts", text: "Product payout ranges stay current for the items we are reviewing." },
   { icon: Award, title: "Focused Buying", text: "Browse only the product types we are actively reviewing." },
-  { icon: Lock, title: "Secure Submission", text: "Your request is submitted to the backend before WhatsApp opens." },
+  { icon: Lock, title: "Secure Submission", text: "Your details are saved for our review team before WhatsApp opens." },
   { icon: MessageCircle, title: "WhatsApp Follow-Up", text: "Continue the conversation immediately after submitting." },
   { icon: Zap, title: "Fast Response", text: "Our team receives your product details with every offer." },
 ];
@@ -57,10 +57,10 @@ function Home() {
               <ShieldCheck className="h-4 w-4" /> {BUSINESS.tagline}
             </span>
             <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl">
-              We Buy Your <span className="text-gradient">Diabetes Care</span> Products
+              We Buy your Diabetic Unused Products on Top Dollars
             </h1>
             <p className="max-w-lg text-lg text-muted-foreground">
-              Browse the products we are currently looking for. Submit your condition, expiry and quantity, then continue directly on WhatsApp.
+              Tell us what sealed diabetic products you have, share the condition and expiry, and we will follow up on WhatsApp with a fair offer.
             </p>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg">
@@ -78,8 +78,8 @@ function Home() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-        {error && <BackendError message={error} />}
-        <SectionHeading title="Browse by Category" subtitle="Categories are loaded from the active backend catalog." />
+        {error && <ProductListError message={error} />}
+        <SectionHeading title="Browse by Category" subtitle="Explore the diabetic products we are currently reviewing." />
         {categories.length === 0 ? (
           <EmptyState text="No active product categories are available yet." />
         ) : (
@@ -107,7 +107,7 @@ function Home() {
       <section className="bg-muted/40 py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="mb-8 flex items-end justify-between gap-4">
-            <SectionHeading title="Products We Buy" subtitle="Loaded from the backend product catalog." align="left" />
+            <SectionHeading title="Products We Buy" subtitle="A current buying list for unused diabetic products." align="left" />
             <Button asChild variant="ghost" className="shrink-0">
               <Link to="/products">View all <ArrowRight className="h-4 w-4" /></Link>
             </Button>
@@ -123,7 +123,7 @@ function Home() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-        <SectionHeading title="Why Choose Diabaticking" subtitle="A simple flow connected to your backend." />
+        <SectionHeading title="Why Choose Diabetics King" subtitle="A simple, friendly way to send your product details." />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {whyChoose.map((w) => (
             <div key={w.title} className="flex gap-4 rounded-2xl border border-border/60 bg-card p-5 shadow-soft">
@@ -143,7 +143,7 @@ function Home() {
         <div className="relative overflow-hidden rounded-3xl gradient-hero px-6 py-12 text-center text-primary-foreground shadow-card sm:px-12">
           <h2 className="text-3xl font-extrabold">Have Diabetes Products to Sell?</h2>
           <p className="mx-auto mt-3 max-w-xl text-primary-foreground/90">
-            Pick a product from the backend catalog, submit your details, and continue on WhatsApp.
+            Pick a product from our current buying list, submit your details, and continue on WhatsApp.
           </p>
           <Button asChild size="lg" variant="secondary" className="mt-6">
             <Link to="/products">Browse Products <ArrowRight className="h-4 w-4" /></Link>
@@ -171,10 +171,10 @@ function EmptyState({ text }: { text: string }) {
   );
 }
 
-function BackendError({ message }: { message: string }) {
+function ProductListError({ message }: { message: string }) {
   return (
     <div className="mb-8 rounded-2xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-      Backend connection issue: {message}
+      Product list issue: {message}
     </div>
   );
 }

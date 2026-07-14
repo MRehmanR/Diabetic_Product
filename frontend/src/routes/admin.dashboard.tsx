@@ -47,7 +47,7 @@ import {
 
 export const Route = createFileRoute("/admin/dashboard")({
   head: () => ({
-    meta: [{ title: "Admin Dashboard - Diabaticking" }],
+    meta: [{ title: "Admin Dashboard - Diabetics King" }],
   }),
   component: AdminDashboardPage,
 });

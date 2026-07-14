@@ -71,14 +71,18 @@ export interface ProductLoadResult {
   error: string | null;
 }
 
+const DEFAULT_BUSINESS_PHONE = "+16786580698";
+const businessPhone = import.meta.env.VITE_BUSINESS_PHONE?.trim() || DEFAULT_BUSINESS_PHONE;
+const businessWhatsapp = businessPhone.replace(/\D/g, "") || DEFAULT_BUSINESS_PHONE.replace(/\D/g, "");
+
 export const BUSINESS = {
-  name: "Diabaticking",
-  tagline: "We buy your diabetes care products at the best price",
-  whatsapp: "923253621336",
-  phone: "+92 325 3621336",
+  name: "Diabetics King",
+  tagline: "We Buy your Diabetic Unused Products on Top Dollars",
+  whatsapp: businessWhatsapp,
+  phone: businessPhone,
   email: "info@diabaticking.com",
-  facebook: "https://web.facebook.com/profile.php?id=61590383957242",
-  city: "Pakistan",
+  facebook: "https://www.facebook.com/profile.php?id=61590383957242",
+  city: "United States",
 };
 
 export const categoryIcons: Record<string, string> = {
