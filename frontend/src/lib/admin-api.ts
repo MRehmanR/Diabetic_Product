@@ -1,4 +1,17 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
+const PUBLIC_API_URL = import.meta.env.VITE_API_URL?.trim() || "http://127.0.0.1:8000/api";
+const INTERNAL_API_URL = import.meta.env.VITE_INTERNAL_API_URL?.trim();
+
+const trimTrailingSlash = (value: string) => value.replace(/\/+$/, "");
+
+const resolveApiUrl = () => {
+  if (typeof window === "undefined" && PUBLIC_API_URL.startsWith("/")) {
+    return trimTrailingSlash(INTERNAL_API_URL || `http://127.0.0.1:8000${PUBLIC_API_URL}`);
+  }
+
+  return trimTrailingSlash(PUBLIC_API_URL);
+};
+
+const API_URL = resolveApiUrl();
 
 type QueryResult<T = unknown> = { data: T | null; error: { message: string } | null };
 type Filter = { column: string; value: unknown };

@@ -17,7 +17,6 @@ import {
   loadProduct,
   loadProducts,
   categoryName,
-  formatPayout,
 } from "@/lib/data";
 
 export const Route = createFileRoute("/products/$id")({
@@ -115,12 +114,12 @@ function ProductDetails() {
           <div className="space-y-5">
             <div className="flex flex-wrap items-center gap-2">
               <Badge className="bg-accent text-accent-foreground">{categoryName(product.category)}</Badge>
+              <Badge variant="secondary">Brand: {product.brand}</Badge>
               <Badge variant={product.isActive ? "default" : "secondary"}>
                 {product.isActive ? "Currently buying" : product.status}
               </Badge>
             </div>
             <h1 className="text-3xl font-extrabold leading-tight">{product.name}</h1>
-            <p className="text-2xl font-extrabold text-secondary">{formatPayout(product)}</p>
             <p className="text-muted-foreground">{product.fullDescription || product.description}</p>
 
             <div className="flex flex-wrap gap-3">

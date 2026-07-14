@@ -27,7 +27,6 @@ import {
   buildWhatsappLink,
   BUSINESS,
   categoryName,
-  formatPayout,
   submitOffer,
 } from "@/lib/data";
 
@@ -175,8 +174,10 @@ export function OrderDialog({
                   {categoryName(product.category)}
                 </p>
                 <h3 className="text-lg font-bold">{product.name}</h3>
+                <p className="w-fit rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
+                  Brand: {product.brand}
+                </p>
                 <p className="text-sm text-muted-foreground">{product.description}</p>
-                <p className="text-sm font-semibold text-secondary">{formatPayout(product)}</p>
               </div>
             </div>
           )}

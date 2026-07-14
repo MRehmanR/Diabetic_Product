@@ -98,7 +98,20 @@ export const categoryIcons: Record<string, string> = {
   "medical-equipment": "Stethoscope",
 };
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+const PUBLIC_API_URL = import.meta.env.VITE_API_URL?.trim() || "http://localhost:8000/api";
+const INTERNAL_API_URL = import.meta.env.VITE_INTERNAL_API_URL?.trim();
+
+const trimTrailingSlash = (value: string) => value.replace(/\/+$/, "");
+
+const resolveApiUrl = () => {
+  if (typeof window === "undefined" && PUBLIC_API_URL.startsWith("/")) {
+    return trimTrailingSlash(INTERNAL_API_URL || `http://127.0.0.1:8000${PUBLIC_API_URL}`);
+  }
+
+  return trimTrailingSlash(PUBLIC_API_URL);
+};
+
+const API_URL = resolveApiUrl();
 
 const toTitle = (value: string) =>
   value
@@ -107,7 +120,26 @@ const toTitle = (value: string) =>
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
 
-const inferBrand = (name: string) => name.split(/\s+/).slice(0, 2).join(" ");
+const knownBrands = [
+  "FreeStyle Libre",
+  "FreeStyle",
+  "Dexcom",
+  "Omnipod",
+  "One Touch",
+  "OneTouch",
+  "Accu-Chek",
+  "Contour",
+  "Bayer",
+  "Medtronic",
+  "Tandem",
+  "Abbott",
+];
+
+const inferBrand = (name: string) => {
+  const normalized = name.toLowerCase();
+  const matched = knownBrands.find((brand) => normalized.includes(brand.toLowerCase()));
+  return matched || name.split(/\s+/).slice(0, 2).join(" ");
+};
 
 const getErrorMessage = async (response: Response, fallback: string) => {
   const payload = await response.json().catch(() => null);
@@ -211,15 +243,6 @@ export function categoriesFromProducts(items: Product[]) {
 }
 
 export const categoryName = (slug: string) => toTitle(slug);
-
-export const formatPayout = (product: Product) => {
-  const min = product.payoutMin;
-  const max = product.payoutMax;
-  if (min !== null && max !== null) return `Rs ${min.toLocaleString("en-PK")} - Rs ${max.toLocaleString("en-PK")}`;
-  if (max !== null) return `Up to Rs ${max.toLocaleString("en-PK")}`;
-  if (min !== null) return `From Rs ${min.toLocaleString("en-PK")}`;
-  return "Quote after review";
-};
 
 export function buildWhatsappLink(
   p: Product,

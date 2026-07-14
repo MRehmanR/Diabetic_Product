@@ -2,13 +2,18 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import * as Icons from "lucide-react";
 import {
   ShieldCheck,
-  Tag,
   Award,
   Lock,
   MessageCircle,
   Zap,
   ArrowRight,
   Store,
+  PackageCheck,
+  HeartHandshake,
+  Quote,
+  Recycle,
+  Clock,
+  Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
@@ -34,11 +39,57 @@ export const Route = createFileRoute("/")({
 
 const whyChoose = [
   { icon: ShieldCheck, title: "Verified Process", text: "Your offer is saved directly to our review system." },
-  { icon: Tag, title: "Clear Payouts", text: "Product payout ranges stay current for the items we are reviewing." },
+  { icon: PackageCheck, title: "Clear Product Review", text: "We check the brand, condition, quantity, and expiry details before following up." },
   { icon: Award, title: "Focused Buying", text: "Browse only the product types we are actively reviewing." },
   { icon: Lock, title: "Secure Submission", text: "Your details are saved for our review team before WhatsApp opens." },
   { icon: MessageCircle, title: "WhatsApp Follow-Up", text: "Continue the conversation immediately after submitting." },
   { icon: Zap, title: "Fast Response", text: "Our team receives your product details with every offer." },
+];
+
+const brandNames = [
+  "FREESTYLE",
+  "DEXCOM",
+  "OMNIPOD",
+  "BAYER",
+  "ONE TOUCH",
+  "MEDTRONIC",
+  "ACCU-CHEK",
+];
+
+const sellerReviews = [
+  {
+    quote: "I had extra test strips after switching meters. Diabetics King made it easy to turn them into cash.",
+    name: "Sarah M.",
+    label: "Local Seller",
+  },
+  {
+    quote: "Quick response, friendly communication, and a very simple process from start to finish.",
+    name: "James K.",
+    label: "Repeat Customer",
+  },
+  {
+    quote: "Instead of letting supplies go to waste, I got help right away. The whole experience felt stress-free.",
+    name: "Linda R.",
+    label: "Happy Seller",
+  },
+];
+
+const whySellHere = [
+  {
+    icon: Recycle,
+    title: "Unused supplies can help someone else",
+    text: "If you receive more sealed diabetic products than you can use, selling them keeps good supplies from sitting unused.",
+  },
+  {
+    icon: HeartHandshake,
+    title: "A human team reviews every offer",
+    text: "Share the product brand, quantity, condition, and expiry. We follow up with care instead of making the process feel cold.",
+  },
+  {
+    icon: Clock,
+    title: "Simple flow, quick follow-up",
+    text: "Pick the product, submit the details once, and continue the conversation directly on WhatsApp.",
+  },
 ];
 
 function Home() {
@@ -79,11 +130,11 @@ function Home() {
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
         {error && <ProductListError message={error} />}
-        <SectionHeading title="Browse by Category" subtitle="Explore the diabetic products we are currently reviewing." />
+        <SectionHeading title="Browse by Category" subtitle="Choose the type of unused diabetic product you want to sell." />
         {categories.length === 0 ? (
           <EmptyState text="No active product categories are available yet." />
         ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {categories.map((c) => {
               const Icon = (Icons[c.icon as keyof typeof Icons] ?? Icons.Package) as React.ComponentType<{ className?: string }>;
               return (
@@ -91,12 +142,17 @@ function Home() {
                   key={c.slug}
                   to="/products"
                   search={{ category: c.slug }}
-                  className="group flex flex-col items-center gap-3 rounded-2xl border border-border/60 bg-card p-5 text-center shadow-soft transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-card"
+                  className="group rounded-3xl border border-border/60 bg-card p-6 shadow-soft transition-all hover:-translate-y-1.5 hover:border-secondary/50 hover:shadow-card"
                 >
-                  <span className="grid h-12 w-12 place-items-center rounded-xl bg-accent text-secondary transition-colors group-hover:gradient-hero group-hover:text-primary-foreground">
-                    <Icon className="h-6 w-6" />
-                  </span>
-                  <span className="text-sm font-semibold leading-tight">{c.name}</span>
+                  <div className="flex items-center gap-4">
+                    <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-accent text-secondary transition-colors group-hover:gradient-hero group-hover:text-primary-foreground">
+                      <Icon className="h-7 w-7" />
+                    </span>
+                    <div className="text-left">
+                      <h3 className="font-bold leading-tight">{c.name}</h3>
+                      <p className="mt-1 text-sm text-muted-foreground">View products in this category</p>
+                    </div>
+                  </div>
                 </Link>
               );
             })}
@@ -105,6 +161,22 @@ function Home() {
       </section>
 
       <section className="bg-muted/40 py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <SectionHeading title="Brands We Buy" subtitle="We review sealed, unused diabetic supplies from trusted major brands." />
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-7">
+            {brandNames.map((brand) => (
+              <div
+                key={brand}
+                className="rounded-2xl border border-border/60 bg-card px-4 py-5 text-center text-sm font-extrabold tracking-wide text-secondary shadow-soft"
+              >
+                {brand}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="mb-8 flex items-end justify-between gap-4">
             <SectionHeading title="Products We Buy" subtitle="A current buying list for unused diabetic products." align="left" />
@@ -119,6 +191,59 @@ function Home() {
               {featured.map((p) => <ProductCard key={p.id} product={p} />)}
             </div>
           )}
+        </div>
+      </section>
+
+      <section className="bg-muted/40 py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <SectionHeading title="What Our Sellers Say" subtitle="Real experiences from people who sold their unused diabetic supplies." />
+          <div className="grid gap-5 md:grid-cols-3">
+            {sellerReviews.map((review) => (
+              <article key={review.name} className="rounded-3xl border border-border/60 bg-card p-6 shadow-soft">
+                <div className="mb-4 flex items-center gap-1 text-secondary">
+                  {[0, 1, 2, 3, 4].map((star) => (
+                    <Star key={star} className="h-4 w-4 fill-current" />
+                  ))}
+                </div>
+                <Quote className="h-8 w-8 text-primary/30" />
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">“{review.quote}”</p>
+                <div className="mt-5">
+                  <p className="font-bold">{review.name}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-primary">{review.label}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground shadow-soft">
+              <HeartHandshake className="h-4 w-4" /> Why sell here?
+            </span>
+            <h2 className="mt-4 text-3xl font-extrabold">Turn extra diabetic supplies into a helpful second chance.</h2>
+            <p className="mt-3 text-muted-foreground">
+              Many people receive more supplies than they can use, switch devices, or have sealed boxes sitting at home. Diabetics King gives you a simple way to send those details to a real team and keep usable products from going to waste.
+            </p>
+            <Button asChild size="lg" className="mt-6">
+              <Link to="/products">Start with your product <ArrowRight className="h-4 w-4" /></Link>
+            </Button>
+          </div>
+          <div className="grid gap-4">
+            {whySellHere.map((item) => (
+              <div key={item.title} className="flex gap-4 rounded-3xl border border-border/60 bg-card p-5 shadow-soft">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl gradient-hero text-primary-foreground">
+                  <item.icon className="h-6 w-6" />
+                </span>
+                <div>
+                  <h3 className="font-bold">{item.title}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{item.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

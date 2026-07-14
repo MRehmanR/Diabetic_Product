@@ -39,7 +39,7 @@ function About() {
           {[
             { icon: Target, title: "Our Mission", text: "Make it simple for people to send unused diabetic products for review and pricing." },
             { icon: Eye, title: "Our Process", text: "You share the product details once, then our team reviews the offer and continues on WhatsApp." },
-            { icon: ClipboardCheck, title: "Our Buying List", text: "Products, categories, payout ranges and requirements stay current for the items we are reviewing." },
+            { icon: ClipboardCheck, title: "Our Buying List", text: "Products, categories, brand details and requirements stay current for the items we are reviewing." },
           ].map((c) => (
             <div key={c.title} className="group rounded-2xl border border-border/60 bg-card p-6 shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-card">
               <span className="grid h-12 w-12 place-items-center rounded-xl gradient-hero text-primary-foreground transition-transform duration-300 group-hover:scale-110"><c.icon className="h-6 w-6" /></span>

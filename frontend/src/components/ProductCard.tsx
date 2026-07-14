@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { MessageCircle, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { OrderDialog } from "@/components/OrderDialog";
-import { type Product, categoryName, formatPayout } from "@/lib/data";
+import { type Product, categoryName } from "@/lib/data";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
@@ -27,9 +27,11 @@ export function ProductCard({ product }: { product: Product }) {
         <Link to="/products/$id" params={{ id: product.id }} className="line-clamp-2 font-semibold leading-snug hover:text-primary">
           {product.name}
         </Link>
+        <span className="w-fit rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
+          Brand: {product.brand}
+        </span>
         <p className="line-clamp-2 text-sm text-muted-foreground">{product.description}</p>
 
-        <div className="text-sm font-semibold text-secondary">{formatPayout(product)}</div>
         <div className="text-xs font-medium text-muted-foreground">
           {product.isActive ? "Currently buying" : "Not currently active"}
         </div>
