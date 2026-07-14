@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ShieldCheck } from "lucide-react";
 import freestyleProducts from "@/assets/download (8).png";
-import dexcomG7 from "@/assets/g7-15-day-sensor.webp";
-import omnipodPods from "@/assets/hero-4.jpeg";
+import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
+import omnipodProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.44.29.jpeg";
 import oneTouchProducts from "@/assets/download (14).png";
 
 const slides = [
@@ -13,14 +13,14 @@ const slides = [
     caption: "We review sealed FreeStyle boxes and sensors with fair, friendly follow-up.",
   },
   {
-    src: dexcomG7,
-    alt: "Dexcom G7 continuous glucose monitoring sensor box",
+    src: dexcomProducts,
+    alt: "Dexcom G7 continuous glucose monitoring sensor boxes",
     title: "Dexcom G7 Sensors",
     caption: "Have unopened Dexcom supplies? Send the details and we will take a look.",
   },
   {
-    src: omnipodPods,
-    alt: "Omnipod 5 pod supply box",
+    src: omnipodProducts,
+    alt: "Omnipod 5 pod supply boxes",
     title: "Omnipod Pod Supplies",
     caption: "We review sealed Omnipod boxes and continue the offer conversation on WhatsApp.",
   },
