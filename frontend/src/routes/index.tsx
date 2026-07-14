@@ -19,17 +19,12 @@ import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { MedicalBackground } from "@/components/MedicalBackground";
-import { BUSINESS, categoriesFromProducts, loadProducts } from "@/lib/data";
+import { BUSINESS, loadProducts } from "@/lib/data";
 import freestyleProducts from "@/assets/download (8).png";
 import oneTouchProducts from "@/assets/download (14).png";
 import dexcomG7 from "@/assets/g7-15-day-sensor.webp";
-import heroImageTwo from "@/assets/hero-2.jpg";
 import omnipodPods from "@/assets/hero-4.jpeg";
-import freestyleImage from "@/assets/brands/freestyle.svg";
-import dexcomImage from "@/assets/brands/dexcom.svg";
-import omnipodImage from "@/assets/brands/omnipod.svg";
 import bayerImage from "@/assets/brands/bayer.svg";
-import oneTouchImage from "@/assets/brands/one-touch.svg";
 import medtronicImage from "@/assets/brands/medtronic.svg";
 import accuChekImage from "@/assets/brands/accu-chek.svg";
 
@@ -58,11 +53,11 @@ const whyChoose = [
 ];
 
 const brandImages = [
-  { name: "FREESTYLE", image: freestyleImage },
-  { name: "DEXCOM", image: dexcomImage },
-  { name: "OMNIPOD", image: omnipodImage },
+  { name: "FREESTYLE", image: freestyleProducts },
+  { name: "DEXCOM", image: dexcomG7 },
+  { name: "OMNIPOD", image: omnipodPods },
   { name: "BAYER", image: bayerImage },
-  { name: "ONE TOUCH", image: oneTouchImage },
+  { name: "ONE TOUCH", image: oneTouchProducts },
   { name: "MEDTRONIC", image: medtronicImage },
   { name: "ACCU-CHEK", image: accuChekImage },
 ];
@@ -103,29 +98,10 @@ const whySellHere = [
   },
 ];
 
-const categoryImageFallbacks: Record<string, string> = {
-  "glucose-meters": dexcomG7,
-  "test-strips": oneTouchProducts,
-  lancets: heroImageTwo,
-  "insulin-supplies": heroImageTwo,
-  "sugar-free-foods": freestyleProducts,
-  "medicine-accessories": freestyleProducts,
-  "foot-care": heroImageTwo,
-  "bp-monitors": heroImageTwo,
-  supplements: freestyleProducts,
-  "medical-equipment": omnipodPods,
-};
-
 function Home() {
   const { products, error } = Route.useLoaderData();
   const activeProducts = products.filter((product) => product.isActive);
   const featured = activeProducts.slice(0, 8);
-  const categories = categoriesFromProducts(activeProducts);
-
-  const imageForCategory = (slug: string) =>
-    activeProducts.find((product) => product.category === slug && product.image)?.image ||
-    categoryImageFallbacks[slug] ||
-    freestyleProducts;
 
   return (
     <Layout>
@@ -159,61 +135,33 @@ function Home() {
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
         {error && <ProductListError message={error} />}
-        <SectionHeading title="Browse by Category" subtitle="Start with the supply type you have, then send the details in a few simple steps." />
-        {categories.length === 0 ? (
-          <EmptyState text="No active product categories are available yet." />
-        ) : (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {categories.map((c) => {
-              const categoryImage = imageForCategory(c.slug);
-              return (
-                <Link
-                  key={c.slug}
-                  to="/products"
-                  search={{ category: c.slug }}
-                  className="group overflow-hidden rounded-3xl border border-border/60 bg-card shadow-soft transition-all hover:-translate-y-1.5 hover:border-secondary/50 hover:shadow-card"
-                >
-                  <div className="relative h-44 overflow-hidden">
-                    <img
-                      src={categoryImage}
-                      alt={`${c.name} diabetic supplies`}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/75 via-foreground/20 to-transparent" />
-                    <span className="absolute left-4 top-4 rounded-full bg-background/90 px-3 py-1 text-xs font-extrabold text-secondary shadow-soft backdrop-blur">
-                      Category
-                    </span>
-                  </div>
-                  <div className="p-5">
-                    <h3 className="text-xl font-extrabold leading-tight">{c.name}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">See the products we review in this category.</p>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
-      </section>
-
-      <section className="bg-muted/40 py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <SectionHeading title="Brands We Buy" subtitle="We review sealed, unused diabetic supplies from trusted major brands." />
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
-            {brandImages.map((brand) => (
-              <div key={brand.name} className="group overflow-hidden rounded-3xl border border-border/60 bg-card shadow-soft transition-all hover:-translate-y-1 hover:border-secondary/50 hover:shadow-card">
+        <SectionHeading title="Browse by Brand" subtitle="Choose the brand you have, then send the product details in a few simple steps." />
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
+          {brandImages.map((brand) => (
+            <Link
+              key={brand.name}
+              to="/products"
+              search={{ brand: brand.name }}
+              className="group overflow-hidden rounded-3xl border border-border/60 bg-card shadow-soft transition-all hover:-translate-y-1.5 hover:border-secondary/50 hover:shadow-card"
+            >
+              <div className="relative overflow-hidden">
                 <img
                   src={brand.image}
                   alt={`${brand.name} diabetic supply brand`}
                   loading="lazy"
                   className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="border-t border-border/60 px-3 py-3 text-center text-xs font-extrabold tracking-wide text-secondary">
-                  {brand.name}
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/55 via-transparent to-transparent opacity-70" />
+                <span className="absolute left-3 top-3 rounded-full bg-background/90 px-3 py-1 text-xs font-extrabold text-secondary shadow-soft backdrop-blur">
+                  Brand
+                </span>
               </div>
-            ))}
-          </div>
+              <div className="border-t border-border/60 px-4 py-4 text-center">
+                <h3 className="text-sm font-extrabold tracking-wide text-secondary">{brand.name}</h3>
+                <p className="mt-1 text-xs text-muted-foreground">View products from this brand</p>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 

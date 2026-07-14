@@ -242,6 +242,12 @@ export function categoriesFromProducts(items: Product[]) {
     .map((slug) => ({ slug, name: categoryName(slug), icon: categoryIcons[slug] || "Package" }));
 }
 
+export function brandsFromProducts(items: Product[]) {
+  return Array.from(new Set(items.map((product) => product.brand)))
+    .filter(Boolean)
+    .sort((a, b) => a.localeCompare(b));
+}
+
 export const categoryName = (slug: string) => toTitle(slug);
 
 export function buildWhatsappLink(

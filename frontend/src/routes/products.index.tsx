@@ -12,17 +12,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { BUSINESS, categoriesFromProducts, loadProducts, type Product } from "@/lib/data";
+import { BUSINESS, brandsFromProducts, loadProducts, type Product } from "@/lib/data";
 
 type ProductSearch = {
-  category?: string;
+  brand?: string;
   q?: string;
 };
 
 export const Route = createFileRoute("/products/")({
   loader: () => loadProducts(),
   validateSearch: (s: Record<string, unknown>): ProductSearch => ({
-    category: typeof s.category === "string" ? s.category : undefined,
+    brand: typeof s.brand === "string" ? s.brand : undefined,
     q: typeof s.q === "string" ? s.q : undefined,
   }),
   head: () => ({
@@ -48,15 +48,15 @@ function ProductsPage() {
   const [sort, setSort] = useState<SortKey>("newest");
   const [showFilters, setShowFilters] = useState(false);
 
-  const categories = categoriesFromProducts(products);
-  const category = search.category ?? "all";
+  const brands = brandsFromProducts(products);
+  const brand = search.brand ?? "all";
 
-  const setCategory = (c: string) =>
-    navigate({ search: (prev: ProductSearch) => ({ ...prev, category: c === "all" ? undefined : c }) });
+  const setBrand = (value: string) =>
+    navigate({ search: (prev: ProductSearch) => ({ ...prev, brand: value === "all" ? undefined : value }) });
 
   const filtered = useMemo(() => {
     let list: Product[] = products.filter((p) => {
-      if (category !== "all" && p.category !== category) return false;
+      if (brand !== "all" && !`${p.brand} ${p.name}`.toLowerCase().includes(brand.toLowerCase())) return false;
       if (query && !`${p.name} ${p.description} ${p.brand}`.toLowerCase().includes(query.toLowerCase())) return false;
       return true;
     });
@@ -66,7 +66,7 @@ function ProductsPage() {
       return String(b.createdAt || "").localeCompare(String(a.createdAt || ""));
     });
     return list;
-  }, [products, category, query, sort]);
+  }, [products, brand, query, sort]);
 
   return (
     <Layout>
@@ -90,12 +90,12 @@ function ProductsPage() {
           </div>
 
           <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft">
-            <h3 className="mb-2 font-bold">Category</h3>
-            <Select value={category} onValueChange={setCategory}>
+            <h3 className="mb-2 font-bold">Brand</h3>
+            <Select value={brand} onValueChange={setBrand}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All categories</SelectItem>
-                {categories.map((c) => <SelectItem key={c.slug} value={c.slug}>{c.name}</SelectItem>)}
+                <SelectItem value="all">All brands</SelectItem>
+                {brands.map((name) => <SelectItem key={name} value={name}>{name}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
