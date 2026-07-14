@@ -25,6 +25,7 @@ import freestyleProducts from "@/assets/download (8).png";
 import oneTouchProducts from "@/assets/download (14).png";
 import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
 import omnipodProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.44.29.jpeg";
+import medicineProducts from "@/assets/medicine.jpeg";
 import bayerImage from "@/assets/brands/bayer.svg";
 import medtronicImage from "@/assets/brands/medtronic.svg";
 import accuChekImage from "@/assets/brands/accu-chek.svg";
@@ -58,13 +59,14 @@ const whyChoose = [
 ];
 
 const brandImages = [
-  { name: "FREESTYLE", image: freestyleProducts },
-  { name: "DEXCOM", image: dexcomProducts },
-  { name: "OMNIPOD", image: omnipodProducts },
-  { name: "BAYER", image: bayerImage },
-  { name: "ONE TOUCH", image: oneTouchProducts },
-  { name: "MEDTRONIC", image: medtronicImage },
-  { name: "ACCU-CHEK", image: accuChekImage },
+  { name: "FREESTYLE", image: freestyleProducts, type: "Brand" },
+  { name: "DEXCOM", image: dexcomProducts, type: "Brand" },
+  { name: "OMNIPOD", image: omnipodProducts, type: "Brand" },
+  { name: "BAYER", image: bayerImage, type: "Brand" },
+  { name: "ONE TOUCH", image: oneTouchProducts, type: "Brand" },
+  { name: "MEDTRONIC", image: medtronicImage, type: "Brand" },
+  { name: "ACCU-CHEK", image: accuChekImage, type: "Brand" },
+  { name: "MEDICINE", image: medicineProducts, type: "Category" },
 ];
 
 const sellerReviews = [
@@ -228,7 +230,7 @@ function Home() {
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
         {error && <ProductListError message={error} />}
-        <SectionHeading title="Browse by Brand" subtitle="Choose the brand you have, then send the product details in a few simple steps." />
+        <SectionHeading title="Browse by Brand or Medicine" subtitle="Choose the brand or medicine supply you have, then send the product details in a few simple steps." />
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {brandImages.map((brand) => (
             <Link
@@ -246,12 +248,12 @@ function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/55 via-transparent to-transparent opacity-70" />
                 <span className="absolute left-3 top-3 rounded-full bg-background/90 px-3 py-1 text-xs font-extrabold text-secondary shadow-soft backdrop-blur">
-                  Brand
+                  {brand.type}
                 </span>
               </div>
               <div className="border-t border-border/60 px-5 py-5 text-center">
                 <h3 className="text-base font-extrabold tracking-wide text-secondary">{brand.name}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">View products from this brand</p>
+                <p className="mt-1 text-sm text-muted-foreground">View products from this {brand.type.toLowerCase()}</p>
               </div>
             </Link>
           ))}

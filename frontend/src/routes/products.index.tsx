@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { BUSINESS, brandsFromProducts, loadProducts, type Product } from "@/lib/data";
+import { BUSINESS, brandsFromProducts, categoryName, loadProducts, type Product } from "@/lib/data";
 
 type ProductSearch = {
   brand?: string;
@@ -48,7 +48,7 @@ function ProductsPage() {
   const [sort, setSort] = useState<SortKey>("newest");
   const [showFilters, setShowFilters] = useState(false);
 
-  const brands = brandsFromProducts(products);
+  const brands = Array.from(new Set([...brandsFromProducts(products), "MEDICINE"]));
   const brand = search.brand ?? "all";
 
   const setBrand = (value: string) =>
@@ -56,8 +56,10 @@ function ProductsPage() {
 
   const filtered = useMemo(() => {
     let list: Product[] = products.filter((p) => {
-      if (brand !== "all" && !`${p.brand} ${p.name}`.toLowerCase().includes(brand.toLowerCase())) return false;
-      if (query && !`${p.name} ${p.description} ${p.brand}`.toLowerCase().includes(query.toLowerCase())) return false;
+      const searchable = `${p.brand} ${p.name} ${p.category} ${categoryName(p.category)} ${p.description}`.toLowerCase();
+
+      if (brand !== "all" && !searchable.includes(brand.toLowerCase())) return false;
+      if (query && !searchable.includes(query.toLowerCase())) return false;
       return true;
     });
 
@@ -85,16 +87,16 @@ function ProductsPage() {
             <h3 className="mb-3 font-bold">Find your supply</h3>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search by product or brand..." className="pl-9" />
+              <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search by product, brand, or medicine..." className="pl-9" />
             </div>
           </div>
 
           <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft">
-            <h3 className="mb-2 font-bold">Brand</h3>
+            <h3 className="mb-2 font-bold">Brand / Category</h3>
             <Select value={brand} onValueChange={setBrand}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All brands</SelectItem>
+                <SelectItem value="all">All brands & categories</SelectItem>
                 {brands.map((name) => <SelectItem key={name} value={name}>{name}</SelectItem>)}
               </SelectContent>
             </Select>

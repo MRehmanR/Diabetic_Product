@@ -4,6 +4,7 @@ import freestyleProducts from "@/assets/download (8).png";
 import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
 import omnipodProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.44.29.jpeg";
 import oneTouchProducts from "@/assets/download (14).png";
+import medicineProducts from "@/assets/medicine.jpeg";
 
 const slides = [
   {
@@ -29,6 +30,12 @@ const slides = [
     alt: "OneTouch Verio and OneTouch Ultra test strip boxes",
     title: "OneTouch Test Strips",
     caption: "Share brand, quantity, and expiry so our team can respond with context.",
+  },
+  {
+    src: medicineProducts,
+    alt: "Medtronic diabetic medicine and pump supply boxes",
+    title: "Medicine & Pump Supplies",
+    caption: "We also review selected sealed diabetes medicine and pump supplies.",
   },
 ];
 
