@@ -17,6 +17,7 @@ def product_to_supply(product) -> dict:
         "id": str(product.id),
         "name": product.name,
         "slug": product.slug,
+        "brand": product.brand,
         "short_description": product.short_description,
         "full_description": product.full_description,
         "category": product.category,

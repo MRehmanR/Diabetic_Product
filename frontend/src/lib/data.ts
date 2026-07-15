@@ -39,6 +39,7 @@ interface SupplyResponse {
   id: string;
   name: string;
   slug: string;
+  brand?: string | null;
   short_description: string;
   full_description?: string;
   category: string;
@@ -177,7 +178,7 @@ const supplyToProduct = (supply: SupplyResponse): Product => ({
   requirements: supply.requirements || [],
   acceptedModels: supply.accepted_models || supply.models || [],
   category: supply.category,
-  brand: inferBrand(supply.name),
+  brand: supply.brand || inferBrand(supply.name),
   image: supply.image_url || null,
   status: supply.status || "active",
   isActive: supply.is_active !== false && supply.status !== "inactive",

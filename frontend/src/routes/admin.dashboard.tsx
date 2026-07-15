@@ -62,14 +62,11 @@ const offerStatusConfig: Record<string, { label: string; className: string }> = 
   completed: { label: "Completed", className: "bg-primary/10 text-primary" },
 };
 
-const splitCsv = (value: string) =>
-  value
-    .split(",")
-    .map((item) => item.trim())
-    .filter(Boolean);
-
-const formatMoney = (value: number | null | undefined) =>
-  value === null || value === undefined ? "Custom" : `Rs ${Number(value).toLocaleString("en-PK")}`;
+const brandToCategory = (brand: string) =>
+  brand
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "") || "products";
 
 function AdminDashboardPage() {
   const navigate = useNavigate();
@@ -138,14 +135,14 @@ function AdminDashboardPage() {
     const descriptionFallback = formData.name.trim();
     const payload = {
       name: formData.name,
-      slug: formData.slug,
+      brand: formData.brand,
       short_description: formData.short_description.trim() || descriptionFallback,
-      full_description: formData.full_description.trim() || formData.short_description.trim() || descriptionFallback,
-      category: formData.category,
-      requirements: splitCsv(formData.requirements),
-      models: splitCsv(formData.models),
+      full_description: formData.short_description.trim() || descriptionFallback,
+      category: brandToCategory(formData.brand),
+      requirements: [],
+      models: [],
       image_url: formData.image_url,
-      features: splitCsv(formData.features),
+      features: [],
       is_active: formData.is_active,
       status: formData.is_active ? "active" : "inactive",
     };
@@ -242,7 +239,7 @@ function AdminDashboardPage() {
   const filteredSupplies = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return supplies;
-    return supplies.filter((supply) => `${supply.name} ${supply.category}`.toLowerCase().includes(q));
+    return supplies.filter((supply) => `${supply.name} ${supply.brand || ""} ${supply.category}`.toLowerCase().includes(q));
   }, [supplies, search]);
 
   const filteredOffers = useMemo(() => {
@@ -520,7 +517,7 @@ function ProductsTable({
         <TableHeader>
           <TableRow className="bg-muted/30">
             <TableHead>Product</TableHead>
-            <TableHead>Category</TableHead>
+            <TableHead>Brand</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
@@ -531,7 +528,7 @@ function ProductsTable({
               <TableCell className="max-w-[260px] font-medium">
                 <span className="line-clamp-1">{supply.name}</span>
               </TableCell>
-              <TableCell className="text-muted-foreground">{supply.category}</TableCell>
+              <TableCell className="text-muted-foreground">{supply.brand || supply.category}</TableCell>
               <TableCell>
                 <Badge className={supply.is_active ? "bg-emerald-100 text-emerald-800" : "bg-muted text-muted-foreground"}>
                   {supply.is_active ? "Active" : "Inactive"}

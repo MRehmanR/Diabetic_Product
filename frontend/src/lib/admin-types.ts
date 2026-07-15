@@ -2,6 +2,7 @@ export interface Supply {
   id: string;
   name: string;
   slug: string;
+  brand: string;
   short_description: string;
   full_description: string;
   category: string;
@@ -60,13 +61,8 @@ export interface BlogFormData {
 
 export interface SupplyFormData {
   name: string;
-  slug: string;
+  brand: string;
   short_description: string;
-  full_description: string;
-  category: string;
-  requirements: string;
-  models: string;
   image_url: string;
-  features: string;
   is_active: boolean;
 }

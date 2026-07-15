@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 class ProductBase(BaseModel):
     name: str = Field(min_length=2, max_length=255)
     slug: str | None = None
+    brand: str = Field(default="Other", min_length=2, max_length=120)
     category: str = Field(min_length=2, max_length=120)
     short_description: str = ""
     full_description: str = ""
@@ -25,6 +26,7 @@ class ProductCreate(ProductBase):
 class ProductUpdate(BaseModel):
     name: str | None = None
     slug: str | None = None
+    brand: str | None = None
     category: str | None = None
     short_description: str | None = None
     full_description: str | None = None
