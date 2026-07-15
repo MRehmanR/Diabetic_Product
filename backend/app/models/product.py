@@ -15,6 +15,7 @@ class Product(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     slug: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
     brand: Mapped[str] = mapped_column(String(120), index=True, nullable=False, default="Other")
+    serial_number: Mapped[str | None] = mapped_column(String(120), index=True)
     category: Mapped[str] = mapped_column(String(120), index=True, nullable=False)
     short_description: Mapped[str] = mapped_column(Text, nullable=False)
     full_description: Mapped[str] = mapped_column(Text, nullable=False)

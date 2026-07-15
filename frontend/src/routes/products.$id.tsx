@@ -155,6 +155,7 @@ function ProductDetails() {
             <h2 className="mb-4 text-xl font-bold">Specifications</h2>
             <dl className="divide-y divide-border rounded-2xl border border-border/60 text-sm">
               <Spec k="Brand" v={product.brand} />
+              {product.serialNumber && <Spec k="Serial Number" v={product.serialNumber} />}
               <Spec k="Category" v={categoryName(product.category)} />
               <Spec k="Status" v={product.status} />
             </dl>

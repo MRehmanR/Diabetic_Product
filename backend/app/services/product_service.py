@@ -33,7 +33,15 @@ async def unique_slug(db: AsyncSession, name: str, requested_slug: str | None = 
 def apply_product_filters(query: Select[tuple[Product]], search: str | None, category: str | None, status_filter: str | None):
     if search:
         pattern = f"%{search}%"
-        query = query.where(or_(Product.name.ilike(pattern), Product.brand.ilike(pattern), Product.short_description.ilike(pattern), Product.category.ilike(pattern)))
+        query = query.where(
+            or_(
+                Product.name.ilike(pattern),
+                Product.brand.ilike(pattern),
+                Product.serial_number.ilike(pattern),
+                Product.short_description.ilike(pattern),
+                Product.category.ilike(pattern),
+            )
+        )
     if category:
         query = query.where(Product.category == category)
     if status_filter:

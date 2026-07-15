@@ -3,6 +3,7 @@ export interface Supply {
   name: string;
   slug: string;
   brand: string;
+  serial_number: string | null;
   short_description: string;
   full_description: string;
   category: string;
@@ -62,6 +63,7 @@ export interface BlogFormData {
 export interface SupplyFormData {
   name: string;
   brand: string;
+  serial_number: string;
   short_description: string;
   image_url: string;
   is_active: boolean;

@@ -24,6 +24,7 @@ import type { Supply, SupplyFormData } from "@/lib/admin-types";
 const emptyForm: SupplyFormData = {
   name: "",
   brand: "",
+  serial_number: "",
   short_description: "",
   image_url: "",
   is_active: true,
@@ -60,6 +61,7 @@ export function AdminSupplyForm({
       setForm({
         name: supply.name,
         brand: supply.brand || "",
+        serial_number: supply.serial_number || "",
         short_description: supply.short_description,
         image_url: supply.image_url || "",
         is_active: supply.is_active,
@@ -136,6 +138,16 @@ export function AdminSupplyForm({
                 onChange={(e) => updateField("name", e.target.value)}
                 placeholder="Dexcom G7 Sensors"
                 required
+              />
+            </div>
+
+            <div className="space-y-2 sm:col-span-2">
+              <Label htmlFor="serial_number">Serial Number</Label>
+              <Input
+                id="serial_number"
+                value={form.serial_number}
+                onChange={(e) => updateField("serial_number", e.target.value)}
+                placeholder="Optional serial number"
               />
             </div>
 

@@ -136,6 +136,7 @@ function AdminDashboardPage() {
     const payload = {
       name: formData.name,
       brand: formData.brand,
+      serial_number: formData.serial_number.trim() || null,
       short_description: formData.short_description.trim() || descriptionFallback,
       full_description: formData.short_description.trim() || descriptionFallback,
       category: brandToCategory(formData.brand),
@@ -239,7 +240,7 @@ function AdminDashboardPage() {
   const filteredSupplies = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return supplies;
-    return supplies.filter((supply) => `${supply.name} ${supply.brand || ""} ${supply.category}`.toLowerCase().includes(q));
+    return supplies.filter((supply) => `${supply.name} ${supply.brand || ""} ${supply.serial_number || ""} ${supply.category}`.toLowerCase().includes(q));
   }, [supplies, search]);
 
   const filteredOffers = useMemo(() => {
@@ -518,6 +519,7 @@ function ProductsTable({
           <TableRow className="bg-muted/30">
             <TableHead>Product</TableHead>
             <TableHead>Brand</TableHead>
+            <TableHead>Serial No.</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
@@ -529,6 +531,7 @@ function ProductsTable({
                 <span className="line-clamp-1">{supply.name}</span>
               </TableCell>
               <TableCell className="text-muted-foreground">{supply.brand || supply.category}</TableCell>
+              <TableCell className="text-muted-foreground">{supply.serial_number || "-"}</TableCell>
               <TableCell>
                 <Badge className={supply.is_active ? "bg-emerald-100 text-emerald-800" : "bg-muted text-muted-foreground"}>
                   {supply.is_active ? "Active" : "Inactive"}

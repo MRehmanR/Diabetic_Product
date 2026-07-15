@@ -15,6 +15,7 @@ export interface Product {
   acceptedModels: string[];
   category: string;
   brand: string;
+  serialNumber: string | null;
   image: string | null;
   status: string;
   isActive: boolean;
@@ -40,6 +41,7 @@ interface SupplyResponse {
   name: string;
   slug: string;
   brand?: string | null;
+  serial_number?: string | null;
   short_description: string;
   full_description?: string;
   category: string;
@@ -179,6 +181,7 @@ const supplyToProduct = (supply: SupplyResponse): Product => ({
   acceptedModels: supply.accepted_models || supply.models || [],
   category: supply.category,
   brand: supply.brand || inferBrand(supply.name),
+  serialNumber: supply.serial_number || null,
   image: supply.image_url || null,
   status: supply.status || "active",
   isActive: supply.is_active !== false && supply.status !== "inactive",
@@ -310,6 +313,7 @@ I would like to offer the following product.
 Product: ${p.name}
 Category: ${categoryName(p.category)}
 Brand: ${p.brand}
+${p.serialNumber ? `Serial Number: ${p.serialNumber}\n` : ""}
 
 Name: ${details.name}
 ${details.email ? `Email: ${details.email}\n` : ""}WhatsApp: ${details.phone}
