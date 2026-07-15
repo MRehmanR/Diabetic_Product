@@ -6,6 +6,7 @@ import { BUSINESS } from "@/lib/data";
 const nav = [
   { to: "/", label: "Home" },
   { to: "/products", label: "Products" },
+  { to: "/blog", label: "Blog" },
   { to: "/about", label: "How It Works" },
   { to: "/contact", label: "Contact" },
 ];

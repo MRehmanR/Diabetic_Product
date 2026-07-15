@@ -21,8 +21,6 @@ const emptyForm: SupplyFormData = {
   short_description: "",
   full_description: "",
   category: "",
-  payout_min: 0,
-  payout_max: 0,
   requirements: "",
   models: "",
   image_url: "",
@@ -61,8 +59,6 @@ export function AdminSupplyForm({
         short_description: supply.short_description,
         full_description: supply.full_description,
         category: supply.category,
-        payout_min: supply.payout_min || 0,
-        payout_max: supply.payout_max || 0,
         requirements: Array.isArray(supply.requirements) ? supply.requirements.join(", ") : "",
         models: Array.isArray(supply.accepted_models || supply.models)
           ? (supply.accepted_models || supply.models).join(", ")
@@ -82,6 +78,10 @@ export function AdminSupplyForm({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!form.image_url.trim()) {
+      toast.error("Product image is required.");
+      return;
+    }
     onSubmit({ ...form, slug: form.slug.trim() || slugify(form.name) });
   }
 
@@ -151,7 +151,7 @@ export function AdminSupplyForm({
                 id="short_description"
                 value={form.short_description}
                 onChange={(e) => updateField("short_description", e.target.value)}
-                required
+                placeholder="Optional"
               />
             </div>
 
@@ -162,31 +162,7 @@ export function AdminSupplyForm({
                 value={form.full_description}
                 onChange={(e) => updateField("full_description", e.target.value)}
                 rows={4}
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="payout_min">Min Payout (Rs)</Label>
-              <Input
-                id="payout_min"
-                type="number"
-                min="0"
-                step="0.01"
-                value={form.payout_min}
-                onChange={(e) => updateField("payout_min", Number(e.target.value) || 0)}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="payout_max">Max Payout (Rs)</Label>
-              <Input
-                id="payout_max"
-                type="number"
-                min="0"
-                step="0.01"
-                value={form.payout_max}
-                onChange={(e) => updateField("payout_max", Number(e.target.value) || 0)}
+                placeholder="Optional"
               />
             </div>
 
@@ -206,6 +182,7 @@ export function AdminSupplyForm({
                     value={form.image_url}
                     onChange={(e) => updateField("image_url", e.target.value)}
                     placeholder="Upload an image or paste an image URL"
+                    required
                   />
                   <div className="flex flex-wrap gap-2">
                     <Button type="button" variant="outline" disabled={uploading || loading}>

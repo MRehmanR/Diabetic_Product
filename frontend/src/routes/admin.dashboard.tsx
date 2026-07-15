@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
+  BookOpen,
   CheckCircle2,
   Clock,
   ClipboardList,
@@ -18,8 +19,9 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { adminApi } from "@/lib/admin-api";
-import type { Offer, Supply, SupplyFormData } from "@/lib/admin-types";
+import type { BlogFormData, BlogPost, Offer, Supply, SupplyFormData } from "@/lib/admin-types";
 import { AdminSupplyForm } from "@/components/AdminSupplyForm";
+import { AdminBlogForm } from "@/components/AdminBlogForm";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -73,14 +75,20 @@ function AdminDashboardPage() {
   const navigate = useNavigate();
   const [supplies, setSupplies] = useState<Supply[]>([]);
   const [offers, setOffers] = useState<Offer[]>([]);
+  const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [authChecked, setAuthChecked] = useState(false);
   const [search, setSearch] = useState("");
   const [offerSearch, setOfferSearch] = useState("");
+  const [blogSearch, setBlogSearch] = useState("");
   const [formOpen, setFormOpen] = useState(false);
+  const [blogFormOpen, setBlogFormOpen] = useState(false);
   const [editingSupply, setEditingSupply] = useState<Supply | null>(null);
+  const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
   const [deleteSupply, setDeleteSupply] = useState<Supply | null>(null);
+  const [deleteBlog, setDeleteBlog] = useState<BlogPost | null>(null);
   const [formLoading, setFormLoading] = useState(false);
+  const [blogFormLoading, setBlogFormLoading] = useState(false);
   const [editingOffer, setEditingOffer] = useState<Offer | null>(null);
   const [quoteAmount, setQuoteAmount] = useState("");
 
@@ -100,16 +108,19 @@ function AdminDashboardPage() {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const [suppliesRes, offersRes] = await Promise.all([
+    const [suppliesRes, offersRes, blogsRes] = await Promise.all([
       adminApi.from("supplies").select("*").order("created_at", { ascending: false }),
       adminApi.from("offers").select("*").order("created_at", { ascending: false }),
+      adminApi.from("blogs").select("*").order("created_at", { ascending: false }),
     ]);
 
     if (suppliesRes.error) toast.error("Could not load products", { description: suppliesRes.error.message });
     if (offersRes.error) toast.error("Could not load offers", { description: offersRes.error.message });
+    if (blogsRes.error) toast.error("Could not load blogs", { description: blogsRes.error.message });
 
     setSupplies((suppliesRes.data as Supply[]) || []);
     setOffers((offersRes.data as Offer[]) || []);
+    setBlogs((blogsRes.data as BlogPost[]) || []);
     setLoading(false);
   }, []);
 
@@ -124,17 +135,16 @@ function AdminDashboardPage() {
 
   async function handleFormSubmit(formData: SupplyFormData) {
     setFormLoading(true);
+    const descriptionFallback = formData.name.trim();
     const payload = {
       name: formData.name,
       slug: formData.slug,
-      short_description: formData.short_description,
-      full_description: formData.full_description,
+      short_description: formData.short_description.trim() || descriptionFallback,
+      full_description: formData.full_description.trim() || formData.short_description.trim() || descriptionFallback,
       category: formData.category,
-      payout_min: formData.payout_min || null,
-      payout_max: formData.payout_max || null,
       requirements: splitCsv(formData.requirements),
       models: splitCsv(formData.models),
-      image_url: formData.image_url || null,
+      image_url: formData.image_url,
       features: splitCsv(formData.features),
       is_active: formData.is_active,
       status: formData.is_active ? "active" : "inactive",
@@ -171,6 +181,50 @@ function AdminDashboardPage() {
     setDeleteSupply(null);
   }
 
+  async function handleBlogSubmit(formData: BlogFormData) {
+    setBlogFormLoading(true);
+    const payload = {
+      title: formData.title,
+      slug: formData.slug,
+      excerpt: formData.excerpt,
+      content: formData.content,
+      image_url: formData.image_url || null,
+      author: formData.author || "Diabetics King",
+      is_published: formData.is_published,
+      status: formData.is_published ? "published" : "draft",
+    };
+
+    const result = editingBlog
+      ? await adminApi.from("blogs").update(payload).eq("id", editingBlog.id)
+      : await adminApi.from("blogs").insert(payload);
+
+    setBlogFormLoading(false);
+
+    if (result.error) {
+      toast.error(editingBlog ? "Failed to update article" : "Failed to add article", {
+        description: result.error.message,
+      });
+      return;
+    }
+
+    toast.success(editingBlog ? "Article updated" : "Article added");
+    setBlogFormOpen(false);
+    setEditingBlog(null);
+    fetchData();
+  }
+
+  async function handleDeleteBlog() {
+    if (!deleteBlog) return;
+    const { error } = await adminApi.from("blogs").delete().eq("id", deleteBlog.id);
+    if (error) {
+      toast.error("Failed to delete article", { description: error.message });
+    } else {
+      toast.success("Article deleted");
+      fetchData();
+    }
+    setDeleteBlog(null);
+  }
+
   async function updateOfferStatus(offer: Offer, status: Offer["status"], quotedAmount?: number) {
     const update: Record<string, unknown> = { status };
     if (quotedAmount !== undefined) update.quoted_amount = quotedAmount;
@@ -199,11 +253,17 @@ function AdminDashboardPage() {
     );
   }, [offers, offerSearch]);
 
+  const filteredBlogs = useMemo(() => {
+    const q = blogSearch.trim().toLowerCase();
+    if (!q) return blogs;
+    return blogs.filter((post) => `${post.title} ${post.excerpt} ${post.author}`.toLowerCase().includes(q));
+  }, [blogs, blogSearch]);
+
   const stats = [
     { label: "Total Products", value: supplies.length, icon: Package, color: "text-primary" },
     { label: "Active", value: supplies.filter((s) => s.is_active).length, icon: TrendingUp, color: "text-emerald-600" },
     { label: "Pending Offers", value: offers.filter((o) => o.status === "pending").length, icon: Clock, color: "text-amber-600" },
-    { label: "Completed", value: offers.filter((o) => o.status === "completed").length, icon: CheckCircle2, color: "text-primary" },
+    { label: "Blog Articles", value: blogs.length, icon: BookOpen, color: "text-primary" },
   ];
 
   if (!authChecked) {
@@ -260,6 +320,9 @@ function AdminDashboardPage() {
             </TabsTrigger>
             <TabsTrigger value="offers" className="gap-1.5">
               <ClipboardList className="h-3.5 w-3.5" /> Offers
+            </TabsTrigger>
+            <TabsTrigger value="blogs" className="gap-1.5">
+              <BookOpen className="h-3.5 w-3.5" /> Blogs
             </TabsTrigger>
           </TabsList>
 
@@ -318,6 +381,35 @@ function AdminDashboardPage() {
               />
             )}
           </TabsContent>
+
+          <TabsContent value="blogs" className="space-y-4">
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Search blog articles..."
+                  value={blogSearch}
+                  onChange={(e) => setBlogSearch(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+              <Button onClick={() => { setEditingBlog(null); setBlogFormOpen(true); }}>
+                <Plus className="h-4 w-4" /> Add Article
+              </Button>
+            </div>
+
+            {loading ? (
+              <LoadingRows />
+            ) : filteredBlogs.length === 0 ? (
+              <EmptyState icon={BookOpen} text="No blog articles found" />
+            ) : (
+              <BlogsTable
+                posts={filteredBlogs}
+                onEdit={(post) => { setEditingBlog(post); setBlogFormOpen(true); }}
+                onDelete={setDeleteBlog}
+              />
+            )}
+          </TabsContent>
         </Tabs>
       </div>
 
@@ -327,6 +419,14 @@ function AdminDashboardPage() {
         onClose={() => { setFormOpen(false); setEditingSupply(null); }}
         onSubmit={handleFormSubmit}
         loading={formLoading}
+      />
+
+      <AdminBlogForm
+        post={editingBlog}
+        open={blogFormOpen}
+        onClose={() => { setBlogFormOpen(false); setEditingBlog(null); }}
+        onSubmit={handleBlogSubmit}
+        loading={blogFormLoading}
       />
 
       <AlertDialog open={!!deleteSupply} onOpenChange={(open) => !open && setDeleteSupply(null)}>
@@ -384,6 +484,23 @@ function AdminDashboardPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AlertDialog open={!!deleteBlog} onOpenChange={(open) => !open && setDeleteBlog(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Blog Article</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{deleteBlog?.title}"? This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteBlog} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
@@ -404,7 +521,6 @@ function ProductsTable({
           <TableRow className="bg-muted/30">
             <TableHead>Product</TableHead>
             <TableHead>Category</TableHead>
-            <TableHead>Payout Range</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
@@ -416,11 +532,6 @@ function ProductsTable({
                 <span className="line-clamp-1">{supply.name}</span>
               </TableCell>
               <TableCell className="text-muted-foreground">{supply.category}</TableCell>
-              <TableCell className="font-semibold text-emerald-600">
-                {supply.payout_min !== null && supply.payout_max !== null
-                  ? `${formatMoney(supply.payout_min)} - ${formatMoney(supply.payout_max)}`
-                  : formatMoney(supply.payout_max ?? supply.payout_min)}
-              </TableCell>
               <TableCell>
                 <Badge className={supply.is_active ? "bg-emerald-100 text-emerald-800" : "bg-muted text-muted-foreground"}>
                   {supply.is_active ? "Active" : "Inactive"}
@@ -431,6 +542,55 @@ function ProductsTable({
                   <Pencil className="h-3.5 w-3.5" />
                 </Button>
                 <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => onDelete(supply)}>
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
+function BlogsTable({
+  posts,
+  onEdit,
+  onDelete,
+}: {
+  posts: BlogPost[];
+  onEdit: (post: BlogPost) => void;
+  onDelete: (post: BlogPost) => void;
+}) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-border/50">
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-muted/30">
+            <TableHead>Article</TableHead>
+            <TableHead>Author</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {posts.map((post) => (
+            <TableRow key={post.id}>
+              <TableCell className="max-w-[360px]">
+                <p className="line-clamp-1 font-medium">{post.title}</p>
+                <p className="line-clamp-1 text-xs text-muted-foreground">/{post.slug}</p>
+              </TableCell>
+              <TableCell className="text-muted-foreground">{post.author}</TableCell>
+              <TableCell>
+                <Badge className={post.is_published ? "bg-emerald-100 text-emerald-800" : "bg-muted text-muted-foreground"}>
+                  {post.is_published ? "Published" : "Draft"}
+                </Badge>
+              </TableCell>
+              <TableCell className="text-right">
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(post)}>
+                  <Pencil className="h-3.5 w-3.5" />
+                </Button>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => onDelete(post)}>
                   <Trash2 className="h-3.5 w-3.5" />
                 </Button>
               </TableCell>

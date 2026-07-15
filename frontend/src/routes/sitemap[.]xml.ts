@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { loadProducts } from "@/lib/data";
+import { fetchBlogs, loadProducts } from "@/lib/data";
 
 const BASE_URL = "";
 
@@ -14,13 +14,15 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const { products } = await loadProducts();
+        const [{ products }, blogs] = await Promise.all([loadProducts(), fetchBlogs().catch(() => [])]);
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/products", changefreq: "daily", priority: "0.9" },
+          { path: "/blog", changefreq: "weekly", priority: "0.7" },
           { path: "/about", changefreq: "monthly", priority: "0.6" },
           { path: "/contact", changefreq: "monthly", priority: "0.6" },
           ...products.map((p) => ({ path: `/products/${p.id}`, changefreq: "weekly" as const, priority: "0.8" })),
+          ...blogs.map((post) => ({ path: `/blog/${post.slug}`, changefreq: "monthly" as const, priority: "0.7" })),
         ];
 
         const urls = entries.map((e) =>

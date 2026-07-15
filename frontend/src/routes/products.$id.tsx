@@ -35,9 +35,9 @@ export const Route = createFileRoute("/products/$id")({
     return {
       meta: [
         { title: p ? `${p.name} - Diabetics King` : "Product - Diabetics King" },
-        { name: "description", content: p?.description ?? "" },
+        { name: "description", content: p ? `Sell your unused ${p.name} to Diabetics King.` : "" },
         { property: "og:title", content: p?.name ?? "Product" },
-        { property: "og:description", content: p?.description ?? "" },
+        { property: "og:description", content: p ? `Start a friendly offer for ${p.name}.` : "" },
         { property: "og:type", content: "product" },
         { property: "og:image", content: p?.image ?? "" },
         { property: "og:url", content: p ? `/products/${p.id}` : "/products" },
@@ -120,7 +120,6 @@ function ProductDetails() {
               </Badge>
             </div>
             <h1 className="text-3xl font-extrabold leading-tight">{product.name}</h1>
-            <p className="text-muted-foreground">{product.fullDescription || product.description}</p>
 
             <div className="flex flex-wrap gap-3">
               <OrderDialog product={product} disabled={!product.isActive}>

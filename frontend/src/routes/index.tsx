@@ -14,6 +14,7 @@ import {
   Truck,
   CircleDollarSign,
   CheckCircle2,
+  Scale,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
@@ -25,10 +26,9 @@ import freestyleProducts from "@/assets/WhatsApp Image 2026-07-14 at 20.38.19.jp
 import oneTouchProducts from "@/assets/download (14).png";
 import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
 import omnipodProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.44.29.jpeg";
-import medicineProducts from "@/assets/medicine.jpeg";
-import bayerImage from "@/assets/brands/bayer.svg";
-import medtronicImage from "@/assets/brands/medtronic.svg";
-import accuChekImage from "@/assets/brands/accu-chek.svg";
+import medtronicImage from "@/assets/medtronic.jpeg";
+import accuChekImage from "@/assets/accu-chek.jpeg";
+import contourNextImage from "@/assets/contour next.jpeg";
 
 export const Route = createFileRoute("/")({
   loader: () => loadProducts(),
@@ -62,11 +62,10 @@ const brandImages = [
   { name: "FREESTYLE", image: freestyleProducts, type: "Brand" },
   { name: "DEXCOM", image: dexcomProducts, type: "Brand" },
   { name: "OMNIPOD", image: omnipodProducts, type: "Brand" },
-  { name: "BAYER", image: bayerImage, type: "Brand" },
   { name: "ONE TOUCH", image: oneTouchProducts, type: "Brand" },
   { name: "MEDTRONIC", image: medtronicImage, type: "Brand" },
   { name: "ACCU-CHEK", image: accuChekImage, type: "Brand" },
-  { name: "MEDICINE", image: medicineProducts, type: "Category" },
+  { name: "CONTOUR NEXT", image: contourNextImage, type: "Brand" },
 ];
 
 const sellerReviews = [
@@ -155,7 +154,7 @@ const easySteps = [
     tone: "from-emerald-50 to-green-100/70",
     titleClass: "text-emerald-700",
     numberClass: "from-emerald-600 to-green-500",
-    visual: "products",
+    icon: PackageCheck,
   },
   {
     number: "2",
@@ -164,7 +163,7 @@ const easySteps = [
     tone: "from-sky-50 to-blue-100/70",
     titleClass: "text-sky-700",
     numberClass: "from-sky-600 to-blue-500",
-    visual: "offer",
+    icon: ClipboardCheck,
   },
   {
     number: "3",
@@ -173,7 +172,7 @@ const easySteps = [
     tone: "from-orange-50 to-amber-100/80",
     titleClass: "text-orange-600",
     numberClass: "from-orange-600 to-amber-500",
-    visual: "shipping",
+    icon: Truck,
   },
   {
     number: "4",
@@ -182,7 +181,7 @@ const easySteps = [
     tone: "from-emerald-50 to-green-100/70",
     titleClass: "text-emerald-700",
     numberClass: "from-emerald-600 to-green-500",
-    visual: "payment",
+    icon: CircleDollarSign,
   },
 ];
 
@@ -191,6 +190,29 @@ const trustBadges = [
   { icon: ClipboardCheck, label: "Expert Evaluation" },
   { icon: Truck, label: "Fast & Free Shipping" },
   { icon: CircleDollarSign, label: "Fast Payments" },
+];
+
+const legalQuestions = [
+  {
+    question: "Do you buy opened or used diabetic products?",
+    answer: "We primarily review sealed, unused products. If packaging is damaged or opened, tell us clearly before shipping so our team can confirm whether it qualifies.",
+  },
+  {
+    question: "Am I responsible for following local rules?",
+    answer: "Yes. Sellers are responsible for confirming that they are allowed to sell the products they submit and that the items were obtained legally.",
+  },
+  {
+    question: "Do you provide medical advice?",
+    answer: "No. Diabetics King is a product review and buyback service. We do not provide medical, dosage, prescription, or treatment advice.",
+  },
+  {
+    question: "When is payment sent?",
+    answer: "Payment is sent after we receive and inspect the package, confirm it matches the submitted details, and approve the items.",
+  },
+  {
+    question: "What happens if an item does not match the details?",
+    answer: "Our team will contact you before completing the offer. Items that are expired, damaged, opened, or different from the submitted details may be rejected or repriced.",
+  },
 ];
 
 function Home() {
@@ -230,7 +252,7 @@ function Home() {
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
         {error && <ProductListError message={error} />}
-        <SectionHeading title="Browse by Brand or Medicine" subtitle="Choose the brand or medicine supply you have, then send the product details in a few simple steps." />
+        <SectionHeading title="Browse by Brand" subtitle="Choose the brand you have, then send the product details in a few simple steps." />
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {brandImages.map((brand) => (
             <Link
@@ -285,7 +307,7 @@ function Home() {
         </div>
       </section>
 
-      <EasyStepsSection />
+      <HowToGetPaidSection />
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
         <SectionHeading title="Why Choose Diabetics King" subtitle="A warmer way to share your product details and get a clear follow-up." />
@@ -303,6 +325,8 @@ function Home() {
           ))}
         </div>
       </section>
+
+      <LegalSection />
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <div className="relative overflow-hidden rounded-3xl gradient-hero px-6 py-12 text-center text-primary-foreground shadow-card sm:px-12">
@@ -353,42 +377,50 @@ function ReviewCard({ review }: { review: (typeof sellerReviews)[number] }) {
   );
 }
 
-function EasyStepsSection() {
+function HowToGetPaidSection() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
       <div className="text-center">
         <h2 className="text-4xl font-black uppercase tracking-wide text-[#06345f] sm:text-5xl">
-          4 Easy Steps To Get Paid
+          How To Get Paid
         </h2>
-        <p className="mt-2 text-3xl font-semibold text-slate-500 sm:text-4xl">Simple. Fast. Secure.</p>
+        <p className="mx-auto mt-3 max-w-2xl text-lg text-muted-foreground">
+          A simple, secure flow from product selection to same-day payout after inspection.
+        </p>
       </div>
 
       <div className="mt-9 grid gap-6 lg:grid-cols-4">
-        {easySteps.map((step, index) => (
-          <article
-            key={step.number}
-            className={`relative flex min-h-[520px] flex-col items-center rounded-[2rem] bg-gradient-to-br ${step.tone} px-6 py-7 text-center shadow-soft ring-1 ring-border/50`}
-          >
-            <span
-              className={`grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br ${step.numberClass} text-4xl font-black text-white shadow-card`}
+        {easySteps.map((step, index) => {
+          const Icon = step.icon;
+
+          return (
+            <article
+              key={step.number}
+              className={`relative flex min-h-[360px] flex-col items-center rounded-[2rem] bg-gradient-to-br ${step.tone} px-6 py-7 text-center shadow-soft ring-1 ring-border/50`}
             >
-              {step.number}
-            </span>
-
-            <EasyStepVisual visual={step.visual} />
-
-            <h3 className={`mt-5 text-2xl font-black uppercase leading-tight ${step.titleClass}`}>
-              {step.title}
-            </h3>
-            <p className="mt-4 text-lg leading-8 text-slate-800">{step.text}</p>
-
-            {index < easySteps.length - 1 && (
-              <span className="pointer-events-none absolute -right-5 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-[#06345f] text-white shadow-card lg:grid">
-                <ArrowRight className="h-6 w-6" />
+              <span
+                className={`grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br ${step.numberClass} text-4xl font-black text-white shadow-card`}
+              >
+                {step.number}
               </span>
-            )}
-          </article>
-        ))}
+
+              <span className="mt-8 grid h-20 w-20 place-items-center rounded-3xl bg-white/85 shadow-soft">
+                <Icon className={`h-10 w-10 ${step.titleClass}`} />
+              </span>
+
+              <h3 className={`mt-7 text-2xl font-black uppercase leading-tight ${step.titleClass}`}>
+                {step.title}
+              </h3>
+              <p className="mt-4 text-base leading-7 text-slate-800">{step.text}</p>
+
+              {index < easySteps.length - 1 && (
+                <span className="pointer-events-none absolute -right-5 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-[#06345f] text-white shadow-card lg:grid">
+                  <ArrowRight className="h-6 w-6" />
+                </span>
+              )}
+            </article>
+          );
+        })}
       </div>
 
       <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -409,75 +441,35 @@ function EasyStepsSection() {
   );
 }
 
-function EasyStepVisual({ visual }: { visual: string }) {
-  if (visual === "products") {
-    return (
-      <div className="mt-6 grid h-44 w-full grid-cols-2 items-center gap-3">
-        {[dexcomProducts, omnipodProducts, freestyleProducts, oneTouchProducts].map((image) => (
-          <div key={image} className="flex h-20 items-center justify-center rounded-2xl bg-white/80 p-2 shadow-soft">
-            <img src={image} alt="" loading="lazy" className="max-h-full max-w-full object-contain" />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  if (visual === "offer") {
-    return (
-      <div className="relative mt-6 grid h-44 w-full place-items-center">
-        <div className="relative w-36 rounded-2xl border-4 border-[#06345f] bg-white px-5 py-6 shadow-card">
-          <span className="absolute -top-5 left-1/2 h-8 w-20 -translate-x-1/2 rounded-lg bg-[#174f7d]" />
-          <p className="text-2xl font-black uppercase text-[#06345f]">Offer</p>
-          <div className="mt-4 space-y-2">
-            <span className="block h-2 rounded-full bg-slate-200" />
-            <span className="block h-2 rounded-full bg-slate-200" />
-            <span className="block h-2 rounded-full bg-slate-200" />
-          </div>
-        </div>
-        <span className="absolute bottom-1 right-7 grid h-16 w-16 place-items-center rounded-full bg-emerald-600 text-4xl font-black text-white shadow-card">
-          $
-        </span>
-      </div>
-    );
-  }
-
-  if (visual === "shipping") {
-    return (
-      <div className="relative mt-6 grid h-44 w-full place-items-center">
-        <div className="h-28 w-44 rounded-xl bg-amber-700/80 shadow-card">
-          <div className="h-7 rounded-t-xl bg-amber-600/90" />
-          <div className="mx-auto mt-5 h-10 w-28 rounded bg-amber-100/80" />
-        </div>
-        <span className="absolute bottom-3 flex items-center gap-2 rounded-2xl bg-[#0f65a8] px-4 py-3 text-lg font-black uppercase leading-none text-white shadow-card">
-          Free <br /> Shipping
-          <Truck className="h-8 w-8" />
-        </span>
-      </div>
-    );
-  }
-
+function LegalSection() {
   return (
-    <div className="relative mt-6 grid h-44 w-full place-items-center">
-      <div className="absolute left-4 top-9 rotate-[-12deg] space-y-1">
-        {[0, 1, 2, 3].map((bill) => (
-          <span key={bill} className="block h-9 w-20 rounded-md border border-emerald-300 bg-emerald-100 shadow-soft" />
-        ))}
-      </div>
-      <div className="relative ml-14 h-36 w-24 rounded-[1.4rem] border-4 border-slate-900 bg-white p-3 shadow-card">
-        <div className="mx-auto h-1 w-8 rounded-full bg-slate-300" />
-        <div className="mt-6 grid place-items-center">
-          <CheckCircle2 className="h-12 w-12 fill-emerald-500 text-white" />
-          <p className="mt-2 text-xs font-black uppercase leading-tight text-slate-900">Payment Received</p>
+    <section className="bg-muted/40 py-14">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+        <div className="text-center">
+          <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-accent text-secondary shadow-soft">
+            <Scale className="h-7 w-7" />
+          </span>
+          <h2 className="mt-4 text-3xl font-extrabold">Legal & Seller Questions</h2>
+          <p className="mx-auto mt-2 max-w-2xl text-muted-foreground">
+            A few important notes before sending products for review.
+          </p>
+        </div>
+
+        <div className="mt-8 space-y-3">
+          {legalQuestions.map((item) => (
+            <details key={item.question} className="group rounded-2xl border border-border/60 bg-card p-5 shadow-soft">
+              <summary className="cursor-pointer list-none font-bold text-foreground">
+                <span className="inline-flex w-full items-center justify-between gap-4">
+                  {item.question}
+                  <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-open:rotate-90" />
+                </span>
+              </summary>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.answer}</p>
+            </details>
+          ))}
         </div>
       </div>
-      <div className="absolute bottom-0 flex flex-wrap justify-center gap-2">
-        {["PayPal", "Zelle", "Cash App", "Apple Pay", "Venmo"].map((method) => (
-          <span key={method} className="rounded-lg bg-white px-2.5 py-1 text-xs font-black text-[#06345f] shadow-soft">
-            {method}
-          </span>
-        ))}
-      </div>
-    </div>
+    </section>
   );
 }
 

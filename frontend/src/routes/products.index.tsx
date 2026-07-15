@@ -48,7 +48,7 @@ function ProductsPage() {
   const [sort, setSort] = useState<SortKey>("newest");
   const [showFilters, setShowFilters] = useState(false);
 
-  const brands = Array.from(new Set([...brandsFromProducts(products), "MEDICINE"]));
+  const brands = brandsFromProducts(products);
   const brand = search.brand ?? "all";
 
   const setBrand = (value: string) =>

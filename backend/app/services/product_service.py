@@ -72,6 +72,8 @@ async def get_by_id(db: AsyncSession, product_id: UUID) -> Product:
 async def create_product(db: AsyncSession, payload: ProductCreate) -> Product:
     data = payload.model_dump()
     data["slug"] = await unique_slug(db, payload.name, payload.slug)
+    data["short_description"] = data.get("short_description") or payload.name
+    data["full_description"] = data.get("full_description") or data["short_description"]
     product = Product(**data)
     db.add(product)
     await db.commit()
@@ -84,6 +86,10 @@ async def update_product(db: AsyncSession, product_id: UUID, payload: ProductUpd
     data: dict[str, Any] = payload.model_dump(exclude_unset=True)
     if "name" in data or "slug" in data:
         data["slug"] = await unique_slug(db, data.get("name", product.name), data.get("slug", product.slug), product.id)
+    if data.get("short_description") == "":
+        data["short_description"] = data.get("name", product.name)
+    if data.get("full_description") == "":
+        data["full_description"] = data.get("short_description", product.short_description)
     for key, value in data.items():
         setattr(product, key, value)
     await db.commit()

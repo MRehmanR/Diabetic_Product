@@ -15,13 +15,24 @@ export interface Product {
   acceptedModels: string[];
   category: string;
   brand: string;
-  payoutMin: number | null;
-  payoutMax: number | null;
   image: string | null;
   status: string;
   isActive: boolean;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  imageUrl: string | null;
+  author: string;
+  isPublished: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface SupplyResponse {
@@ -31,8 +42,6 @@ interface SupplyResponse {
   short_description: string;
   full_description?: string;
   category: string;
-  payout_min?: number | null;
-  payout_max?: number | null;
   requirements?: string[];
   models?: string[];
   accepted_models?: string[];
@@ -42,6 +51,19 @@ interface SupplyResponse {
   status?: string;
   created_at?: string;
   updated_at?: string;
+}
+
+interface BlogResponse {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  image_url?: string | null;
+  author: string;
+  is_published: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface OrderDetails {
@@ -129,7 +151,6 @@ const knownBrands = [
   "OneTouch",
   "Accu-Chek",
   "Contour",
-  "Bayer",
   "Medtronic",
   "Tandem",
   "Abbott",
@@ -157,8 +178,6 @@ const supplyToProduct = (supply: SupplyResponse): Product => ({
   acceptedModels: supply.accepted_models || supply.models || [],
   category: supply.category,
   brand: inferBrand(supply.name),
-  payoutMin: supply.payout_min ?? null,
-  payoutMax: supply.payout_max ?? null,
   image: supply.image_url || null,
   status: supply.status || "active",
   isActive: supply.is_active !== false && supply.status !== "inactive",
@@ -201,6 +220,34 @@ export async function loadProduct(id: string): Promise<ProductLoadResult> {
       error: error instanceof Error ? error.message : "Could not connect to the backend",
     };
   }
+}
+
+const blogToPost = (post: BlogResponse): BlogPost => ({
+  id: post.id,
+  title: post.title,
+  slug: post.slug,
+  excerpt: post.excerpt,
+  content: post.content,
+  imageUrl: post.image_url || null,
+  author: post.author,
+  isPublished: post.is_published,
+  createdAt: post.created_at,
+  updatedAt: post.updated_at,
+});
+
+export async function fetchBlogs(): Promise<BlogPost[]> {
+  const response = await fetch(`${API_URL}/blogs`);
+  if (!response.ok) throw new Error(await getErrorMessage(response, "Could not load blogs"));
+  const posts = (await response.json()) as BlogResponse[];
+  if (!Array.isArray(posts)) throw new Error("Invalid blogs response");
+  return posts.map(blogToPost);
+}
+
+export async function fetchBlog(slug: string): Promise<BlogPost | null> {
+  const response = await fetch(`${API_URL}/blogs/${encodeURIComponent(slug)}`);
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error(await getErrorMessage(response, "Could not load blog"));
+  return blogToPost((await response.json()) as BlogResponse);
 }
 
 export async function submitOffer({ product, details }: OfferPayload) {

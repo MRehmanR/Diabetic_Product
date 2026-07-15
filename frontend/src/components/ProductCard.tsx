@@ -30,7 +30,6 @@ export function ProductCard({ product }: { product: Product }) {
         <span className="w-fit rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
           Brand: {product.brand}
         </span>
-        <p className="line-clamp-2 text-sm text-muted-foreground">{product.description}</p>
 
         <div className="text-xs font-medium text-muted-foreground">
           {product.isActive ? "Ready for review" : "Not currently active"}

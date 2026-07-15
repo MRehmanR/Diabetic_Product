@@ -5,8 +5,6 @@ export interface Supply {
   short_description: string;
   full_description: string;
   category: string;
-  payout_min: number | null;
-  payout_max: number | null;
   requirements: string[];
   models: string[];
   accepted_models: string[];
@@ -36,14 +34,36 @@ export interface Offer {
   updated_at: string;
 }
 
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  image_url: string | null;
+  author: string;
+  status: string;
+  is_published: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BlogFormData {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  image_url: string;
+  author: string;
+  is_published: boolean;
+}
+
 export interface SupplyFormData {
   name: string;
   slug: string;
   short_description: string;
   full_description: string;
   category: string;
-  payout_min: number;
-  payout_max: number;
   requirements: string;
   models: string;
   image_url: string;

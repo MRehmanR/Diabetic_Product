@@ -177,7 +177,6 @@ export function OrderDialog({
                 <p className="w-fit rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
                   Brand: {product.brand}
                 </p>
-                <p className="text-sm text-muted-foreground">{product.description}</p>
               </div>
             </div>
           )}

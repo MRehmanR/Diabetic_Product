@@ -1,8 +1,7 @@
 import uuid
 from datetime import datetime
-from decimal import Decimal
 
-from sqlalchemy import Boolean, DateTime, Index, Numeric, String, Text, func
+from sqlalchemy import Boolean, DateTime, Index, String, Text, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -22,8 +21,6 @@ class Product(Base):
     requirements: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
     image_url: Mapped[str | None] = mapped_column(Text)
     status: Mapped[str] = mapped_column(String(30), default="active", index=True, nullable=False)
-    payout_min: Mapped[Decimal | None] = mapped_column(Numeric(10, 2))
-    payout_max: Mapped[Decimal | None] = mapped_column(Numeric(10, 2))
     features: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), index=True, nullable=False)

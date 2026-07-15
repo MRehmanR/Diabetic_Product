@@ -85,7 +85,7 @@ class QueryBuilder<T = unknown> implements PromiseLike<QueryResult<T>> {
   private mode: "select" | "insert" | "update" | "delete" = "select";
   private payload: unknown;
 
-  constructor(private table: "supplies" | "offers") {}
+  constructor(private table: "supplies" | "offers" | "blogs") {}
 
   select(_columns = "*") {
     this.mode = "select";
@@ -138,28 +138,30 @@ class QueryBuilder<T = unknown> implements PromiseLike<QueryResult<T>> {
     const result =
       this.table === "supplies"
         ? await request<unknown[]>("/supplies")
-        : await request<unknown[]>("/admin/offers");
+        : this.table === "blogs"
+          ? await request<unknown[]>("/admin/blogs")
+          : await request<unknown[]>("/admin/offers");
     if (result.error) return result as QueryResult<T>;
     const rows = Array.isArray(result.data) ? result.data : [];
     return { data: this.applyLocalSort(rows) as T, error: null };
   }
 
   private insertRequest(): Promise<QueryResult<T>> {
-    const path = this.table === "supplies" ? "/admin/supplies" : "/offers";
+    const path = this.table === "supplies" ? "/admin/supplies" : this.table === "blogs" ? "/admin/blogs" : "/offers";
     return request<T>(path, { method: "POST", body: JSON.stringify(this.payload) });
   }
 
   private updateRequest(): Promise<QueryResult<T>> {
     const id = this.filters.find((f) => f.column === "id")?.value;
     if (!id) return Promise.resolve({ data: null, error: { message: "Missing id filter" } });
-    const path = this.table === "supplies" ? `/admin/supplies/${id}` : `/admin/offers/${id}`;
+    const path = this.table === "supplies" ? `/admin/supplies/${id}` : this.table === "blogs" ? `/admin/blogs/${id}` : `/admin/offers/${id}`;
     return request<T>(path, { method: "PUT", body: JSON.stringify(this.payload) });
   }
 
   private deleteRequest(): Promise<QueryResult<T>> {
     const id = this.filters.find((f) => f.column === "id")?.value;
     if (!id) return Promise.resolve({ data: null, error: { message: "Missing id filter" } });
-    const path = this.table === "supplies" ? `/admin/supplies/${id}` : `/admin/offers/${id}`;
+    const path = this.table === "supplies" ? `/admin/supplies/${id}` : this.table === "blogs" ? `/admin/blogs/${id}` : `/admin/offers/${id}`;
     return request<T>(path, { method: "DELETE" });
   }
 
@@ -175,7 +177,7 @@ class QueryBuilder<T = unknown> implements PromiseLike<QueryResult<T>> {
 }
 
 export const adminApi = {
-  from(table: "supplies" | "offers") {
+  from(table: "supplies" | "offers" | "blogs") {
     return new QueryBuilder(table);
   },
   async uploadImage(file: File) {

@@ -12,7 +12,7 @@ from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
 
-from app.api import auth, dashboard, products, quote_requests, uploads
+from app.api import auth, blogs, dashboard, products, quote_requests, uploads
 from app.core.config import settings
 
 logging.basicConfig(level=logging.INFO)
@@ -53,6 +53,7 @@ async def global_exception_handler(_: Request, exc: Exception):
 
 
 app.include_router(auth.router, prefix="/api")
+app.include_router(blogs.router, prefix="/api")
 app.include_router(products.router, prefix="/api")
 app.include_router(quote_requests.router, prefix="/api")
 app.include_router(dashboard.router, prefix="/api")

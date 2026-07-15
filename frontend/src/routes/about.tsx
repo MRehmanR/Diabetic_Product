@@ -12,7 +12,6 @@ import { Layout } from "@/components/Layout";
 import { MedicalBackground } from "@/components/MedicalBackground";
 import { Button } from "@/components/ui/button";
 import { BUSINESS } from "@/lib/data";
-import howItWorksImage from "@/assets/how it work.jpeg";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -82,18 +81,18 @@ function HowItWorks() {
     <Layout>
       <section className="relative overflow-hidden gradient-soft border-b border-border/60">
         <MedicalBackground />
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:py-20">
+        <div className="mx-auto max-w-5xl px-4 py-16 text-center sm:px-6 lg:py-20">
           <div className="animate-fade-in">
             <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1 text-xs font-bold text-accent-foreground shadow-soft">
               <CheckCircle2 className="h-4 w-4" /> Simple. Fast. Secure.
             </span>
             <h1 className="text-4xl font-black uppercase tracking-wide text-[#06345f] sm:text-5xl">
-              4 Easy Steps To Get Paid
+              How To Get Paid
             </h1>
-            <p className="mt-4 max-w-xl text-lg text-muted-foreground">
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
               Select your product, get a clear offer, ship with a prepaid label, and receive payment after inspection.
             </p>
-            <div className="mt-7 flex flex-wrap gap-3">
+            <div className="mt-7 flex flex-wrap justify-center gap-3">
               <Button asChild size="lg">
                 <Link to="/products">Start With Your Product <ArrowRight className="h-4 w-4" /></Link>
               </Button>
@@ -101,15 +100,6 @@ function HowItWorks() {
                 <a href={`tel:${BUSINESS.phone}`}>Call {BUSINESS.phone}</a>
               </Button>
             </div>
-          </div>
-
-          <div className="overflow-hidden rounded-[2rem] border border-border/60 bg-white p-3 shadow-card">
-            <img
-              src={howItWorksImage}
-              alt="Four easy steps to get paid: select product, get an offer, free shipping label, and receive payment"
-              className="h-full w-full rounded-[1.5rem] object-cover"
-              loading="eager"
-            />
           </div>
         </div>
       </section>

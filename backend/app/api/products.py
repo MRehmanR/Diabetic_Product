@@ -20,8 +20,6 @@ def product_to_supply(product) -> dict:
         "short_description": product.short_description,
         "full_description": product.full_description,
         "category": product.category,
-        "payout_min": float(product.payout_min) if product.payout_min is not None else None,
-        "payout_max": float(product.payout_max) if product.payout_max is not None else None,
         "requirements": product.requirements or [],
         "models": product.accepted_models or [],
         "accepted_models": product.accepted_models or [],
