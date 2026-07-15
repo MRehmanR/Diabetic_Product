@@ -13,7 +13,7 @@ export function Footer() {
             <span className="font-display text-lg font-extrabold">{BUSINESS.name}</span>
           </Link>
           <p className="text-sm text-muted-foreground">
-            {BUSINESS.tagline}. Share what you have, then continue on WhatsApp with a real person from our team.
+            {BUSINESS.tagline}
           </p>
           <a
             href={BUSINESS.facebook}
