@@ -98,13 +98,13 @@ const businessPhone = import.meta.env.VITE_BUSINESS_PHONE?.trim() || DEFAULT_BUS
 const businessWhatsapp = businessPhone.replace(/\D/g, "") || DEFAULT_BUSINESS_PHONE.replace(/\D/g, "");
 
 export const BUSINESS = {
-  // name: "Diabetics King",
-  // // tagline: "Turn unused diabetic supplies into a fair, friendly offer",
-  // whatsapp: businessWhatsapp,
-  // phone: businessPhone,
-  // email: "info@diabaticking.com",
-  // facebook: "https://www.facebook.com/profile.php?id=61590383957242",
-  // city: "United States",
+  name: "Diabetics King",
+  tagline: "Turn unused diabetic supplies into a fair, friendly offer",
+  whatsapp: businessWhatsapp,
+  phone: businessPhone,
+  email: "info@diabaticking.com",
+  facebook: "https://www.facebook.com/profile.php?id=61590383957242",
+  city: "United States",
 };
 
 export const categoryIcons: Record<string, string> = {
