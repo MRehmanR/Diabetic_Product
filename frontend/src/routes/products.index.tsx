@@ -28,7 +28,11 @@ export const Route = createFileRoute("/products/")({
   head: () => ({
     meta: [
       { title: `Products We Buy - ${BUSINESS.name}` },
-      { name: "description", content: "Browse unused diabetic supplies Diabetics King is currently reviewing and start a friendly offer." },
+      {
+        name: "description",
+        content:
+          "Browse unused diabetic supplies Diabetics King is currently reviewing and start a friendly offer.",
+      },
       { property: "og:title", content: "Products We Buy" },
       { property: "og:url", content: "/products" },
     ],
@@ -52,11 +56,14 @@ function ProductsPage() {
   const brand = search.brand ?? "all";
 
   const setBrand = (value: string) =>
-    navigate({ search: (prev: ProductSearch) => ({ ...prev, brand: value === "all" ? undefined : value }) });
+    navigate({
+      search: (prev: ProductSearch) => ({ ...prev, brand: value === "all" ? undefined : value }),
+    });
 
   const filtered = useMemo(() => {
     let list: Product[] = products.filter((p) => {
-      const searchable = `${p.brand} ${p.name} ${p.category} ${categoryName(p.category)} ${p.description}`.toLowerCase();
+      const searchable =
+        `${p.brand} ${p.name} ${p.serialNumber || ""} ${p.category} ${categoryName(p.category)} ${p.description}`.toLowerCase();
 
       if (brand !== "all" && !searchable.includes(brand.toLowerCase())) return false;
       if (query && !searchable.includes(query.toLowerCase())) return false;
@@ -76,7 +83,9 @@ function ProductsPage() {
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
           <h1 className="text-3xl font-extrabold">Products We Buy</h1>
           <p className="mt-1 text-muted-foreground">
-            {error ? "Products could not be loaded" : `${filtered.length} products ready for a friendly review`}
+            {error
+              ? "Products could not be loaded"
+              : `${filtered.length} products ready for a friendly review`}
           </p>
         </div>
       </section>
@@ -87,17 +96,28 @@ function ProductsPage() {
             <h3 className="mb-3 font-bold">Find your supply</h3>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search by product, brand, or medicine..." className="pl-9" />
+              <Input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search by product, brand, or serial no..."
+                className="pl-9"
+              />
             </div>
           </div>
 
           <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft">
             <h3 className="mb-2 font-bold">Brand / Category</h3>
             <Select value={brand} onValueChange={setBrand}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All brands & categories</SelectItem>
-                {brands.map((name) => <SelectItem key={name} value={name}>{name}</SelectItem>)}
+                {brands.map((name) => (
+                  <SelectItem key={name} value={name}>
+                    {name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -110,12 +130,19 @@ function ProductsPage() {
             </div>
           )}
           <div className="mb-5 flex items-center justify-between gap-3">
-            <Button variant="outline" size="sm" className="lg:hidden" onClick={() => setShowFilters((v) => !v)}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="lg:hidden"
+              onClick={() => setShowFilters((v) => !v)}
+            >
               <SlidersHorizontal className="h-4 w-4" /> Filters
             </Button>
             <div className="ml-auto w-48">
               <Select value={sort} onValueChange={(v) => setSort(v as SortKey)}>
-                <SelectTrigger><SelectValue placeholder="Sort by" /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="newest">Newest</SelectItem>
                   <SelectItem value="name">Name</SelectItem>
@@ -130,7 +157,9 @@ function ProductsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {filtered.map((p) => <ProductCard key={p.id} product={p} />)}
+              {filtered.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
             </div>
           )}
         </div>

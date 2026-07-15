@@ -6,13 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { adminApi } from "@/lib/admin-api";
+import { resolveMediaUrl } from "@/lib/data";
 import type { BlogFormData, BlogPost } from "@/lib/admin-types";
 
 const emptyForm: BlogFormData = {
@@ -47,6 +43,7 @@ export function AdminBlogForm({
 }) {
   const [form, setForm] = useState<BlogFormData>(emptyForm);
   const [uploading, setUploading] = useState(false);
+  const imagePreviewUrl = resolveMediaUrl(form.image_url);
 
   useEffect(() => {
     if (post) {
@@ -170,8 +167,15 @@ export function AdminBlogForm({
                   placeholder="Optional image URL"
                 />
                 <Button type="button" variant="outline" disabled={uploading || loading}>
-                  <label htmlFor="blog-image-upload" className="flex cursor-pointer items-center gap-2">
-                    {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImagePlus className="h-4 w-4" />}
+                  <label
+                    htmlFor="blog-image-upload"
+                    className="flex cursor-pointer items-center gap-2"
+                  >
+                    {uploading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <ImagePlus className="h-4 w-4" />
+                    )}
                     Upload
                   </label>
                 </Button>
@@ -184,6 +188,13 @@ export function AdminBlogForm({
                 onChange={handleImageUpload}
                 disabled={uploading || loading}
               />
+              {imagePreviewUrl && (
+                <img
+                  src={imagePreviewUrl}
+                  alt="Blog preview"
+                  className="h-32 w-48 rounded-lg border object-cover"
+                />
+              )}
             </div>
 
             <div className="flex items-center gap-3 sm:col-span-2">

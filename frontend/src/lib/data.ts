@@ -98,7 +98,8 @@ export interface ProductLoadResult {
 
 const DEFAULT_BUSINESS_PHONE = "+16786580698";
 const businessPhone = import.meta.env.VITE_BUSINESS_PHONE?.trim() || DEFAULT_BUSINESS_PHONE;
-const businessWhatsapp = businessPhone.replace(/\D/g, "") || DEFAULT_BUSINESS_PHONE.replace(/\D/g, "");
+const businessWhatsapp =
+  businessPhone.replace(/\D/g, "") || DEFAULT_BUSINESS_PHONE.replace(/\D/g, "");
 
 export const BUSINESS = {
   name: "Diabetics King",
@@ -125,6 +126,7 @@ export const categoryIcons: Record<string, string> = {
 
 const PUBLIC_API_URL = import.meta.env.VITE_API_URL?.trim() || "http://localhost:8000/api";
 const INTERNAL_API_URL = import.meta.env.VITE_INTERNAL_API_URL?.trim();
+const PUBLIC_UPLOAD_BASE_URL = import.meta.env.VITE_PUBLIC_UPLOAD_BASE_URL?.trim() || "";
 
 const trimTrailingSlash = (value: string) => value.replace(/\/+$/, "");
 
@@ -137,6 +139,63 @@ const resolveApiUrl = () => {
 };
 
 const API_URL = resolveApiUrl();
+
+const getPublicApiOrigin = () => {
+  if (!/^https?:\/\//i.test(PUBLIC_API_URL)) return "";
+
+  try {
+    return new URL(PUBLIC_API_URL).origin;
+  } catch {
+    return "";
+  }
+};
+
+const getUploadBaseUrl = () => {
+  if (PUBLIC_UPLOAD_BASE_URL) return trimTrailingSlash(PUBLIC_UPLOAD_BASE_URL);
+
+  const apiOrigin = getPublicApiOrigin();
+  return apiOrigin ? `${apiOrigin}/uploads` : "";
+};
+
+const isLoopbackHost = (hostname: string) =>
+  ["localhost", "127.0.0.1", "0.0.0.0"].includes(hostname) || hostname.startsWith("127.");
+
+const withUploadBase = (pathname: string, search = "", hash = "") => {
+  const uploadBase = getUploadBaseUrl();
+  const relativePath = pathname.replace(/^\/uploads\/?/, "");
+
+  if (!uploadBase) {
+    return relativePath ? `/uploads/${relativePath}${search}${hash}` : `/uploads${search}${hash}`;
+  }
+
+  return relativePath
+    ? `${uploadBase}/${relativePath}${search}${hash}`
+    : `${uploadBase}${search}${hash}`;
+};
+
+export function resolveMediaUrl(url?: string | null) {
+  const value = url?.trim();
+  if (!value) return null;
+  if (/^(data|blob):/i.test(value)) return value;
+
+  if (/^https?:\/\//i.test(value)) {
+    try {
+      const parsed = new URL(value);
+
+      if (parsed.pathname.startsWith("/uploads/") && isLoopbackHost(parsed.hostname)) {
+        return withUploadBase(parsed.pathname, parsed.search, parsed.hash);
+      }
+    } catch {
+      return value;
+    }
+
+    return value;
+  }
+
+  if (value.startsWith("/uploads/")) return withUploadBase(value);
+
+  return value;
+}
 
 const toTitle = (value: string) =>
   value
@@ -182,7 +241,7 @@ const supplyToProduct = (supply: SupplyResponse): Product => ({
   category: supply.category,
   brand: supply.brand || inferBrand(supply.name),
   serialNumber: supply.serial_number || null,
-  image: supply.image_url || null,
+  image: resolveMediaUrl(supply.image_url),
   status: supply.status || "active",
   isActive: supply.is_active !== false && supply.status !== "inactive",
   createdAt: supply.created_at,
@@ -232,7 +291,7 @@ const blogToPost = (post: BlogResponse): BlogPost => ({
   slug: post.slug,
   excerpt: post.excerpt,
   content: post.content,
-  imageUrl: post.image_url || null,
+  imageUrl: resolveMediaUrl(post.image_url),
   author: post.author,
   isPublished: post.is_published,
   createdAt: post.created_at,
@@ -301,11 +360,7 @@ export function brandsFromProducts(items: Product[]) {
 
 export const categoryName = (slug: string) => toTitle(slug);
 
-export function buildWhatsappLink(
-  p: Product,
-  productUrl: string,
-  details: OrderDetails,
-) {
+export function buildWhatsappLink(p: Product, productUrl: string, details: OrderDetails) {
   const message = `Hello ${BUSINESS.name},
 
 I would like to offer the following product.

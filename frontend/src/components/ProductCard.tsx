@@ -7,7 +7,11 @@ import { type Product, categoryName } from "@/lib/data";
 export function ProductCard({ product }: { product: Product }) {
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-card">
-      <Link to="/products/$id" params={{ id: product.id }} className="relative block aspect-square overflow-hidden bg-muted">
+      <Link
+        to="/products/$id"
+        params={{ id: product.id }}
+        className="relative block aspect-square overflow-hidden bg-muted"
+      >
         {product.image ? (
           <img
             src={product.image}
@@ -23,13 +27,24 @@ export function ProductCard({ product }: { product: Product }) {
       </Link>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
-        <span className="text-xs font-semibold uppercase tracking-wide text-primary">{categoryName(product.category)}</span>
-        <Link to="/products/$id" params={{ id: product.id }} className="line-clamp-2 font-semibold leading-snug hover:text-primary">
+        <span className="text-xs font-semibold uppercase tracking-wide text-primary">
+          {categoryName(product.category)}
+        </span>
+        <Link
+          to="/products/$id"
+          params={{ id: product.id }}
+          className="line-clamp-2 font-semibold leading-snug hover:text-primary"
+        >
           {product.name}
         </Link>
         <span className="w-fit rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
           Brand: {product.brand}
         </span>
+        {product.serialNumber && (
+          <span className="text-xs font-semibold text-muted-foreground">
+            Serial No: {product.serialNumber}
+          </span>
+        )}
 
         <div className="text-xs font-medium text-muted-foreground">
           {product.isActive ? "Ready for review" : "Not currently active"}
@@ -37,7 +52,9 @@ export function ProductCard({ product }: { product: Product }) {
 
         <div className="mt-auto grid grid-cols-1 gap-2 pt-2 sm:grid-cols-2">
           <Button asChild variant="outline" size="sm">
-            <Link to="/products/$id" params={{ id: product.id }}>Details</Link>
+            <Link to="/products/$id" params={{ id: product.id }}>
+              Details
+            </Link>
           </Button>
           <OrderDialog product={product} disabled={!product.isActive}>
             <Button size="sm" variant="whatsapp" className="w-full" disabled={!product.isActive}>

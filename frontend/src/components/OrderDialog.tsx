@@ -42,15 +42,7 @@ const emptyDetails: OrderDetails = {
   notes: "",
 };
 
-const steps = [
-  "Product",
-  "Contact",
-  "Quantity",
-  "Condition",
-  "Expiry",
-  "Notes",
-  "Send",
-];
+const steps = ["Product", "Contact", "Quantity", "Condition", "Expiry", "Notes", "Send"];
 
 export function OrderDialog({
   product,
@@ -154,7 +146,10 @@ export function OrderDialog({
               <span>{progress}%</span>
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-muted">
-              <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progress}%` }} />
+              <div
+                className="h-full rounded-full bg-primary transition-all"
+                style={{ width: `${progress}%` }}
+              />
             </div>
           </div>
 
@@ -162,7 +157,11 @@ export function OrderDialog({
             <div className="grid gap-4 sm:grid-cols-[120px_1fr]">
               <div className="aspect-square overflow-hidden rounded-lg border bg-muted">
                 {product.image ? (
-                  <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="h-full w-full object-cover"
+                  />
                 ) : (
                   <div className="grid h-full place-items-center text-muted-foreground">
                     <Package className="h-10 w-10" />
@@ -177,6 +176,11 @@ export function OrderDialog({
                 <p className="w-fit rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
                   Brand: {product.brand}
                 </p>
+                {product.serialNumber && (
+                  <p className="text-xs font-semibold text-muted-foreground">
+                    Serial No: {product.serialNumber}
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -262,7 +266,10 @@ export function OrderDialog({
                 />
               </Field>
               <Field label="Months left" id="offer-months" required>
-                <Select value={details.monthsLeft} onValueChange={(value) => set("monthsLeft", value)}>
+                <Select
+                  value={details.monthsLeft}
+                  onValueChange={(value) => set("monthsLeft", value)}
+                >
                   <SelectTrigger id="offer-months">
                     <SelectValue />
                   </SelectTrigger>
@@ -306,7 +313,12 @@ export function OrderDialog({
         </div>
 
         <DialogFooter className="gap-2 sm:justify-between">
-          <Button type="button" variant="outline" disabled={step === 0 || submitting} onClick={() => setStep((value) => Math.max(value - 1, 0))}>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={step === 0 || submitting}
+            onClick={() => setStep((value) => Math.max(value - 1, 0))}
+          >
             <ArrowLeft className="h-4 w-4" /> Back
           </Button>
           {step < steps.length - 1 ? (
@@ -353,7 +365,10 @@ function Field({
   return (
     <div className="grid gap-2">
       <div className="flex items-center justify-between gap-3">
-        <Label htmlFor={id}>{label}{required ? " *" : ""}</Label>
+        <Label htmlFor={id}>
+          {label}
+          {required ? " *" : ""}
+        </Label>
         {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
       </div>
       {children}

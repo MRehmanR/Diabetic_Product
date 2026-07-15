@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { adminApi } from "@/lib/admin-api";
+import { resolveMediaUrl } from "@/lib/data";
 import {
   Select,
   SelectContent,
@@ -13,12 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { Supply, SupplyFormData } from "@/lib/admin-types";
 
 const emptyForm: SupplyFormData = {
@@ -55,6 +51,7 @@ export function AdminSupplyForm({
 }) {
   const [form, setForm] = useState<SupplyFormData>(emptyForm);
   const [uploading, setUploading] = useState(false);
+  const imagePreviewUrl = resolveMediaUrl(form.image_url);
 
   useEffect(() => {
     if (supply) {
@@ -124,7 +121,9 @@ export function AdminSupplyForm({
                 </SelectTrigger>
                 <SelectContent>
                   {brandOptions.map((brand) => (
-                    <SelectItem key={brand} value={brand}>{brand}</SelectItem>
+                    <SelectItem key={brand} value={brand}>
+                      {brand}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -165,8 +164,12 @@ export function AdminSupplyForm({
               <Label htmlFor="image_url">Product Image</Label>
               <div className="grid gap-3 sm:grid-cols-[160px_1fr]">
                 <div className="flex aspect-square items-center justify-center overflow-hidden rounded-lg border bg-muted">
-                  {form.image_url ? (
-                    <img src={form.image_url} alt="Product preview" className="h-full w-full object-cover" />
+                  {imagePreviewUrl ? (
+                    <img
+                      src={imagePreviewUrl}
+                      alt="Product preview"
+                      className="h-full w-full object-cover"
+                    />
                   ) : (
                     <Package className="h-10 w-10 text-muted-foreground" />
                   )}
@@ -181,13 +184,24 @@ export function AdminSupplyForm({
                   />
                   <div className="flex flex-wrap gap-2">
                     <Button type="button" variant="outline" disabled={uploading || loading}>
-                      <label htmlFor="product-image-upload" className="flex cursor-pointer items-center gap-2">
-                        {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImagePlus className="h-4 w-4" />}
+                      <label
+                        htmlFor="product-image-upload"
+                        className="flex cursor-pointer items-center gap-2"
+                      >
+                        {uploading ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <ImagePlus className="h-4 w-4" />
+                        )}
                         {uploading ? "Uploading..." : "Upload Image"}
                       </label>
                     </Button>
                     {form.image_url && (
-                      <Button type="button" variant="ghost" onClick={() => updateField("image_url", "")}>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => updateField("image_url", "")}
+                      >
                         Remove
                       </Button>
                     )}
