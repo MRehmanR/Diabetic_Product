@@ -3,8 +3,10 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import freestyleProducts from "@/assets/WhatsApp Image 2026-07-14 at 20.38.19.jpeg";
 import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
 import omnipodProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.44.29.jpeg";
-import oneTouchProducts from "@/assets/brands/one-touch.svg";
 import medicineProducts from "@/assets/medicine.jpeg";
+import { getBrandAsset } from "@/lib/brand-assets";
+
+const oneTouchProducts = getBrandAsset("ONE TOUCH", ["one-touch", "onetouch"]);
 
 const slides = [
   {
@@ -25,13 +27,17 @@ const slides = [
     title: "Omnipod Pod Supplies",
     caption: "We review sealed Omnipod boxes and continue the offer conversation on WhatsApp.",
   },
-  {
-    src: oneTouchProducts,
-    alt: "OneTouch Verio and OneTouch Ultra test strip boxes",
-    title: "OneTouch Test Strips",
-    caption: "Share brand, quantity, and expiry so our team can respond with context.",
-    fit: "contain",
-  },
+  ...(oneTouchProducts
+    ? [
+        {
+          src: oneTouchProducts,
+          alt: "OneTouch Verio and OneTouch Ultra test strip boxes",
+          title: "OneTouch Test Strips",
+          caption: "Share brand, quantity, and expiry so our team can respond with context.",
+          fit: "contain",
+        },
+      ]
+    : []),
   {
     src: medicineProducts,
     alt: "Medtronic diabetic medicine and pump supply boxes",

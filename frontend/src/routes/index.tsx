@@ -30,8 +30,8 @@ import {
   type Brand,
   type Product,
 } from "@/lib/data";
+import { getBrandAsset } from "@/lib/brand-assets";
 import freestyleProducts from "@/assets/WhatsApp Image 2026-07-14 at 20.38.19.jpeg";
-import oneTouchProducts from "@/assets/brands/one-touch.svg";
 import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
 import omnipodProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.44.29.jpeg";
 import medtronicImage from "@/assets/medtronic.jpeg";
@@ -100,14 +100,22 @@ const whyChoose = [
   },
 ];
 
-const brandImages = [
-  { name: "FREESTYLE", image: freestyleProducts, type: "Brand" },
-  { name: "DEXCOM", image: dexcomProducts, type: "Brand" },
-  { name: "OMNIPOD", image: omnipodProducts, type: "Brand" },
-  { name: "ONE TOUCH", image: oneTouchProducts, type: "Brand" },
-  { name: "MEDTRONIC", image: medtronicImage, type: "Brand" },
-  { name: "ACCU-CHEK", image: accuChekImage, type: "Brand" },
-  { name: "CONTOUR NEXT", image: contourNextImage, type: "Brand" },
+const brandImages: Array<{ name: string; image: string | null; type: string }> = [
+  { name: "FREESTYLE", image: getBrandAsset("FREESTYLE") ?? freestyleProducts, type: "Brand" },
+  { name: "DEXCOM", image: getBrandAsset("DEXCOM") ?? dexcomProducts, type: "Brand" },
+  { name: "OMNIPOD", image: getBrandAsset("OMNIPOD") ?? omnipodProducts, type: "Brand" },
+  {
+    name: "ONE TOUCH",
+    image: getBrandAsset("ONE TOUCH", ["one-touch", "onetouch"]),
+    type: "Brand",
+  },
+  { name: "MEDTRONIC", image: getBrandAsset("MEDTRONIC") ?? medtronicImage, type: "Brand" },
+  { name: "ACCU-CHEK", image: getBrandAsset("ACCU-CHEK") ?? accuChekImage, type: "Brand" },
+  {
+    name: "CONTOUR NEXT",
+    image: getBrandAsset("CONTOUR NEXT", ["contour-next"]) ?? contourNextImage,
+    type: "Brand",
+  },
 ];
 
 const normalizeBrandName = (value: string) => value.trim().replace(/\s+/g, " ").toUpperCase();

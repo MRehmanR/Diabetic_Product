@@ -2,16 +2,17 @@
 
 The homepage "Brands We Buy" section imports images from this folder.
 
-Current files:
+Current files can be SVG, PNG, JPG, JPEG, or WebP.
+
+Recommended filenames:
 
 - `freestyle.svg`
 - `dexcom.svg`
 - `omnipod.svg`
-- `bayer.svg`
-- `one-touch.svg`
+- `one-touch.png` or `one-touch.jpeg`
 - `medtronic.svg`
 - `accu-chek.svg`
+- `contour-next.png` or `contour-next.jpeg`
 
-If you have official brand or product images, replace these files and keep the
-same filenames. SVG, PNG, JPG, and WebP are fine, but if you change the file
-extension, update the imports in `frontend/src/routes/index.tsx`.
+The app now reads this folder automatically. If you add or replace a brand image
+with one of the recommended names, no code import change is needed.
