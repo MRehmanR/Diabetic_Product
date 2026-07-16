@@ -12,6 +12,7 @@ import type { ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { BUSINESS } from "@/lib/data";
+import logoUrl from "@/assets/logo.jpeg";
 
 function NotFoundComponent() {
   return (
@@ -76,16 +77,26 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: BUSINESS.name },
-      { name: "description", content: "Sell unused diabetic products to Diabetics King. Share your details and continue on WhatsApp for a friendly follow-up." },
+      {
+        name: "description",
+        content:
+          "Sell unused diabetic products to Diabetics King. Share your details and continue on WhatsApp for a friendly follow-up.",
+      },
       { name: "author", content: BUSINESS.name },
       { property: "og:title", content: BUSINESS.name },
-      { property: "og:description", content: "Friendly diabetic product buyback offers with quick WhatsApp follow-up." },
+      {
+        property: "og:description",
+        content: "Friendly diabetic product buyback offers with quick WhatsApp follow-up.",
+      },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: BUSINESS.name },
+      { property: "og:image", content: logoUrl },
+      { name: "twitter:image", content: logoUrl },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
-      { rel: "icon", href: "data:," },
+      { rel: "icon", href: logoUrl, type: "image/jpeg" },
+      { rel: "apple-touch-icon", href: logoUrl },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {

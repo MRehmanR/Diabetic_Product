@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { MessageCircle, Phone, MapPin, Facebook } from "lucide-react";
 import { BUSINESS } from "@/lib/data";
-import logoUrl from "@/assets/logo.png";
+import logoUrl from "@/assets/logo.jpeg";
 
 export function Footer() {
   return (

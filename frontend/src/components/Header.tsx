@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { HeartPulse, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { BUSINESS } from "@/lib/data";
+import logoUrl from "@/assets/logo.jpeg";
 
 const nav = [
   { to: "/", label: "Home" },
@@ -21,9 +22,11 @@ export function Header() {
           to="/"
           className="flex shrink-0 items-center gap-2 transition-transform hover:scale-[1.02]"
         >
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-white/15 text-white">
-            <HeartPulse className="h-5 w-5" />
-          </span>
+          <img
+            src={logoUrl}
+            alt={`${BUSINESS.name} logo`}
+            className="h-9 w-9 rounded-full bg-white object-cover ring-2 ring-white/25"
+          />
           <span className="font-display text-lg font-extrabold tracking-tight">
             {BUSINESS.name}
           </span>
