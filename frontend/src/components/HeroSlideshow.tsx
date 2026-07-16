@@ -1,58 +1,62 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import freestyleProducts from "@/assets/WhatsApp Image 2026-07-14 at 20.38.19.jpeg";
-import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
-import omnipodProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.44.29.jpeg";
 import medicineProducts from "@/assets/medicine.jpeg";
-import { getBrandAsset } from "@/lib/brand-assets";
 
-const oneTouchProducts = getBrandAsset("ONE TOUCH", ["one-touch", "onetouch"]);
+type HeroSlide = {
+  src: string;
+  alt: string;
+  title: string;
+  caption: string;
+  fit?: "contain" | "cover";
+};
 
-const slides = [
-  {
-    src: freestyleProducts,
-    alt: "FreeStyle Libre and FreeStyle diabetic testing supply boxes",
-    title: "FreeStyle & Libre Supplies",
-    caption: "We review sealed FreeStyle boxes and sensors with fair, friendly follow-up.",
-  },
-  {
-    src: dexcomProducts,
-    alt: "Dexcom G7 continuous glucose monitoring sensor boxes",
-    title: "Dexcom G7 Sensors",
-    caption: "Have unopened Dexcom supplies? Send the details and we will take a look.",
-  },
-  {
-    src: omnipodProducts,
-    alt: "Omnipod 5 pod supply boxes",
-    title: "Omnipod Pod Supplies",
-    caption: "We review sealed Omnipod boxes and continue the offer conversation on WhatsApp.",
-  },
-  ...(oneTouchProducts
-    ? [
-        {
-          src: oneTouchProducts,
-          alt: "OneTouch Verio and OneTouch Ultra test strip boxes",
-          title: "OneTouch Test Strips",
-          caption: "Share brand, quantity, and expiry so our team can respond with context.",
-          fit: "contain",
-        },
-      ]
-    : []),
+export type HeroBrandImage = {
+  name: string;
+  image: string | null;
+  description?: string;
+};
+
+const fallbackSlides: HeroSlide[] = [
   {
     src: medicineProducts,
-    alt: "Medtronic diabetic medicine and pump supply boxes",
-    title: "Medicine & Pump Supplies",
-    caption: "We also review selected sealed diabetes medicine and pump supplies.",
+    alt: "Diabetes medicine and pump supply boxes",
+    title: "Diabetes Supplies",
+    caption: "We review selected sealed diabetes supplies in a simple WhatsApp flow.",
+    fit: "cover",
   },
 ];
 
-export function HeroSlideshow() {
+export function HeroSlideshow({ brandImages = [] }: { brandImages?: HeroBrandImage[] }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
-  const go = useCallback((next: number) => {
-    setIndex((i) => (next + slides.length) % slides.length);
-  }, []);
+  const slides = useMemo(() => {
+    const brandSlides = brandImages
+      .filter((brand) => Boolean(brand.image))
+      .slice(0, 8)
+      .map((brand) => ({
+        src: brand.image as string,
+        alt: `${brand.name} diabetic supply brand`,
+        title: brand.name,
+        caption:
+          brand.description ||
+          "Choose this brand from our buying list and send the product details in a few simple steps.",
+        fit: "contain" as const,
+      }));
+
+    return brandSlides.length > 0 ? brandSlides : fallbackSlides;
+  }, [brandImages]);
+
+  const go = useCallback(
+    (next: number) => {
+      setIndex((i) => (next + slides.length) % slides.length);
+    },
+    [slides.length],
+  );
+
+  useEffect(() => {
+    setIndex((current) => (current >= slides.length ? 0 : current));
+  }, [slides.length]);
 
   useEffect(() => {
     if (paused) return;
@@ -62,7 +66,7 @@ export function HeroSlideshow() {
     }, 4200);
 
     return () => window.clearInterval(timer);
-  }, [paused]);
+  }, [paused, slides.length]);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") {

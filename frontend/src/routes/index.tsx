@@ -362,7 +362,7 @@ function Home() {
               </Button>
             </div>
           </div>
-          <HeroSlideshow />
+          <HeroSlideshow brandImages={visibleBrands} />
         </div>
       </section>
 
