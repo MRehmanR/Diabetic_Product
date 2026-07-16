@@ -344,7 +344,11 @@ function Home() {
                   <img
                     src={brand.image}
                     alt={`${brand.name} diabetic supply brand`}
+                    width={480}
+                    height={320}
                     loading="lazy"
+                    decoding="async"
+                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                     className="h-56 w-full object-contain p-4 sm:h-64 lg:h-72"
                   />
                 ) : (

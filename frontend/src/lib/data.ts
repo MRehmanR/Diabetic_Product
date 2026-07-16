@@ -139,8 +139,20 @@ const resolveApiUrl = () => {
 };
 
 const API_URL = resolveApiUrl();
-const PRODUCTS_CACHE_TTL_MS = 30_000;
+const PRODUCTS_CACHE_TTL_MS = 120_000;
 let productsCache: { timestamp: number; products: Product[] } | null = null;
+
+const getFreshProductsCache = () => {
+  if (
+    typeof window !== "undefined" &&
+    productsCache &&
+    Date.now() - productsCache.timestamp < PRODUCTS_CACHE_TTL_MS
+  ) {
+    return productsCache.products;
+  }
+
+  return null;
+};
 
 const getPublicApiOrigin = () => {
   if (!/^https?:\/\//i.test(PUBLIC_API_URL)) return "";
@@ -251,13 +263,8 @@ const supplyToProduct = (supply: SupplyResponse): Product => ({
 });
 
 export async function fetchProducts(): Promise<Product[]> {
-  if (
-    typeof window !== "undefined" &&
-    productsCache &&
-    Date.now() - productsCache.timestamp < PRODUCTS_CACHE_TTL_MS
-  ) {
-    return productsCache.products;
-  }
+  const cachedProducts = getFreshProductsCache();
+  if (cachedProducts) return cachedProducts;
 
   const response = await fetch(`${API_URL}/supplies`);
   if (!response.ok) throw new Error(await getErrorMessage(response, "Could not load products"));
@@ -284,6 +291,11 @@ export async function loadProducts(): Promise<ProductsLoadResult> {
 }
 
 export async function fetchProduct(id: string): Promise<Product | null> {
+  const cachedProduct = getFreshProductsCache()?.find(
+    (product) => product.id === id || product.backendId === id,
+  );
+  if (cachedProduct) return cachedProduct;
+
   const response = await fetch(`${API_URL}/supplies/${encodeURIComponent(id)}`);
   if (response.status === 404) return null;
   if (!response.ok) throw new Error(await getErrorMessage(response, "Could not load product"));

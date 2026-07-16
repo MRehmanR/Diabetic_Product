@@ -105,6 +105,10 @@ function ProductDetails() {
                 <img
                   src={product.image}
                   alt={product.name}
+                  width={900}
+                  height={900}
+                  decoding="async"
+                  fetchPriority="high"
                   className="aspect-square w-full object-cover"
                 />
               ) : (

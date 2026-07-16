@@ -17,7 +17,11 @@ export function ProductCard({ product }: { product: Product }) {
           <img
             src={product.image}
             alt={product.name}
+            width={480}
+            height={480}
             loading="lazy"
+            decoding="async"
+            sizes="(min-width: 1280px) 280px, (min-width: 640px) 50vw, 100vw"
             className="h-full w-full object-cover"
           />
         ) : (
@@ -34,6 +38,7 @@ export function ProductCard({ product }: { product: Product }) {
         <Link
           to="/products/$id"
           params={{ id: product.id }}
+          preload={false}
           className="line-clamp-2 font-semibold leading-snug hover:text-primary"
         >
           {product.name}

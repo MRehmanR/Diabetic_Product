@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.dependencies import require_admin
@@ -55,6 +55,7 @@ async def get_product(slug: str, db: AsyncSession = Depends(get_db)):
 
 @router.get("/supplies")
 async def list_supplies(
+    response: Response,
     page: int = Query(1, ge=1),
     page_size: int = Query(100, ge=1, le=100),
     search: str | None = None,
@@ -63,12 +64,14 @@ async def list_supplies(
     sort: str = "newest",
     db: AsyncSession = Depends(get_db),
 ):
+    response.headers["Cache-Control"] = "public, max-age=60, stale-while-revalidate=300"
     rows, _ = await product_service.list_products(db, page, page_size, search, category, status, sort)
     return [product_to_supply(row) for row in rows]
 
 
 @router.get("/supplies/{slug}")
-async def get_supply(slug: str, db: AsyncSession = Depends(get_db)):
+async def get_supply(slug: str, response: Response, db: AsyncSession = Depends(get_db)):
+    response.headers["Cache-Control"] = "public, max-age=60, stale-while-revalidate=300"
     return product_to_supply(await product_service.get_by_slug(db, slug))
 
 

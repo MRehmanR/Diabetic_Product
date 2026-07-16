@@ -60,7 +60,17 @@ app.include_router(dashboard.router, prefix="/api")
 app.include_router(uploads.router, prefix="/api")
 
 Path(settings.UPLOAD_DIR).mkdir(parents=True, exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
+
+
+class CachedStaticFiles(StaticFiles):
+    async def get_response(self, path, scope):
+        response = await super().get_response(path, scope)
+        if response.status_code == 200:
+            response.headers.setdefault("Cache-Control", "public, max-age=31536000, immutable")
+        return response
+
+
+app.mount("/uploads", CachedStaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
 
 
 @app.get("/health")
