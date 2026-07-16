@@ -22,7 +22,14 @@ import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { MedicalBackground } from "@/components/MedicalBackground";
-import { BUSINESS, buildSiteUrl, loadProducts, type Product } from "@/lib/data";
+import {
+  BUSINESS,
+  buildSiteUrl,
+  loadBrands,
+  loadProducts,
+  type Brand,
+  type Product,
+} from "@/lib/data";
 import freestyleProducts from "@/assets/WhatsApp Image 2026-07-14 at 20.38.19.jpeg";
 import oneTouchProducts from "@/assets/brands/one-touch.svg";
 import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
@@ -32,7 +39,14 @@ import accuChekImage from "@/assets/accu-chek.jpeg";
 import contourNextImage from "@/assets/contour next.jpeg";
 
 export const Route = createFileRoute("/")({
-  loader: () => loadProducts(),
+  loader: async () => {
+    const [productsResult, brandsResult] = await Promise.all([loadProducts(), loadBrands()]);
+    return {
+      ...productsResult,
+      brands: brandsResult.brands,
+      brandError: brandsResult.error,
+    };
+  },
   head: () => ({
     meta: [
       { title: BUSINESS.name },
@@ -98,11 +112,28 @@ const brandImages = [
 
 const normalizeBrandName = (value: string) => value.trim().replace(/\s+/g, " ").toUpperCase();
 
-function buildBrandCards(products: Product[]) {
-  const brands = new Map<string, { name: string; image: string | null; type: string }>();
+function buildBrandCards(products: Product[], editableBrands: Brand[]) {
+  const brands = new Map<
+    string,
+    { name: string; image: string | null; type: string; description?: string }
+  >();
+  const defaultImages = new Map(
+    brandImages.map((brand) => [normalizeBrandName(brand.name), brand.image]),
+  );
 
   brandImages.forEach((brand) => {
     brands.set(normalizeBrandName(brand.name), brand);
+  });
+
+  editableBrands.forEach((brand) => {
+    if (!brand.isActive) return;
+    const brandName = normalizeBrandName(brand.name);
+    brands.set(brandName, {
+      name: brandName,
+      image: brand.imageUrl || defaultImages.get(brandName) || null,
+      type: "Brand",
+      description: brand.description,
+    });
   });
 
   products.forEach((product) => {
@@ -286,10 +317,13 @@ const legalQuestions = [
 ];
 
 function Home() {
-  const { products, error } = Route.useLoaderData();
+  const { products, error, brands } = Route.useLoaderData();
   const activeProducts = useMemo(() => products.filter((product) => product.isActive), [products]);
   const featured = useMemo(() => activeProducts.slice(0, 8), [activeProducts]);
-  const visibleBrands = useMemo(() => buildBrandCards(activeProducts), [activeProducts]);
+  const visibleBrands = useMemo(
+    () => buildBrandCards(activeProducts, brands),
+    [activeProducts, brands],
+  );
 
   return (
     <Layout>
@@ -366,7 +400,7 @@ function Home() {
                   {brand.name}
                 </h3>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  View products from this {brand.type.toLowerCase()}
+                  {brand.description || `View products from this ${brand.type.toLowerCase()}`}
                 </p>
               </div>
             </Link>

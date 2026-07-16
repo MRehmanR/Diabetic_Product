@@ -54,7 +54,10 @@ async function rawRequest<T>(path: string, options: RequestInit = {}): Promise<Q
     if (!response.ok) return { data: null, error: { message: await parseError(response) } };
     return { data: (await response.json()) as T, error: null };
   } catch (error) {
-    return { data: null, error: { message: error instanceof Error ? error.message : "Network error" } };
+    return {
+      data: null,
+      error: { message: error instanceof Error ? error.message : "Network error" },
+    };
   }
 }
 
@@ -65,10 +68,13 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<Quer
   const refreshToken = getRefreshToken();
   if (!refreshToken) return first;
 
-  const refreshed = await rawRequest<{ access_token: string; refresh_token: string }>("/auth/refresh", {
-    method: "POST",
-    body: JSON.stringify({ refresh_token: refreshToken }),
-  });
+  const refreshed = await rawRequest<{ access_token: string; refresh_token: string }>(
+    "/auth/refresh",
+    {
+      method: "POST",
+      body: JSON.stringify({ refresh_token: refreshToken }),
+    },
+  );
   if (!refreshed.data) {
     clearTokens();
     return first;
@@ -78,6 +84,8 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<Quer
   return rawRequest<T>(path, options);
 }
 
+type AdminTable = "supplies" | "offers" | "blogs" | "brands";
+
 class QueryBuilder<T = unknown> implements PromiseLike<QueryResult<T>> {
   private filters: Filter[] = [];
   private sortColumn = "";
@@ -85,7 +93,7 @@ class QueryBuilder<T = unknown> implements PromiseLike<QueryResult<T>> {
   private mode: "select" | "insert" | "update" | "delete" = "select";
   private payload: unknown;
 
-  constructor(private table: "supplies" | "offers" | "blogs") {}
+  constructor(private table: AdminTable) {}
 
   select(_columns = "*") {
     this.mode = "select";
@@ -140,28 +148,51 @@ class QueryBuilder<T = unknown> implements PromiseLike<QueryResult<T>> {
         ? await request<unknown[]>("/supplies")
         : this.table === "blogs"
           ? await request<unknown[]>("/admin/blogs")
-          : await request<unknown[]>("/admin/offers");
+          : this.table === "brands"
+            ? await request<unknown[]>("/admin/brands")
+            : await request<unknown[]>("/admin/offers");
     if (result.error) return result as QueryResult<T>;
     const rows = Array.isArray(result.data) ? result.data : [];
     return { data: this.applyLocalSort(rows) as T, error: null };
   }
 
   private insertRequest(): Promise<QueryResult<T>> {
-    const path = this.table === "supplies" ? "/admin/supplies" : this.table === "blogs" ? "/admin/blogs" : "/offers";
+    const path =
+      this.table === "supplies"
+        ? "/admin/supplies"
+        : this.table === "blogs"
+          ? "/admin/blogs"
+          : this.table === "brands"
+            ? "/admin/brands"
+            : "/offers";
     return request<T>(path, { method: "POST", body: JSON.stringify(this.payload) });
   }
 
   private updateRequest(): Promise<QueryResult<T>> {
     const id = this.filters.find((f) => f.column === "id")?.value;
     if (!id) return Promise.resolve({ data: null, error: { message: "Missing id filter" } });
-    const path = this.table === "supplies" ? `/admin/supplies/${id}` : this.table === "blogs" ? `/admin/blogs/${id}` : `/admin/offers/${id}`;
+    const path =
+      this.table === "supplies"
+        ? `/admin/supplies/${id}`
+        : this.table === "blogs"
+          ? `/admin/blogs/${id}`
+          : this.table === "brands"
+            ? `/admin/brands/${id}`
+            : `/admin/offers/${id}`;
     return request<T>(path, { method: "PUT", body: JSON.stringify(this.payload) });
   }
 
   private deleteRequest(): Promise<QueryResult<T>> {
     const id = this.filters.find((f) => f.column === "id")?.value;
     if (!id) return Promise.resolve({ data: null, error: { message: "Missing id filter" } });
-    const path = this.table === "supplies" ? `/admin/supplies/${id}` : this.table === "blogs" ? `/admin/blogs/${id}` : `/admin/offers/${id}`;
+    const path =
+      this.table === "supplies"
+        ? `/admin/supplies/${id}`
+        : this.table === "blogs"
+          ? `/admin/blogs/${id}`
+          : this.table === "brands"
+            ? `/admin/brands/${id}`
+            : `/admin/offers/${id}`;
     return request<T>(path, { method: "DELETE" });
   }
 
@@ -177,7 +208,7 @@ class QueryBuilder<T = unknown> implements PromiseLike<QueryResult<T>> {
 }
 
 export const adminApi = {
-  from(table: "supplies" | "offers" | "blogs") {
+  from(table: AdminTable) {
     return new QueryBuilder(table);
   },
   async uploadImage(file: File) {
@@ -190,10 +221,13 @@ export const adminApi = {
   },
   auth: {
     async signInWithPassword({ email, password }: { email: string; password: string }) {
-      const result = await rawRequest<{ access_token: string; refresh_token: string }>("/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-      });
+      const result = await rawRequest<{ access_token: string; refresh_token: string }>(
+        "/auth/login",
+        {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+        },
+      );
       if (result.data) setTokens(result.data);
       return { data: result.data ? { session: result.data } : null, error: result.error };
     },

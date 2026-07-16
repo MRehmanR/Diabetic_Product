@@ -36,6 +36,18 @@ export interface BlogPost {
   updatedAt: string;
 }
 
+export interface Brand {
+  id: string;
+  name: string;
+  slug: string;
+  imageUrl: string | null;
+  description: string;
+  displayOrder: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface SupplyResponse {
   id: string;
   name: string;
@@ -54,6 +66,18 @@ interface SupplyResponse {
   status?: string;
   created_at?: string;
   updated_at?: string;
+}
+
+interface BrandResponse {
+  id: string;
+  name: string;
+  slug: string;
+  image_url?: string | null;
+  description?: string | null;
+  display_order?: number | null;
+  is_active?: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 interface BlogResponse {
@@ -93,6 +117,11 @@ export interface ProductsLoadResult {
 
 export interface ProductLoadResult {
   product: Product | null;
+  error: string | null;
+}
+
+export interface BrandsLoadResult {
+  brands: Brand[];
   error: string | null;
 }
 
@@ -270,6 +299,18 @@ const supplyToProduct = (supply: SupplyResponse): Product => ({
   updatedAt: supply.updated_at,
 });
 
+const brandToBrand = (brand: BrandResponse): Brand => ({
+  id: brand.id,
+  name: brand.name,
+  slug: brand.slug,
+  imageUrl: resolveMediaUrl(brand.image_url),
+  description: brand.description || "",
+  displayOrder: brand.display_order ?? 0,
+  isActive: brand.is_active !== false,
+  createdAt: brand.created_at,
+  updatedAt: brand.updated_at,
+});
+
 export async function fetchProducts(): Promise<Product[]> {
   const cachedProducts = getFreshProductsCache();
   if (cachedProducts) return cachedProducts;
@@ -293,6 +334,25 @@ export async function loadProducts(): Promise<ProductsLoadResult> {
   } catch (error) {
     return {
       products: [],
+      error: error instanceof Error ? error.message : "Could not connect to the backend",
+    };
+  }
+}
+
+export async function fetchBrands(): Promise<Brand[]> {
+  const response = await fetch(`${API_URL}/brands`);
+  if (!response.ok) throw new Error(await getErrorMessage(response, "Could not load brands"));
+  const brands = (await response.json()) as BrandResponse[];
+  if (!Array.isArray(brands)) throw new Error("Invalid brands response");
+  return brands.map(brandToBrand);
+}
+
+export async function loadBrands(): Promise<BrandsLoadResult> {
+  try {
+    return { brands: await fetchBrands(), error: null };
+  } catch (error) {
+    return {
+      brands: [],
       error: error instanceof Error ? error.message : "Could not connect to the backend",
     };
   }

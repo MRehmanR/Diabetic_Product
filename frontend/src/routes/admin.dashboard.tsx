@@ -20,9 +20,18 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { adminApi } from "@/lib/admin-api";
-import type { BlogFormData, BlogPost, Offer, Supply, SupplyFormData } from "@/lib/admin-types";
+import type {
+  BlogFormData,
+  BlogPost,
+  Brand,
+  BrandFormData,
+  Offer,
+  Supply,
+  SupplyFormData,
+} from "@/lib/admin-types";
 import { AdminSupplyForm } from "@/components/AdminSupplyForm";
 import { AdminBlogForm } from "@/components/AdminBlogForm";
+import { AdminBrandForm } from "@/components/AdminBrandForm";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -98,6 +107,7 @@ function AdminDashboardPage() {
   const [supplies, setSupplies] = useState<Supply[]>([]);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
   const [customBrands, setCustomBrands] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [authChecked, setAuthChecked] = useState(false);
@@ -108,14 +118,18 @@ function AdminDashboardPage() {
   const [blogSearch, setBlogSearch] = useState("");
   const [formOpen, setFormOpen] = useState(false);
   const [brandFormOpen, setBrandFormOpen] = useState(false);
+  const [brandDetailsFormOpen, setBrandDetailsFormOpen] = useState(false);
   const [blogFormOpen, setBlogFormOpen] = useState(false);
   const [editingSupply, setEditingSupply] = useState<Supply | null>(null);
   const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
+  const [editingBrand, setEditingBrand] = useState<Brand | null>(null);
   const [deleteSupply, setDeleteSupply] = useState<Supply | null>(null);
   const [deleteBlog, setDeleteBlog] = useState<BlogPost | null>(null);
+  const [deleteBrand, setDeleteBrand] = useState<Brand | null>(null);
   const [formLoading, setFormLoading] = useState(false);
   const [blogFormLoading, setBlogFormLoading] = useState(false);
   const [brandFormLoading, setBrandFormLoading] = useState(false);
+  const [brandDetailsFormLoading, setBrandDetailsFormLoading] = useState(false);
   const [editingOffer, setEditingOffer] = useState<Offer | null>(null);
   const [quoteAmount, setQuoteAmount] = useState("");
   const [brandToRename, setBrandToRename] = useState("");
@@ -137,10 +151,11 @@ function AdminDashboardPage() {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const [suppliesRes, offersRes, blogsRes] = await Promise.all([
+    const [suppliesRes, offersRes, blogsRes, brandsRes] = await Promise.all([
       adminApi.from("supplies").select("*").order("created_at", { ascending: false }),
       adminApi.from("offers").select("*").order("created_at", { ascending: false }),
       adminApi.from("blogs").select("*").order("created_at", { ascending: false }),
+      adminApi.from("brands").select("*").order("display_order", { ascending: true }),
     ]);
 
     if (suppliesRes.error)
@@ -149,10 +164,13 @@ function AdminDashboardPage() {
       toast.error("Could not load offers", { description: offersRes.error.message });
     if (blogsRes.error)
       toast.error("Could not load blogs", { description: blogsRes.error.message });
+    if (brandsRes.error)
+      toast.error("Could not load brands", { description: brandsRes.error.message });
 
     setSupplies((suppliesRes.data as Supply[]) || []);
     setOffers((offersRes.data as Offer[]) || []);
     setBlogs((blogsRes.data as BlogPost[]) || []);
+    setBrands((brandsRes.data as Brand[]) || []);
     setLoading(false);
   }, []);
 
@@ -199,9 +217,86 @@ function AdminDashboardPage() {
 
     toast.success(editingSupply ? "Product updated" : "Product added");
     setCustomBrands((prev) => (prev.includes(normalizedBrand) ? prev : [...prev, normalizedBrand]));
+    if (!brands.some((brand) => normalizeBrand(brand.name) === normalizedBrand)) {
+      const brandResult = await adminApi.from("brands").insert({
+        name: normalizedBrand,
+        description: "",
+        display_order: brands.length + 1,
+        is_active: true,
+      });
+      if (!brandResult.error && brandResult.data) {
+        setBrands((prev) => [...prev, brandResult.data as Brand]);
+      }
+    }
     setFormOpen(false);
     setEditingSupply(null);
     fetchData();
+  }
+
+  async function handleBrandDetailsSubmit(formData: BrandFormData) {
+    setBrandDetailsFormLoading(true);
+    const normalizedBrandName = normalizeBrand(formData.name);
+    const oldBrandName = editingBrand ? normalizeBrand(editingBrand.name) : "";
+    const payload = {
+      name: normalizedBrandName,
+      image_url: formData.image_url.trim() || null,
+      description: formData.description.trim(),
+      display_order: Number(formData.display_order) || 0,
+      is_active: formData.is_active,
+    };
+
+    const result = editingBrand
+      ? await adminApi.from("brands").update(payload).eq("id", editingBrand.id)
+      : await adminApi.from("brands").insert(payload);
+
+    if (result.error) {
+      setBrandDetailsFormLoading(false);
+      toast.error(editingBrand ? "Failed to update brand" : "Failed to add brand", {
+        description: result.error.message,
+      });
+      return;
+    }
+
+    if (editingBrand && oldBrandName && oldBrandName !== normalizedBrandName) {
+      const productsToUpdate = supplies.filter(
+        (supply) => normalizeBrand(supply.brand || "") === oldBrandName,
+      );
+      const updates = await Promise.all(
+        productsToUpdate.map((supply) =>
+          adminApi
+            .from("supplies")
+            .update({
+              brand: normalizedBrandName,
+              category: brandToCategory(normalizedBrandName),
+            })
+            .eq("id", supply.id),
+        ),
+      );
+      const failed = updates.find((update) => update.error);
+      if (failed?.error) {
+        toast.error("Brand saved, but some products were not updated", {
+          description: failed.error.message,
+        });
+      }
+    }
+
+    setBrandDetailsFormLoading(false);
+    toast.success(editingBrand ? "Brand updated" : "Brand added");
+    setBrandDetailsFormOpen(false);
+    setEditingBrand(null);
+    fetchData();
+  }
+
+  async function handleDeleteBrand() {
+    if (!deleteBrand) return;
+    const { error } = await adminApi.from("brands").delete().eq("id", deleteBrand.id);
+    if (error) {
+      toast.error("Failed to delete brand", { description: error.message });
+    } else {
+      toast.success("Brand deleted");
+      fetchData();
+    }
+    setDeleteBrand(null);
   }
 
   async function handleDelete() {
@@ -265,6 +360,18 @@ function AdminDashboardPage() {
       toast.error("Failed to rename brand", { description: failed.error.message });
       fetchData();
       return;
+    }
+
+    const matchingBrand = brands.find((brand) => normalizeBrand(brand.name) === oldBrand);
+    if (matchingBrand) {
+      await adminApi.from("brands").update({ name: renamedBrand }).eq("id", matchingBrand.id);
+    } else {
+      await adminApi.from("brands").insert({
+        name: renamedBrand,
+        description: "",
+        display_order: brands.length + 1,
+        is_active: true,
+      });
     }
 
     setSupplies((prev) =>
@@ -399,10 +506,11 @@ function AdminDashboardPage() {
       Array.from(
         new Set([
           ...supplies.map((supply) => normalizeBrand(supply.brand || "")).filter(Boolean),
+          ...brands.map((brand) => normalizeBrand(brand.name)).filter(Boolean),
           ...customBrands,
         ]),
       ).sort((a, b) => a.localeCompare(b)),
-    [supplies, customBrands],
+    [supplies, brands, customBrands],
   );
 
   const stats = [
@@ -479,6 +587,9 @@ function AdminDashboardPage() {
             </TabsTrigger>
             <TabsTrigger value="offers" className="gap-1.5">
               <ClipboardList className="h-3.5 w-3.5" /> Offers
+            </TabsTrigger>
+            <TabsTrigger value="brands" className="gap-1.5">
+              <Tags className="h-3.5 w-3.5" /> Brands
             </TabsTrigger>
             <TabsTrigger value="blogs" className="gap-1.5">
               <BookOpen className="h-3.5 w-3.5" /> Blogs
@@ -584,6 +695,37 @@ function AdminDashboardPage() {
             )}
           </TabsContent>
 
+          <TabsContent value="brands" className="space-y-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-muted-foreground">
+                Manage homepage brand names, images, descriptions, order, and visibility.
+              </p>
+              <Button
+                onClick={() => {
+                  setEditingBrand(null);
+                  setBrandDetailsFormOpen(true);
+                }}
+              >
+                <Plus className="h-4 w-4" /> Add Brand
+              </Button>
+            </div>
+
+            {loading ? (
+              <LoadingRows />
+            ) : brands.length === 0 ? (
+              <EmptyState icon={Tags} text="No brand records found" />
+            ) : (
+              <BrandsTable
+                brands={brands}
+                onEdit={(brand) => {
+                  setEditingBrand(brand);
+                  setBrandDetailsFormOpen(true);
+                }}
+                onDelete={setDeleteBrand}
+              />
+            )}
+          </TabsContent>
+
           <TabsContent value="blogs" className="space-y-4">
             <div className="flex flex-col gap-3 sm:flex-row">
               <div className="relative flex-1">
@@ -644,6 +786,17 @@ function AdminDashboardPage() {
         }}
         onSubmit={handleBlogSubmit}
         loading={blogFormLoading}
+      />
+
+      <AdminBrandForm
+        brand={editingBrand}
+        open={brandDetailsFormOpen}
+        onClose={() => {
+          setBrandDetailsFormOpen(false);
+          setEditingBrand(null);
+        }}
+        onSubmit={handleBrandDetailsSubmit}
+        loading={brandDetailsFormLoading}
       />
 
       <Dialog open={brandFormOpen} onOpenChange={(open) => !open && setBrandFormOpen(false)}>
@@ -762,6 +915,27 @@ function AdminDashboardPage() {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteBlog}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={!!deleteBrand} onOpenChange={(open) => !open && setDeleteBrand(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Brand</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{deleteBrand?.name}"? Products with this brand name
+              will remain, but this brand card will be removed from brand management.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteBrand}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Delete
@@ -894,6 +1068,90 @@ function BlogsTable({
                   size="icon"
                   className="h-8 w-8 text-destructive"
                   onClick={() => onDelete(post)}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
+function BrandsTable({
+  brands,
+  onEdit,
+  onDelete,
+}: {
+  brands: Brand[];
+  onEdit: (brand: Brand) => void;
+  onDelete: (brand: Brand) => void;
+}) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-border/50">
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-muted/30">
+            <TableHead>Brand</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead>Order</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {brands.map((brand) => (
+            <TableRow key={brand.id}>
+              <TableCell>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-muted">
+                    {brand.image_url ? (
+                      <img
+                        src={brand.image_url}
+                        alt={brand.name}
+                        className="h-full w-full object-contain bg-white p-1"
+                      />
+                    ) : (
+                      <Tags className="h-5 w-5 text-muted-foreground" />
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium">{brand.name}</p>
+                    <p className="text-xs text-muted-foreground">/{brand.slug}</p>
+                  </div>
+                </div>
+              </TableCell>
+              <TableCell className="max-w-[360px] text-muted-foreground">
+                <p className="line-clamp-2">{brand.description || "-"}</p>
+              </TableCell>
+              <TableCell>{brand.display_order}</TableCell>
+              <TableCell>
+                <Badge
+                  className={
+                    brand.is_active
+                      ? "bg-emerald-100 text-emerald-800"
+                      : "bg-muted text-muted-foreground"
+                  }
+                >
+                  {brand.is_active ? "Active" : "Inactive"}
+                </Badge>
+              </TableCell>
+              <TableCell className="text-right">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => onEdit(brand)}
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-destructive"
+                  onClick={() => onDelete(brand)}
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </Button>

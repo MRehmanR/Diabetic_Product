@@ -50,6 +50,18 @@ export interface BlogPost {
   updated_at: string;
 }
 
+export interface Brand {
+  id: string;
+  name: string;
+  slug: string;
+  image_url: string | null;
+  description: string;
+  display_order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface BlogFormData {
   title: string;
   slug: string;
@@ -58,6 +70,14 @@ export interface BlogFormData {
   image_url: string;
   author: string;
   is_published: boolean;
+}
+
+export interface BrandFormData {
+  name: string;
+  image_url: string;
+  description: string;
+  display_order: string;
+  is_active: boolean;
 }
 
 export interface SupplyFormData {
