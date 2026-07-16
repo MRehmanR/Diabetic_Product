@@ -1,33 +1,21 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import {
-  MessageCircle,
-  Share2,
-  Check,
-  ShieldCheck,
-  ArrowLeft,
-  Package,
-} from "lucide-react";
+import { MessageCircle, Share2, Check, ShieldCheck, ArrowLeft, Package } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { OrderDialog } from "@/components/OrderDialog";
-import {
-  loadProduct,
-  loadProducts,
-  categoryName,
-} from "@/lib/data";
+import { loadProduct, categoryName } from "@/lib/data";
 
 export const Route = createFileRoute("/products/$id")({
   loader: async ({ params }) => {
     const { product, error } = await loadProduct(params.id);
     if (!product && !error) throw notFound();
-    const { products } = product ? await loadProducts() : { products: [] };
     return {
       product,
       error,
-      related: products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4),
+      related: [],
     };
   },
   head: ({ loaderData }) => {
@@ -49,7 +37,9 @@ export const Route = createFileRoute("/products/$id")({
     <Layout>
       <div className="mx-auto max-w-2xl px-4 py-24 text-center">
         <h1 className="text-2xl font-bold">Product not found</h1>
-        <Button asChild className="mt-6"><Link to="/products">Back to products</Link></Button>
+        <Button asChild className="mt-6">
+          <Link to="/products">Back to products</Link>
+        </Button>
       </div>
     </Layout>
   ),
@@ -57,7 +47,9 @@ export const Route = createFileRoute("/products/$id")({
     <Layout>
       <div className="mx-auto max-w-2xl px-4 py-24 text-center">
         <h1 className="text-2xl font-bold">Product could not load</h1>
-        <Button asChild className="mt-6"><Link to="/products">Back to products</Link></Button>
+        <Button asChild className="mt-6">
+          <Link to="/products">Back to products</Link>
+        </Button>
       </div>
     </Layout>
   ),
@@ -75,7 +67,9 @@ function ProductDetails() {
           <p className="mt-2 text-sm text-muted-foreground">
             {error ? `Product list issue: ${error}` : "The product is unavailable."}
           </p>
-          <Button asChild className="mt-6"><Link to="/products">Back to products</Link></Button>
+          <Button asChild className="mt-6">
+            <Link to="/products">Back to products</Link>
+          </Button>
         </div>
       </Layout>
     );
@@ -84,7 +78,11 @@ function ProductDetails() {
   const share = async () => {
     const url = typeof window !== "undefined" ? window.location.href : "";
     if (navigator.share) {
-      try { await navigator.share({ title: product.name, url }); } catch { /* cancelled */ }
+      try {
+        await navigator.share({ title: product.name, url });
+      } catch {
+        /* cancelled */
+      }
     } else {
       await navigator.clipboard.writeText(url);
       toast.success("Product link copied to clipboard");
@@ -95,14 +93,20 @@ function ProductDetails() {
     <Layout>
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
         <Button asChild variant="ghost" size="sm" className="mb-4">
-          <Link to="/products"><ArrowLeft className="h-4 w-4" /> Back to products</Link>
+          <Link to="/products">
+            <ArrowLeft className="h-4 w-4" /> Back to products
+          </Link>
         </Button>
 
         <div className="grid gap-10 lg:grid-cols-2">
           <div>
             <div className="overflow-hidden rounded-3xl border border-border/60 bg-muted shadow-soft">
               {product.image ? (
-                <img src={product.image} alt={product.name} className="aspect-square w-full object-cover" />
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="aspect-square w-full object-cover"
+                />
               ) : (
                 <div className="grid aspect-square w-full place-items-center text-muted-foreground">
                   <Package className="h-16 w-16" />
@@ -113,7 +117,9 @@ function ProductDetails() {
 
           <div className="space-y-5">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge className="bg-accent text-accent-foreground">{categoryName(product.category)}</Badge>
+              <Badge className="bg-accent text-accent-foreground">
+                {categoryName(product.category)}
+              </Badge>
               <Badge variant="secondary">Brand: {product.brand}</Badge>
               <Badge variant={product.isActive ? "default" : "secondary"}>
                 {product.isActive ? "Ready for review" : product.status}
@@ -123,7 +129,11 @@ function ProductDetails() {
 
             <div className="flex flex-wrap gap-3">
               <OrderDialog product={product} disabled={!product.isActive}>
-                <Button size="lg" disabled={!product.isActive} className="flex-1 bg-whatsapp text-whatsapp-foreground hover:bg-whatsapp/90">
+                <Button
+                  size="lg"
+                  disabled={!product.isActive}
+                  className="flex-1 bg-whatsapp text-whatsapp-foreground hover:bg-whatsapp/90"
+                >
                   <MessageCircle className="h-5 w-5" /> Ask on WhatsApp
                 </Button>
               </OrderDialog>
@@ -133,9 +143,12 @@ function ProductDetails() {
             </div>
 
             <div className="rounded-2xl border border-border/60 bg-card p-4">
-              <div className="flex items-center gap-2 text-sm font-bold"><ShieldCheck className="h-4 w-4 text-secondary" /> Friendly review team ready</div>
+              <div className="flex items-center gap-2 text-sm font-bold">
+                <ShieldCheck className="h-4 w-4 text-secondary" /> Friendly review team ready
+              </div>
               <p className="mt-2 text-sm text-muted-foreground">
-                This product is part of our current buying list. Your details are saved before WhatsApp opens, so our team can respond with context.
+                This product is part of our current buying list. Your details are saved before
+                WhatsApp opens, so our team can respond with context.
               </p>
             </div>
           </div>
@@ -166,7 +179,9 @@ function ProductDetails() {
           <div className="mt-16">
             <h2 className="mb-6 text-2xl font-extrabold">Related Products</h2>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {related.map((p) => <ProductCard key={p.id} product={p} />)}
+              {related.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
             </div>
           </div>
         )}

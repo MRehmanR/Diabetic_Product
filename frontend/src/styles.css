@@ -141,8 +141,16 @@
   --sidebar-accent-foreground: oklch(0.96 0.025 230);
   --sidebar-border: oklch(1 0 0 / 12%);
   --sidebar-ring: oklch(0.78 0.14 230);
-  --gradient-hero: linear-gradient(135deg, oklch(0.78 0.14 230) 0%, oklch(0.72 0.15 218) 52%, oklch(0.76 0.11 205) 100%);
-  --gradient-soft: radial-gradient(circle at 10% 0%, oklch(0.86 0.09 215 / 0.18) 0%, transparent 34%), radial-gradient(circle at 90% 20%, oklch(0.78 0.14 230 / 0.18) 0%, transparent 32%), linear-gradient(180deg, oklch(0.25 0.06 255) 0%, oklch(0.18 0.055 255) 100%);
+  --gradient-hero: linear-gradient(
+    135deg,
+    oklch(0.78 0.14 230) 0%,
+    oklch(0.72 0.15 218) 52%,
+    oklch(0.76 0.11 205) 100%
+  );
+  --gradient-soft:
+    radial-gradient(circle at 10% 0%, oklch(0.86 0.09 215 / 0.18) 0%, transparent 34%),
+    radial-gradient(circle at 90% 20%, oklch(0.78 0.14 230 / 0.18) 0%, transparent 32%),
+    linear-gradient(180deg, oklch(0.25 0.06 255) 0%, oklch(0.18 0.055 255) 100%);
 }
 
 @layer base {
@@ -164,7 +172,10 @@
     text-rendering: geometricPrecision;
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     letter-spacing: -0.025em;
     line-height: 1.05;
@@ -195,8 +206,13 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 @utility animate-float {
@@ -205,9 +221,16 @@
 
 /* Slow drifting blobs for animated medical backgrounds */
 @keyframes blob-drift {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -40px) scale(1.1); }
-  66% { transform: translate(-20px, 20px) scale(0.95); }
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -40px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
 }
 
 @utility animate-blob {
@@ -216,9 +239,15 @@
 
 /* Animated gradient sweep */
 @keyframes gradient-pan {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @utility animate-gradient {
@@ -228,8 +257,12 @@
 
 /* Horizontal seller review marquee */
 @keyframes reviews-marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .reviews-marquee {
@@ -261,11 +294,32 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .reviews-marquee {
+    mask-image: none;
+    -webkit-mask-image: none;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .reviews-marquee-track {
+    animation: none;
+  }
+}
+
 /* Rising medical particles (pulse dots) */
 @keyframes pulse-ring {
-  0% { transform: scale(0.9); opacity: 0.7; }
-  70% { transform: scale(1.6); opacity: 0; }
-  100% { opacity: 0; }
+  0% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 @utility animate-pulse-ring {
@@ -274,8 +328,12 @@
 
 /* Subtle grid drift */
 @keyframes grid-move {
-  0% { background-position: 0 0; }
-  100% { background-position: 40px 40px; }
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 40px 40px;
+  }
 }
 
 /* Reusable animated medical background */
@@ -289,7 +347,9 @@
 
 /* ECG heartbeat line sweep */
 @keyframes ecg-dash {
-  to { stroke-dashoffset: -1000; }
+  to {
+    stroke-dashoffset: -1000;
+  }
 }
 
 @utility animate-ecg {

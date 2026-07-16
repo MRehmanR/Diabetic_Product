@@ -111,9 +111,12 @@ function AdminDashboardPage() {
       adminApi.from("blogs").select("*").order("created_at", { ascending: false }),
     ]);
 
-    if (suppliesRes.error) toast.error("Could not load products", { description: suppliesRes.error.message });
-    if (offersRes.error) toast.error("Could not load offers", { description: offersRes.error.message });
-    if (blogsRes.error) toast.error("Could not load blogs", { description: blogsRes.error.message });
+    if (suppliesRes.error)
+      toast.error("Could not load products", { description: suppliesRes.error.message });
+    if (offersRes.error)
+      toast.error("Could not load offers", { description: offersRes.error.message });
+    if (blogsRes.error)
+      toast.error("Could not load blogs", { description: blogsRes.error.message });
 
     setSupplies((suppliesRes.data as Supply[]) || []);
     setOffers((offersRes.data as Offer[]) || []);
@@ -240,27 +243,53 @@ function AdminDashboardPage() {
   const filteredSupplies = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return supplies;
-    return supplies.filter((supply) => `${supply.name} ${supply.brand || ""} ${supply.serial_number || ""} ${supply.category}`.toLowerCase().includes(q));
+    return supplies.filter((supply) =>
+      `${supply.name} ${supply.brand || ""} ${supply.serial_number || ""} ${supply.category}`
+        .toLowerCase()
+        .includes(q),
+    );
   }, [supplies, search]);
 
   const filteredOffers = useMemo(() => {
     const q = offerSearch.trim().toLowerCase();
     if (!q) return offers;
     return offers.filter((offer) =>
-      `${offer.name} ${offer.email || ""} ${offer.phone || ""} ${offer.supply_type}`.toLowerCase().includes(q),
+      `${offer.name} ${offer.email || ""} ${offer.phone || ""} ${offer.supply_type}`
+        .toLowerCase()
+        .includes(q),
     );
   }, [offers, offerSearch]);
 
   const filteredBlogs = useMemo(() => {
     const q = blogSearch.trim().toLowerCase();
     if (!q) return blogs;
-    return blogs.filter((post) => `${post.title} ${post.excerpt} ${post.author}`.toLowerCase().includes(q));
+    return blogs.filter((post) =>
+      `${post.title} ${post.excerpt} ${post.author}`.toLowerCase().includes(q),
+    );
   }, [blogs, blogSearch]);
+
+  const availableBrands = useMemo(
+    () =>
+      Array.from(new Set(supplies.map((supply) => supply.brand).filter(Boolean))).sort((a, b) =>
+        a.localeCompare(b),
+      ),
+    [supplies],
+  );
 
   const stats = [
     { label: "Total Products", value: supplies.length, icon: Package, color: "text-primary" },
-    { label: "Active", value: supplies.filter((s) => s.is_active).length, icon: TrendingUp, color: "text-emerald-600" },
-    { label: "Pending Offers", value: offers.filter((o) => o.status === "pending").length, icon: Clock, color: "text-amber-600" },
+    {
+      label: "Active",
+      value: supplies.filter((s) => s.is_active).length,
+      icon: TrendingUp,
+      color: "text-emerald-600",
+    },
+    {
+      label: "Pending Offers",
+      value: offers.filter((o) => o.status === "pending").length,
+      icon: Clock,
+      color: "text-amber-600",
+    },
     { label: "Blog Articles", value: blogs.length, icon: BookOpen, color: "text-primary" },
   ];
 
@@ -282,7 +311,9 @@ function AdminDashboardPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Admin Dashboard</h1>
-              <p className="text-sm text-muted-foreground">Manage backend products and customer offers</p>
+              <p className="text-sm text-muted-foreground">
+                Manage backend products and customer offers
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -335,7 +366,12 @@ function AdminDashboardPage() {
                   className="pl-9"
                 />
               </div>
-              <Button onClick={() => { setEditingSupply(null); setFormOpen(true); }}>
+              <Button
+                onClick={() => {
+                  setEditingSupply(null);
+                  setFormOpen(true);
+                }}
+              >
                 <Plus className="h-4 w-4" /> Add Product
               </Button>
             </div>
@@ -347,7 +383,10 @@ function AdminDashboardPage() {
             ) : (
               <ProductsTable
                 supplies={filteredSupplies}
-                onEdit={(supply) => { setEditingSupply(supply); setFormOpen(true); }}
+                onEdit={(supply) => {
+                  setEditingSupply(supply);
+                  setFormOpen(true);
+                }}
                 onDelete={setDeleteSupply}
               />
             )}
@@ -391,7 +430,12 @@ function AdminDashboardPage() {
                   className="pl-9"
                 />
               </div>
-              <Button onClick={() => { setEditingBlog(null); setBlogFormOpen(true); }}>
+              <Button
+                onClick={() => {
+                  setEditingBlog(null);
+                  setBlogFormOpen(true);
+                }}
+              >
                 <Plus className="h-4 w-4" /> Add Article
               </Button>
             </div>
@@ -403,7 +447,10 @@ function AdminDashboardPage() {
             ) : (
               <BlogsTable
                 posts={filteredBlogs}
-                onEdit={(post) => { setEditingBlog(post); setBlogFormOpen(true); }}
+                onEdit={(post) => {
+                  setEditingBlog(post);
+                  setBlogFormOpen(true);
+                }}
                 onDelete={setDeleteBlog}
               />
             )}
@@ -414,15 +461,22 @@ function AdminDashboardPage() {
       <AdminSupplyForm
         supply={editingSupply}
         open={formOpen}
-        onClose={() => { setFormOpen(false); setEditingSupply(null); }}
+        onClose={() => {
+          setFormOpen(false);
+          setEditingSupply(null);
+        }}
         onSubmit={handleFormSubmit}
         loading={formLoading}
+        brandOptions={availableBrands}
       />
 
       <AdminBlogForm
         post={editingBlog}
         open={blogFormOpen}
-        onClose={() => { setBlogFormOpen(false); setEditingBlog(null); }}
+        onClose={() => {
+          setBlogFormOpen(false);
+          setEditingBlog(null);
+        }}
         onSubmit={handleBlogSubmit}
         loading={blogFormLoading}
       />
@@ -437,7 +491,10 @@ function AdminDashboardPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -450,7 +507,9 @@ function AdminDashboardPage() {
             <AlertDialogTitle>Send Quote to {editingOffer?.name}</AlertDialogTitle>
             <AlertDialogDescription>
               {editingOffer?.supply_type} - Qty: {editingOffer?.quantity}
-              {editingOffer?.condition_description ? ` - ${editingOffer.condition_description}` : ""}
+              {editingOffer?.condition_description
+                ? ` - ${editingOffer.condition_description}`
+                : ""}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="space-y-3 py-2">
@@ -493,7 +552,10 @@ function AdminDashboardPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteBlog} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction
+              onClick={handleDeleteBlog}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -530,18 +592,36 @@ function ProductsTable({
               <TableCell className="max-w-[260px] font-medium">
                 <span className="line-clamp-1">{supply.name}</span>
               </TableCell>
-              <TableCell className="text-muted-foreground">{supply.brand || supply.category}</TableCell>
+              <TableCell className="text-muted-foreground">
+                {supply.brand || supply.category}
+              </TableCell>
               <TableCell className="text-muted-foreground">{supply.serial_number || "-"}</TableCell>
               <TableCell>
-                <Badge className={supply.is_active ? "bg-emerald-100 text-emerald-800" : "bg-muted text-muted-foreground"}>
+                <Badge
+                  className={
+                    supply.is_active
+                      ? "bg-emerald-100 text-emerald-800"
+                      : "bg-muted text-muted-foreground"
+                  }
+                >
                   {supply.is_active ? "Active" : "Inactive"}
                 </Badge>
               </TableCell>
               <TableCell className="text-right">
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(supply)}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => onEdit(supply)}
+                >
                   <Pencil className="h-3.5 w-3.5" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => onDelete(supply)}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-destructive"
+                  onClick={() => onDelete(supply)}
+                >
                   <Trash2 className="h-3.5 w-3.5" />
                 </Button>
               </TableCell>
@@ -582,15 +662,31 @@ function BlogsTable({
               </TableCell>
               <TableCell className="text-muted-foreground">{post.author}</TableCell>
               <TableCell>
-                <Badge className={post.is_published ? "bg-emerald-100 text-emerald-800" : "bg-muted text-muted-foreground"}>
+                <Badge
+                  className={
+                    post.is_published
+                      ? "bg-emerald-100 text-emerald-800"
+                      : "bg-muted text-muted-foreground"
+                  }
+                >
                   {post.is_published ? "Published" : "Draft"}
                 </Badge>
               </TableCell>
               <TableCell className="text-right">
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(post)}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => onEdit(post)}
+                >
                   <Pencil className="h-3.5 w-3.5" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => onDelete(post)}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-destructive"
+                  onClick={() => onDelete(post)}
+                >
                   <Trash2 className="h-3.5 w-3.5" />
                 </Button>
               </TableCell>
@@ -633,33 +729,65 @@ function OffersTable({
                 <TableCell>
                   <div>
                     <p className="font-medium">{offer.name}</p>
-                    <p className="text-xs text-muted-foreground">{offer.email || "No email provided"}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {offer.email || "No email provided"}
+                    </p>
                   </div>
                 </TableCell>
                 <TableCell>{offer.supply_type}</TableCell>
                 <TableCell>{offer.quantity}</TableCell>
-                <TableCell className="text-muted-foreground">{offer.expiration_date || "N/A"}</TableCell>
-                <TableCell><Badge className={status.className}>{status.label}</Badge></TableCell>
-                <TableCell className="font-semibold">{offer.quoted_amount ? formatMoney(offer.quoted_amount) : "-"}</TableCell>
+                <TableCell className="text-muted-foreground">
+                  {offer.expiration_date || "N/A"}
+                </TableCell>
+                <TableCell>
+                  <Badge className={status.className}>{status.label}</Badge>
+                </TableCell>
+                <TableCell className="font-semibold">
+                  {offer.quoted_amount ? formatMoney(offer.quoted_amount) : "-"}
+                </TableCell>
                 <TableCell className="text-right">
                   <div className="flex flex-wrap justify-end gap-1">
                     {offer.status === "pending" && (
-                      <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => onQuote(offer)}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 text-xs"
+                        onClick={() => onQuote(offer)}
+                      >
                         <DollarSign className="h-3 w-3" /> Quote
                       </Button>
                     )}
                     {offer.status === "quoted" && (
                       <>
-                        <Button variant="ghost" size="sm" className="h-7 text-xs text-emerald-600" onClick={() => onStatus(offer, "accepted", offer.quoted_amount || undefined)}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 text-xs text-emerald-600"
+                          onClick={() =>
+                            onStatus(offer, "accepted", offer.quoted_amount || undefined)
+                          }
+                        >
                           <CheckCircle2 className="h-3 w-3" /> Accept
                         </Button>
-                        <Button variant="ghost" size="sm" className="h-7 text-xs text-red-600" onClick={() => onStatus(offer, "declined")}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 text-xs text-red-600"
+                          onClick={() => onStatus(offer, "declined")}
+                        >
                           <X className="h-3 w-3" /> Decline
                         </Button>
                       </>
                     )}
                     {offer.status === "accepted" && (
-                      <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => onStatus(offer, "completed", offer.quoted_amount || undefined)}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 text-xs"
+                        onClick={() =>
+                          onStatus(offer, "completed", offer.quoted_amount || undefined)
+                        }
+                      >
                         <CheckCircle2 className="h-3 w-3" /> Complete
                       </Button>
                     )}
@@ -684,7 +812,13 @@ function LoadingRows() {
   );
 }
 
-function EmptyState({ icon: Icon, text }: { icon: React.ComponentType<{ className?: string }>; text: string }) {
+function EmptyState({
+  icon: Icon,
+  text,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  text: string;
+}) {
   return (
     <div className="py-12 text-center">
       <Icon className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />

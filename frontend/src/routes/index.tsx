@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo } from "react";
 import {
   ShieldCheck,
   Award,
@@ -21,9 +22,9 @@ import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { MedicalBackground } from "@/components/MedicalBackground";
-import { BUSINESS, loadProducts } from "@/lib/data";
+import { BUSINESS, loadProducts, type Product } from "@/lib/data";
 import freestyleProducts from "@/assets/WhatsApp Image 2026-07-14 at 20.38.19.jpeg";
-import oneTouchProducts from "@/assets/download (14).png";
+import oneTouchProducts from "@/assets/brands/one-touch.svg";
 import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
 import omnipodProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.44.29.jpeg";
 import medtronicImage from "@/assets/medtronic.jpeg";
@@ -41,7 +42,10 @@ export const Route = createFileRoute("/")({
           "Sell your unused Dexcom, Omnipod, FreeStyle Libre 3 Plus sensors, Ozempic, test strips, and more to Diabetics King.",
       },
       { property: "og:title", content: "Diabetics King" },
-      { property: "og:description", content: "Turn your extra diabetes supplies into cash and get top dollar." },
+      {
+        property: "og:description",
+        content: "Turn your extra diabetes supplies into cash and get top dollar.",
+      },
       { property: "og:url", content: "/" },
     ],
     links: [{ rel: "canonical", href: "/" }],
@@ -50,12 +54,36 @@ export const Route = createFileRoute("/")({
 });
 
 const whyChoose = [
-  { icon: ShieldCheck, title: "Respectful Review", text: "We look at your supply details carefully before following up." },
-  { icon: PackageCheck, title: "Clear Product Details", text: "Brand, condition, quantity, and expiry are kept easy to understand." },
-  { icon: Award, title: "Focused Buying", text: "You only see the product types we are currently reviewing." },
-  { icon: Lock, title: "Private Submission", text: "Your information is handled with care before the WhatsApp conversation starts." },
-  { icon: MessageCircle, title: "Real WhatsApp Follow-Up", text: "A real person can continue the conversation with the details you already sent." },
-  { icon: Zap, title: "Quick Next Step", text: "The form gives our team what they need to respond without back-and-forth confusion." },
+  {
+    icon: ShieldCheck,
+    title: "Respectful Review",
+    text: "We look at your supply details carefully before following up.",
+  },
+  {
+    icon: PackageCheck,
+    title: "Clear Product Details",
+    text: "Brand, condition, quantity, and expiry are kept easy to understand.",
+  },
+  {
+    icon: Award,
+    title: "Focused Buying",
+    text: "You only see the product types we are currently reviewing.",
+  },
+  {
+    icon: Lock,
+    title: "Private Submission",
+    text: "Your information is handled with care before the WhatsApp conversation starts.",
+  },
+  {
+    icon: MessageCircle,
+    title: "Real WhatsApp Follow-Up",
+    text: "A real person can continue the conversation with the details you already sent.",
+  },
+  {
+    icon: Zap,
+    title: "Quick Next Step",
+    text: "The form gives our team what they need to respond without back-and-forth confusion.",
+  },
 ];
 
 const brandImages = [
@@ -68,49 +96,81 @@ const brandImages = [
   { name: "CONTOUR NEXT", image: contourNextImage, type: "Brand" },
 ];
 
+const normalizeBrandName = (value: string) => value.trim().replace(/\s+/g, " ").toUpperCase();
+
+function buildBrandCards(products: Product[]) {
+  const brands = new Map<string, { name: string; image: string | null; type: string }>();
+
+  brandImages.forEach((brand) => {
+    brands.set(normalizeBrandName(brand.name), brand);
+  });
+
+  products.forEach((product) => {
+    const brandName = normalizeBrandName(product.brand);
+    if (!brandName || brands.has(brandName)) return;
+
+    brands.set(brandName, {
+      name: brandName,
+      image: product.image,
+      type: "Brand",
+    });
+  });
+
+  return Array.from(brands.values());
+}
+
 const sellerReviews = [
   {
-    quote: "I had extra test strips after switching meters. Diabetics King made it easy to turn them into cash.",
+    quote:
+      "I had extra test strips after switching meters. Diabetics King made it easy to turn them into cash.",
     name: "Sarah M.",
     label: "Local Seller",
   },
   {
-    quote: "Quick response, friendly communication, and a very simple process from start to finish.",
+    quote:
+      "Quick response, friendly communication, and a very simple process from start to finish.",
     name: "James K.",
     label: "Repeat Customer",
   },
   {
-    quote: "Instead of letting supplies go to waste, I got help right away. The whole experience felt stress-free.",
+    quote:
+      "Instead of letting supplies go to waste, I got help right away. The whole experience felt stress-free.",
     name: "Linda R.",
     label: "Happy Seller",
   },
   {
-    quote: "The instructions were clear, and I knew exactly what details to send before getting my offer.",
+    quote:
+      "The instructions were clear, and I knew exactly what details to send before getting my offer.",
     name: "Michael T.",
     label: "Verified Seller",
   },
   {
-    quote: "I had sealed Dexcom sensors I no longer needed. The process felt simple and respectful.",
+    quote:
+      "I had sealed Dexcom sensors I no longer needed. The process felt simple and respectful.",
     name: "Amanda P.",
     label: "Dexcom Seller",
   },
   {
-    quote: "They answered my questions quickly and helped me understand the next step without pressure.",
+    quote:
+      "They answered my questions quickly and helped me understand the next step without pressure.",
     name: "Robert H.",
     label: "Local Seller",
   },
   {
-    quote: "I liked that everything continued through WhatsApp, so the conversation stayed easy to follow.",
+    quote:
+      "I liked that everything continued through WhatsApp, so the conversation stayed easy to follow.",
     name: "Nadia K.",
     label: "Happy Seller",
   },
   {
-    quote: "The offer process was straightforward. I submitted the product details and got a clear response.",
+    quote:
+      "The offer process was straightforward. I submitted the product details and got a clear response.",
     name: "Chris W.",
     label: "Repeat Customer",
   },
   {
-    quote: "I had extra Omnipod supplies after a device change. This gave them a useful second chance.",
+    quote:
+      "I had extra Omnipod supplies after a device change. This gave them a useful second chance.",
     name: "Emily R.",
     label: "Omnipod Seller",
   },
@@ -120,27 +180,32 @@ const sellerReviews = [
     label: "Verified Seller",
   },
   {
-    quote: "I appreciated the quick follow-up and the simple form. It saved a lot of back-and-forth.",
+    quote:
+      "I appreciated the quick follow-up and the simple form. It saved a lot of back-and-forth.",
     name: "Monica B.",
     label: "Local Seller",
   },
   {
-    quote: "Selling my unused supplies was much easier once I could choose the exact product brand first.",
+    quote:
+      "Selling my unused supplies was much easier once I could choose the exact product brand first.",
     name: "Anthony J.",
     label: "Happy Seller",
   },
   {
-    quote: "The process was clear from product selection to payment details. Very smooth experience.",
+    quote:
+      "The process was clear from product selection to payment details. Very smooth experience.",
     name: "Grace L.",
     label: "Repeat Customer",
   },
   {
-    quote: "I had unopened FreeStyle Libre sensors at home. Diabetics King helped me move forward quickly.",
+    quote:
+      "I had unopened FreeStyle Libre sensors at home. Diabetics King helped me move forward quickly.",
     name: "Olivia N.",
     label: "FreeStyle Seller",
   },
   {
-    quote: "Friendly communication, simple steps, and no confusion about what information was needed.",
+    quote:
+      "Friendly communication, simple steps, and no confusion about what information was needed.",
     name: "Kevin D.",
     label: "Verified Seller",
   },
@@ -195,30 +260,36 @@ const trustBadges = [
 const legalQuestions = [
   {
     question: "Do you buy opened or used diabetic products?",
-    answer: "We primarily review sealed, unused products. If packaging is damaged or opened, tell us clearly before shipping so our team can confirm whether it qualifies.",
+    answer:
+      "We primarily review sealed, unused products. If packaging is damaged or opened, tell us clearly before shipping so our team can confirm whether it qualifies.",
   },
   {
     question: "Am I responsible for following local rules?",
-    answer: "Yes. Sellers are responsible for confirming that they are allowed to sell the products they submit and that the items were obtained legally.",
+    answer:
+      "Yes. Sellers are responsible for confirming that they are allowed to sell the products they submit and that the items were obtained legally.",
   },
   {
     question: "Do you provide medical advice?",
-    answer: "No. Diabetics King is a product review and buyback service. We do not provide medical, dosage, prescription, or treatment advice.",
+    answer:
+      "No. Diabetics King is a product review and buyback service. We do not provide medical, dosage, prescription, or treatment advice.",
   },
   {
     question: "When is payment sent?",
-    answer: "Payment is sent after we receive and inspect the package, confirm it matches the submitted details, and approve the items.",
+    answer:
+      "Payment is sent after we receive and inspect the package, confirm it matches the submitted details, and approve the items.",
   },
   {
     question: "What happens if an item does not match the details?",
-    answer: "Our team will contact you before completing the offer. Items that are expired, damaged, opened, or different from the submitted details may be rejected or repriced.",
+    answer:
+      "Our team will contact you before completing the offer. Items that are expired, damaged, opened, or different from the submitted details may be rejected or repriced.",
   },
 ];
 
 function Home() {
   const { products, error } = Route.useLoaderData();
-  const activeProducts = products.filter((product) => product.isActive);
-  const featured = activeProducts.slice(0, 8);
+  const activeProducts = useMemo(() => products.filter((product) => product.isActive), [products]);
+  const featured = useMemo(() => activeProducts.slice(0, 8), [activeProducts]);
+  const visibleBrands = useMemo(() => buildBrandCards(activeProducts), [activeProducts]);
 
   return (
     <Layout>
@@ -233,11 +304,14 @@ function Home() {
               Turn Your Extra Diabetes Supplies Into Cash – Get Top Dollar💸
             </h1>
             <p className="max-w-lg text-lg text-muted-foreground">
-              Sell Your Unused Dexcom, Omnipod, FreeStyle Libre 3 Plus Sensors, Ozempic, Test Strips & More — Get an Offer, Ship Your Products, and Get Paid.
+              Sell Your Unused Dexcom, Omnipod, FreeStyle Libre 3 Plus Sensors, Ozempic, Test Strips
+              & More — Get an Offer, Ship Your Products, and Get Paid.
             </p>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg">
-                <Link to="/products">Browse Products <ArrowRight className="h-4 w-4" /></Link>
+                <Link to="/products">
+                  Browse Products <ArrowRight className="h-4 w-4" />
+                </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
                 <a href={BUSINESS.facebook} target="_blank" rel="noopener noreferrer">
@@ -252,9 +326,12 @@ function Home() {
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
         {error && <ProductListError message={error} />}
-        <SectionHeading title="Browse by Brand" subtitle="Choose the brand you have, then send the product details in a few simple steps." />
+        <SectionHeading
+          title="Browse by Brand"
+          subtitle="Choose the brand you have, then send the product details in a few simple steps."
+        />
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {brandImages.map((brand) => (
+          {visibleBrands.map((brand) => (
             <Link
               key={brand.name}
               to="/products"
@@ -262,20 +339,30 @@ function Home() {
               className="group overflow-hidden rounded-[2rem] border border-border/60 bg-card shadow-soft transition-all hover:-translate-y-1.5 hover:border-secondary/50 hover:shadow-card"
             >
               <div className="relative overflow-hidden bg-white">
-                <img
-                  src={brand.image}
-                  alt={`${brand.name} diabetic supply brand`}
-                  loading="lazy"
-                  className="h-56 w-full object-contain p-4 transition-transform duration-500 group-hover:scale-105 sm:h-64 lg:h-72"
-                />
+                {brand.image ? (
+                  <img
+                    src={brand.image}
+                    alt={`${brand.name} diabetic supply brand`}
+                    loading="lazy"
+                    className="h-56 w-full object-contain p-4 transition-transform duration-500 group-hover:scale-105 sm:h-64 lg:h-72"
+                  />
+                ) : (
+                  <div className="grid h-56 w-full place-items-center text-secondary sm:h-64 lg:h-72">
+                    <PackageCheck className="h-14 w-14" />
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/55 via-transparent to-transparent opacity-70" />
                 <span className="absolute left-3 top-3 rounded-full bg-background/90 px-3 py-1 text-xs font-extrabold text-secondary shadow-soft backdrop-blur">
                   {brand.type}
                 </span>
               </div>
               <div className="border-t border-border/60 px-5 py-5 text-center">
-                <h3 className="text-base font-extrabold tracking-wide text-secondary">{brand.name}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">View products from this {brand.type.toLowerCase()}</p>
+                <h3 className="text-base font-extrabold tracking-wide text-secondary">
+                  {brand.name}
+                </h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  View products from this {brand.type.toLowerCase()}
+                </p>
               </div>
             </Link>
           ))}
@@ -285,16 +372,24 @@ function Home() {
       <section className="py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="mb-8 flex items-end justify-between gap-4">
-            <SectionHeading title="Products We Buy" subtitle="Choose the item that matches what you have at home." align="left" />
+            <SectionHeading
+              title="Products We Buy"
+              subtitle="Choose the item that matches what you have at home."
+              align="left"
+            />
             <Button asChild variant="ghost" className="shrink-0">
-              <Link to="/products">View all <ArrowRight className="h-4 w-4" /></Link>
+              <Link to="/products">
+                View all <ArrowRight className="h-4 w-4" />
+              </Link>
             </Button>
           </div>
           {featured.length === 0 ? (
             <EmptyState text="No active products are available yet." />
           ) : (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {featured.map((p) => <ProductCard key={p.id} product={p} />)}
+              {featured.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
             </div>
           )}
         </div>
@@ -302,7 +397,10 @@ function Home() {
 
       <section className="bg-muted/40 py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <SectionHeading title="What Our Sellers Say" subtitle="15 seller reviews moving across the page in a smooth horizontal flow." />
+          <SectionHeading
+            title="What Our Sellers Say"
+            subtitle="15 seller reviews moving across the page in a smooth horizontal flow."
+          />
           <ReviewsMarquee />
         </div>
       </section>
@@ -310,10 +408,16 @@ function Home() {
       <HowToGetPaidSection />
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-        <SectionHeading title="Why Choose Diabetics King" subtitle="A warmer way to share your product details and get a clear follow-up." />
+        <SectionHeading
+          title="Why Choose Diabetics King"
+          subtitle="A warmer way to share your product details and get a clear follow-up."
+        />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {whyChoose.map((w) => (
-            <div key={w.title} className="flex gap-4 rounded-2xl border border-border/60 bg-card p-5 shadow-soft">
+            <div
+              key={w.title}
+              className="flex gap-4 rounded-2xl border border-border/60 bg-card p-5 shadow-soft"
+            >
               <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl gradient-hero text-primary-foreground">
                 <w.icon className="h-6 w-6" />
               </span>
@@ -332,10 +436,13 @@ function Home() {
         <div className="relative overflow-hidden rounded-3xl gradient-hero px-6 py-12 text-center text-primary-foreground shadow-card sm:px-12">
           <h2 className="text-3xl font-extrabold">Have Diabetic Supplies to Sell?</h2>
           <p className="mx-auto mt-3 max-w-xl text-primary-foreground/90">
-            Pick a product from our current buying list, send the details once, and continue on WhatsApp with a real person.
+            Pick a product from our current buying list, send the details once, and continue on
+            WhatsApp with a real person.
           </p>
           <Button asChild size="lg" variant="secondary" className="mt-6">
-            <Link to="/products">Browse Products <ArrowRight className="h-4 w-4" /></Link>
+            <Link to="/products">
+              Browse Products <ArrowRight className="h-4 w-4" />
+            </Link>
           </Button>
         </div>
       </section>
@@ -428,11 +535,16 @@ function HowToGetPaidSection() {
           const Icon = badge.icon;
 
           return (
-            <div key={badge.label} className="flex items-center justify-center gap-3 text-slate-700">
+            <div
+              key={badge.label}
+              className="flex items-center justify-center gap-3 text-slate-700"
+            >
               <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-emerald-600 text-white shadow-soft">
                 <Icon className="h-7 w-7" />
               </span>
-              <span className="max-w-40 text-base font-black uppercase leading-tight">{badge.label}</span>
+              <span className="max-w-40 text-base font-black uppercase leading-tight">
+                {badge.label}
+              </span>
             </div>
           );
         })}
@@ -457,7 +569,10 @@ function LegalSection() {
 
         <div className="mt-8 space-y-3">
           {legalQuestions.map((item) => (
-            <details key={item.question} className="group rounded-2xl border border-border/60 bg-card p-5 shadow-soft">
+            <details
+              key={item.question}
+              className="group rounded-2xl border border-border/60 bg-card p-5 shadow-soft"
+            >
               <summary className="cursor-pointer list-none font-bold text-foreground">
                 <span className="inline-flex w-full items-center justify-between gap-4">
                   {item.question}
@@ -473,11 +588,25 @@ function LegalSection() {
   );
 }
 
-function SectionHeading({ title, subtitle, align = "center" }: { title: string; subtitle?: string; align?: "center" | "left" }) {
+function SectionHeading({
+  title,
+  subtitle,
+  align = "center",
+}: {
+  title: string;
+  subtitle?: string;
+  align?: "center" | "left";
+}) {
   return (
     <div className={`mb-8 ${align === "center" ? "text-center" : ""}`}>
       <h2 className="text-3xl font-extrabold">{title}</h2>
-      {subtitle && <p className={`mt-2 text-muted-foreground ${align === "center" ? "mx-auto max-w-2xl" : ""}`}>{subtitle}</p>}
+      {subtitle && (
+        <p
+          className={`mt-2 text-muted-foreground ${align === "center" ? "mx-auto max-w-2xl" : ""}`}
+        >
+          {subtitle}
+        </p>
+      )}
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import freestyleProducts from "@/assets/WhatsApp Image 2026-07-14 at 20.38.19.jpeg";
 import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
 import omnipodProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.44.29.jpeg";
-import oneTouchProducts from "@/assets/download (14).png";
+import oneTouchProducts from "@/assets/brands/one-touch.svg";
 import medicineProducts from "@/assets/medicine.jpeg";
 
 const slides = [
@@ -30,6 +30,7 @@ const slides = [
     alt: "OneTouch Verio and OneTouch Ultra test strip boxes",
     title: "OneTouch Test Strips",
     caption: "Share brand, quantity, and expiry so our team can respond with context.",
+    fit: "contain",
   },
   {
     src: medicineProducts,
@@ -51,7 +52,11 @@ export function HeroSlideshow() {
   useEffect(() => {
     if (paused) return;
     // Respect users who prefer reduced motion — no auto-advance.
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
     const id = setInterval(() => go(index + 1), 5000);
     return () => clearInterval(id);
   }, [paused, index, go]);
@@ -103,7 +108,9 @@ export function HeroSlideshow() {
               loading={i === 0 ? "eager" : "lazy"}
               decoding="async"
               fetchPriority={i === 0 ? "high" : "low"}
-              className="h-full w-full object-cover transition-transform duration-[6000ms] ease-out motion-safe:group-hover:scale-105"
+              className={`h-full w-full bg-white transition-transform duration-[6000ms] ease-out motion-safe:group-hover:scale-105 ${
+                s.fit === "contain" ? "object-contain p-8 sm:p-10" : "object-cover"
+              }`}
             />
           </div>
         ))}

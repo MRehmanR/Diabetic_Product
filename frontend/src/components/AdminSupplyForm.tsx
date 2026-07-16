@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ImagePlus, Loader2, Package } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -36,22 +36,38 @@ const brandOptions = [
   "CONTOUR NEXT",
 ];
 
+const CUSTOM_BRAND_VALUE = "__custom_brand__";
+
 export function AdminSupplyForm({
   supply,
   open,
   onClose,
   onSubmit,
   loading,
+  brandOptions: extraBrandOptions = [],
 }: {
   supply?: Supply | null;
   open: boolean;
   onClose: () => void;
   onSubmit: (data: SupplyFormData) => void;
   loading?: boolean;
+  brandOptions?: string[];
 }) {
   const [form, setForm] = useState<SupplyFormData>(emptyForm);
   const [uploading, setUploading] = useState(false);
+  const [customBrandMode, setCustomBrandMode] = useState(false);
   const imagePreviewUrl = resolveMediaUrl(form.image_url);
+  const availableBrands = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          [...brandOptions, ...extraBrandOptions].map((brand) => brand.trim()).filter(Boolean),
+        ),
+      ).sort((a, b) => a.localeCompare(b)),
+    [extraBrandOptions],
+  );
+  const brandIsCustom =
+    customBrandMode || Boolean(form.brand && !availableBrands.includes(form.brand));
 
   useEffect(() => {
     if (supply) {
@@ -63,10 +79,12 @@ export function AdminSupplyForm({
         image_url: supply.image_url || "",
         is_active: supply.is_active,
       });
+      setCustomBrandMode(Boolean(supply.brand && !availableBrands.includes(supply.brand)));
     } else {
       setForm(emptyForm);
+      setCustomBrandMode(false);
     }
-  }, [supply, open]);
+  }, [supply, open, availableBrands]);
 
   function updateField(field: keyof SupplyFormData, value: string | boolean) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -83,6 +101,17 @@ export function AdminSupplyForm({
       return;
     }
     onSubmit(form);
+  }
+
+  function handleBrandSelect(value: string) {
+    if (value === CUSTOM_BRAND_VALUE) {
+      setCustomBrandMode(true);
+      if (availableBrands.includes(form.brand)) updateField("brand", "");
+      return;
+    }
+
+    setCustomBrandMode(false);
+    updateField("brand", value);
   }
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -115,19 +144,36 @@ export function AdminSupplyForm({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2 sm:col-span-2">
               <Label htmlFor="brand">Brand</Label>
-              <Select value={form.brand} onValueChange={(value) => updateField("brand", value)}>
+              <Select
+                value={brandIsCustom ? CUSTOM_BRAND_VALUE : form.brand}
+                onValueChange={handleBrandSelect}
+              >
                 <SelectTrigger id="brand">
                   <SelectValue placeholder="Select brand" />
                 </SelectTrigger>
                 <SelectContent>
-                  {brandOptions.map((brand) => (
+                  {availableBrands.map((brand) => (
                     <SelectItem key={brand} value={brand}>
                       {brand}
                     </SelectItem>
                   ))}
+                  <SelectItem value={CUSTOM_BRAND_VALUE}>+ Add new brand</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+
+            {brandIsCustom && (
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="custom-brand">New Brand Name</Label>
+                <Input
+                  id="custom-brand"
+                  value={form.brand}
+                  onChange={(e) => updateField("brand", e.target.value.toUpperCase())}
+                  placeholder="Enter new brand name"
+                  required
+                />
+              </div>
+            )}
 
             <div className="space-y-2 sm:col-span-2">
               <Label htmlFor="name">Product Name</Label>

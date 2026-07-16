@@ -139,6 +139,8 @@ const resolveApiUrl = () => {
 };
 
 const API_URL = resolveApiUrl();
+const PRODUCTS_CACHE_TTL_MS = 30_000;
+let productsCache: { timestamp: number; products: Product[] } | null = null;
 
 const getPublicApiOrigin = () => {
   if (!/^https?:\/\//i.test(PUBLIC_API_URL)) return "";
@@ -249,11 +251,25 @@ const supplyToProduct = (supply: SupplyResponse): Product => ({
 });
 
 export async function fetchProducts(): Promise<Product[]> {
+  if (
+    typeof window !== "undefined" &&
+    productsCache &&
+    Date.now() - productsCache.timestamp < PRODUCTS_CACHE_TTL_MS
+  ) {
+    return productsCache.products;
+  }
+
   const response = await fetch(`${API_URL}/supplies`);
   if (!response.ok) throw new Error(await getErrorMessage(response, "Could not load products"));
   const supplies = (await response.json()) as SupplyResponse[];
   if (!Array.isArray(supplies)) throw new Error("Invalid products response");
-  return supplies.map(supplyToProduct);
+  const products = supplies.map(supplyToProduct);
+
+  if (typeof window !== "undefined") {
+    productsCache = { timestamp: Date.now(), products };
+  }
+
+  return products;
 }
 
 export async function loadProducts(): Promise<ProductsLoadResult> {
