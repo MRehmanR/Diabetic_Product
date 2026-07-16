@@ -7,7 +7,7 @@ import {
   MessageCircle,
   Zap,
   ArrowRight,
-  Store,
+  Facebook,
   PackageCheck,
   Quote,
   Star,
@@ -22,7 +22,7 @@ import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { MedicalBackground } from "@/components/MedicalBackground";
-import { BUSINESS, loadProducts, type Product } from "@/lib/data";
+import { BUSINESS, buildSiteUrl, loadProducts, type Product } from "@/lib/data";
 import freestyleProducts from "@/assets/WhatsApp Image 2026-07-14 at 20.38.19.jpeg";
 import oneTouchProducts from "@/assets/brands/one-touch.svg";
 import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
@@ -46,9 +46,9 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "Turn your extra diabetes supplies into cash and get top dollar.",
       },
-      { property: "og:url", content: "/" },
+      { property: "og:url", content: buildSiteUrl("/") },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: buildSiteUrl("/") }],
   }),
   component: Home,
 });
@@ -315,7 +315,7 @@ function Home() {
               </Button>
               <Button asChild size="lg" variant="outline">
                 <a href={BUSINESS.facebook} target="_blank" rel="noopener noreferrer">
-                  <Store className="h-4 w-4" /> Visit our Facebook
+                  <Facebook className="h-4 w-4" /> Visit our Facebook
                 </a>
               </Button>
             </div>

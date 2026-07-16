@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { OrderDialog } from "@/components/OrderDialog";
-import { loadProduct, categoryName } from "@/lib/data";
+import { loadProduct, categoryName, buildSiteUrl } from "@/lib/data";
 
 export const Route = createFileRoute("/products/$id")({
   loader: async ({ params }) => {
@@ -28,9 +28,12 @@ export const Route = createFileRoute("/products/$id")({
         { property: "og:description", content: p ? `Start a friendly offer for ${p.name}.` : "" },
         { property: "og:type", content: "product" },
         { property: "og:image", content: p?.image ?? "" },
-        { property: "og:url", content: p ? `/products/${p.id}` : "/products" },
+        {
+          property: "og:url",
+          content: p ? buildSiteUrl(`/products/${p.id}`) : buildSiteUrl("/products"),
+        },
       ],
-      links: p ? [{ rel: "canonical", href: `/products/${p.id}` }] : [],
+      links: p ? [{ rel: "canonical", href: buildSiteUrl(`/products/${p.id}`) }] : [],
     };
   },
   notFoundComponent: () => (
@@ -76,7 +79,7 @@ function ProductDetails() {
   }
 
   const share = async () => {
-    const url = typeof window !== "undefined" ? window.location.href : "";
+    const url = buildSiteUrl(`/products/${product.id}`);
     if (navigator.share) {
       try {
         await navigator.share({ title: product.name, url });

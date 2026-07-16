@@ -26,6 +26,7 @@ import {
   type OrderDetails,
   buildWhatsappLink,
   BUSINESS,
+  buildSiteUrl,
   categoryName,
   submitOffer,
 } from "@/lib/data";
@@ -108,10 +109,7 @@ export function OrderDialog({
       return;
     }
 
-    const url =
-      typeof window !== "undefined"
-        ? `${window.location.origin}/products/${product.id}`
-        : `/products/${product.id}`;
+    const url = buildSiteUrl(`/products/${product.id}`);
 
     try {
       setSubmitting(true);

@@ -13,6 +13,7 @@ import {
   Pencil,
   Plus,
   Search,
+  Tags,
   Trash2,
   TrendingUp,
   X,
@@ -68,11 +69,14 @@ const brandToCategory = (brand: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "") || "products";
 
+const normalizeBrand = (brand: string) => brand.trim().replace(/\s+/g, " ").toUpperCase();
+
 function AdminDashboardPage() {
   const navigate = useNavigate();
   const [supplies, setSupplies] = useState<Supply[]>([]);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [customBrands, setCustomBrands] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [authChecked, setAuthChecked] = useState(false);
   const [search, setSearch] = useState("");
@@ -135,14 +139,15 @@ function AdminDashboardPage() {
 
   async function handleFormSubmit(formData: SupplyFormData) {
     setFormLoading(true);
+    const normalizedBrand = normalizeBrand(formData.brand);
     const descriptionFallback = formData.name.trim();
     const payload = {
       name: formData.name,
-      brand: formData.brand,
+      brand: normalizedBrand,
       serial_number: formData.serial_number.trim() || null,
       short_description: formData.short_description.trim() || descriptionFallback,
       full_description: formData.short_description.trim() || descriptionFallback,
-      category: brandToCategory(formData.brand),
+      category: brandToCategory(normalizedBrand),
       requirements: [],
       models: [],
       image_url: formData.image_url,
@@ -165,6 +170,7 @@ function AdminDashboardPage() {
     }
 
     toast.success(editingSupply ? "Product updated" : "Product added");
+    setCustomBrands((prev) => (prev.includes(normalizedBrand) ? prev : [...prev, normalizedBrand]));
     setFormOpen(false);
     setEditingSupply(null);
     fetchData();
@@ -270,10 +276,13 @@ function AdminDashboardPage() {
 
   const availableBrands = useMemo(
     () =>
-      Array.from(new Set(supplies.map((supply) => supply.brand).filter(Boolean))).sort((a, b) =>
-        a.localeCompare(b),
-      ),
-    [supplies],
+      Array.from(
+        new Set([
+          ...supplies.map((supply) => normalizeBrand(supply.brand || "")).filter(Boolean),
+          ...customBrands,
+        ]),
+      ).sort((a, b) => a.localeCompare(b)),
+    [supplies, customBrands],
   );
 
   const stats = [
@@ -284,6 +293,7 @@ function AdminDashboardPage() {
       icon: TrendingUp,
       color: "text-emerald-600",
     },
+    { label: "Brands", value: availableBrands.length, icon: Tags, color: "text-sky-600" },
     {
       label: "Pending Offers",
       value: offers.filter((o) => o.status === "pending").length,
@@ -326,7 +336,7 @@ function AdminDashboardPage() {
           </div>
         </div>
 
-        <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-5">
           {stats.map((stat) => (
             <Card key={stat.label} className="border-border/50">
               <CardContent className="flex items-center gap-3 p-4">

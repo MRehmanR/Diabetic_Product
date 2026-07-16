@@ -127,6 +127,7 @@ export const categoryIcons: Record<string, string> = {
 const PUBLIC_API_URL = import.meta.env.VITE_API_URL?.trim() || "http://localhost:8000/api";
 const INTERNAL_API_URL = import.meta.env.VITE_INTERNAL_API_URL?.trim();
 const PUBLIC_UPLOAD_BASE_URL = import.meta.env.VITE_PUBLIC_UPLOAD_BASE_URL?.trim() || "";
+const PUBLIC_SITE_URL = import.meta.env.VITE_SITE_URL?.trim() || "";
 
 const trimTrailingSlash = (value: string) => value.replace(/\/+$/, "");
 
@@ -141,6 +142,13 @@ const resolveApiUrl = () => {
 const API_URL = resolveApiUrl();
 const PRODUCTS_CACHE_TTL_MS = 120_000;
 let productsCache: { timestamp: number; products: Product[] } | null = null;
+
+export function buildSiteUrl(path = "/") {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const base = PUBLIC_SITE_URL || (typeof window !== "undefined" ? window.location.origin : "");
+
+  return base ? `${trimTrailingSlash(base)}${normalizedPath}` : normalizedPath;
+}
 
 const getFreshProductsCache = () => {
   if (

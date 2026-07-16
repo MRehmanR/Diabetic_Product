@@ -28,6 +28,7 @@ jobs:
       VITE_INTERNAL_API_URL: http://127.0.0.1:8000/api
       VITE_BUSINESS_PHONE: ${{ vars.VITE_BUSINESS_PHONE }}
       VITE_PUBLIC_UPLOAD_BASE_URL: /uploads
+      VITE_SITE_URL: ${{ vars.VITE_SITE_URL || secrets.VITE_SITE_URL || 'http://diabeticking.com' }}
 
     steps:
       - name: Checkout repository
@@ -212,6 +213,7 @@ jobs:
           EC2_USER: ${{ vars.EC2_USER || secrets.EC2_USER }}
           VITE_BUSINESS_PHONE: ${{ vars.VITE_BUSINESS_PHONE || secrets.VITE_BUSINESS_PHONE || '+16786580698' }}
           VITE_PUBLIC_UPLOAD_BASE_URL: ${{ vars.VITE_PUBLIC_UPLOAD_BASE_URL || secrets.VITE_PUBLIC_UPLOAD_BASE_URL || '/uploads' }}
+          VITE_SITE_URL: ${{ vars.VITE_SITE_URL || secrets.VITE_SITE_URL || 'http://diabeticking.com' }}
           BACKEND_ENV: ${{ secrets.BACKEND_ENV }}
         run: |
           set -euo pipefail
@@ -224,6 +226,7 @@ jobs:
             printf 'VITE_INTERNAL_API_URL=http://127.0.0.1:8000/api\n'
             printf 'VITE_BUSINESS_PHONE=%s\n' "$VITE_BUSINESS_PHONE"
             printf 'VITE_PUBLIC_UPLOAD_BASE_URL=%s\n' "$VITE_PUBLIC_UPLOAD_BASE_URL"
+            printf 'VITE_SITE_URL=%s\n' "$VITE_SITE_URL"
           } > /tmp/frontend.env.production
 
           scp \
