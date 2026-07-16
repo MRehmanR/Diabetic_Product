@@ -82,6 +82,17 @@ const ALL_BRANDS_VALUE = "__all_brands__";
 
 type ProductSort = "newest" | "oldest" | "name_asc" | "brand_asc" | "active_first";
 
+const formatMoney = (amount: number | string | null | undefined) => {
+  const value = Number(amount);
+  if (!Number.isFinite(value)) return "-";
+
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 2,
+  }).format(value);
+};
+
 function AdminDashboardPage() {
   const navigate = useNavigate();
   const [supplies, setSupplies] = useState<Supply[]>([]);

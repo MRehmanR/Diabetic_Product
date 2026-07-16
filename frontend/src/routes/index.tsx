@@ -330,14 +330,14 @@ function Home() {
           title="Browse by Brand"
           subtitle="Choose the brand you have, then send the product details in a few simple steps."
         />
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5">
           {visibleBrands.map((brand) => (
             <Link
               key={brand.name}
               to="/products"
               search={{ brand: brand.name }}
               preload={false}
-              className="group overflow-hidden rounded-[2rem] border border-border/60 bg-card shadow-soft transition-colors hover:border-secondary/50"
+              className="group overflow-hidden rounded-xl border border-border/60 bg-card shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-secondary/50 hover:shadow-card"
             >
               <div className="relative overflow-hidden bg-white">
                 {brand.image ? (
@@ -348,24 +348,24 @@ function Home() {
                     height={320}
                     loading="lazy"
                     decoding="async"
-                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                    className="h-56 w-full object-contain p-4 sm:h-64 lg:h-72"
+                    sizes="(min-width: 1536px) 260px, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                    className="h-44 w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105 sm:h-48 lg:h-52"
                   />
                 ) : (
-                  <div className="grid h-56 w-full place-items-center text-secondary sm:h-64 lg:h-72">
-                    <PackageCheck className="h-14 w-14" />
+                  <div className="grid h-44 w-full place-items-center text-secondary sm:h-48 lg:h-52">
+                    <PackageCheck className="h-10 w-10" />
                   </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/55 via-transparent to-transparent opacity-70" />
-                <span className="absolute left-3 top-3 rounded-full bg-background/90 px-3 py-1 text-xs font-extrabold text-secondary shadow-soft backdrop-blur">
+                <span className="absolute left-3 top-3 rounded-full bg-background/90 px-2.5 py-0.5 text-[11px] font-extrabold text-secondary shadow-soft backdrop-blur">
                   {brand.type}
                 </span>
               </div>
-              <div className="border-t border-border/60 px-5 py-5 text-center">
-                <h3 className="text-base font-extrabold tracking-wide text-secondary">
+              <div className="border-t border-border/60 px-4 py-4 text-center">
+                <h3 className="text-sm font-extrabold tracking-wide text-secondary">
                   {brand.name}
                 </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="mt-1 text-xs text-muted-foreground">
                   View products from this {brand.type.toLowerCase()}
                 </p>
               </div>
@@ -391,7 +391,7 @@ function Home() {
           {featured.length === 0 ? (
             <EmptyState text="No active products are available yet." />
           ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5">
               {featured.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
