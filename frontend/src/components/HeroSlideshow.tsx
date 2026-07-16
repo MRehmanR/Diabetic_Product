@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import freestyleProducts from "@/assets/WhatsApp Image 2026-07-14 at 20.38.19.jpeg";
 import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
@@ -42,10 +42,21 @@ const slides = [
 
 export function HeroSlideshow() {
   const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   const go = useCallback((next: number) => {
     setIndex((i) => (next + slides.length) % slides.length);
   }, []);
+
+  useEffect(() => {
+    if (paused) return;
+
+    const timer = window.setInterval(() => {
+      setIndex((current) => (current + 1) % slides.length);
+    }, 4200);
+
+    return () => window.clearInterval(timer);
+  }, [paused]);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") {
@@ -67,10 +78,15 @@ export function HeroSlideshow() {
         aria-roledescription="carousel"
         aria-label="Diabetes products we buy"
         tabIndex={0}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocus={() => setPaused(true)}
+        onBlur={() => setPaused(false)}
         onKeyDown={onKeyDown}
         className="group relative aspect-[5/4] w-full overflow-hidden rounded-3xl shadow-card ring-1 ring-border/50 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         <img
+          key={current.src}
           src={current.src}
           alt={current.alt}
           width={1280}
@@ -78,7 +94,7 @@ export function HeroSlideshow() {
           loading="eager"
           decoding="async"
           fetchPriority="high"
-          className={`h-full w-full bg-white ${
+          className={`h-full w-full animate-in fade-in-0 zoom-in-95 bg-white duration-700 ${
             current.fit === "contain" ? "object-contain p-8 sm:p-10" : "object-cover"
           }`}
         />

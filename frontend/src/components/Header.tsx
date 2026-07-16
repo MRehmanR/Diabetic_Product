@@ -16,12 +16,17 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 w-full bg-primary text-primary-foreground">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Link to="/" className="flex shrink-0 items-center gap-2">
+      <div className="mx-auto flex h-16 w-full max-w-[1600px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
+        <Link
+          to="/"
+          className="flex shrink-0 items-center gap-2 transition-transform hover:scale-[1.02]"
+        >
           <span className="grid h-8 w-8 place-items-center rounded-full bg-white/15 text-white">
             <HeartPulse className="h-5 w-5" />
           </span>
-          <span className="font-display text-lg font-extrabold tracking-tight">{BUSINESS.name}</span>
+          <span className="font-display text-lg font-extrabold tracking-tight">
+            {BUSINESS.name}
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
@@ -29,7 +34,7 @@ export function Header() {
             <Link
               key={n.to}
               to={n.to}
-              className="rounded-lg px-3 py-2 text-sm font-bold text-primary-foreground/80 transition-colors hover:bg-white/10 hover:text-white"
+              className="rounded-lg px-3 py-2 text-sm font-bold text-primary-foreground/80 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/10 hover:text-white"
               activeProps={{ className: "bg-white/15 text-white" }}
               activeOptions={{ exact: n.to === "/" }}
             >
@@ -39,7 +44,7 @@ export function Header() {
         </nav>
 
         <button
-          className="rounded-lg p-2 text-primary-foreground md:hidden"
+          className="rounded-lg p-2 text-primary-foreground transition hover:bg-white/10 md:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
         >
@@ -49,13 +54,13 @@ export function Header() {
 
       {open && (
         <div className="border-t border-white/10 bg-primary md:hidden">
-          <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3">
+          <nav className="mx-auto flex max-w-[1600px] flex-col gap-1 px-4 py-3">
             {nav.map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-2.5 text-sm font-bold text-primary-foreground/80 hover:bg-white/10 hover:text-white"
+                className="rounded-lg px-3 py-2.5 text-sm font-bold text-primary-foreground/80 transition hover:bg-white/10 hover:text-white"
                 activeProps={{ className: "bg-white/15 text-white" }}
                 activeOptions={{ exact: n.to === "/" }}
               >

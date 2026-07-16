@@ -6,7 +6,7 @@ import { type Product, categoryName } from "@/lib/data";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
-    <div className="group flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft transition-colors duration-300 hover:border-secondary/50">
+    <div className="group flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-secondary/50 hover:shadow-card">
       <Link
         to="/products/$id"
         params={{ id: product.id }}
@@ -22,7 +22,7 @@ export function ProductCard({ product }: { product: Product }) {
             loading="lazy"
             decoding="async"
             sizes="(min-width: 1280px) 280px, (min-width: 640px) 50vw, 100vw"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="grid h-full w-full place-items-center text-muted-foreground">
@@ -39,7 +39,7 @@ export function ProductCard({ product }: { product: Product }) {
           to="/products/$id"
           params={{ id: product.id }}
           preload={false}
-          className="line-clamp-2 font-semibold leading-snug hover:text-primary"
+          className="line-clamp-2 font-semibold leading-snug transition-colors hover:text-primary"
         >
           {product.name}
         </Link>

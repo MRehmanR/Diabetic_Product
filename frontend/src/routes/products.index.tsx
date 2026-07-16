@@ -80,7 +80,7 @@ function ProductsPage() {
   return (
     <Layout>
       <section className="gradient-soft border-b border-border/60">
-        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+        <div className="mx-auto w-full max-w-[1800px] px-4 py-10 sm:px-6 lg:px-10">
           <h1 className="text-3xl font-extrabold">Products We Buy</h1>
           <p className="mt-1 text-muted-foreground">
             {error
@@ -90,7 +90,7 @@ function ProductsPage() {
         </div>
       </section>
 
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[260px_1fr]">
+      <div className="mx-auto grid w-full max-w-[1800px] gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[240px_1fr] lg:px-10">
         <aside className={`${showFilters ? "block" : "hidden"} space-y-6 lg:block`}>
           <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft">
             <h3 className="mb-3 font-bold">Find your supply</h3>
@@ -156,7 +156,7 @@ function ProductsPage() {
               No products match your filters yet.
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
               {filtered.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}

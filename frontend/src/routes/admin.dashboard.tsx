@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { type FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   BookOpen,
@@ -26,8 +26,16 @@ import { AdminBlogForm } from "@/components/AdminBlogForm";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -70,6 +78,9 @@ const brandToCategory = (brand: string) =>
     .replace(/(^-|-$)/g, "") || "products";
 
 const normalizeBrand = (brand: string) => brand.trim().replace(/\s+/g, " ").toUpperCase();
+const ALL_BRANDS_VALUE = "__all_brands__";
+
+type ProductSort = "newest" | "oldest" | "name_asc" | "brand_asc" | "active_first";
 
 function AdminDashboardPage() {
   const navigate = useNavigate();
@@ -80,9 +91,12 @@ function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [authChecked, setAuthChecked] = useState(false);
   const [search, setSearch] = useState("");
+  const [brandFilter, setBrandFilter] = useState(ALL_BRANDS_VALUE);
+  const [productSort, setProductSort] = useState<ProductSort>("newest");
   const [offerSearch, setOfferSearch] = useState("");
   const [blogSearch, setBlogSearch] = useState("");
   const [formOpen, setFormOpen] = useState(false);
+  const [brandFormOpen, setBrandFormOpen] = useState(false);
   const [blogFormOpen, setBlogFormOpen] = useState(false);
   const [editingSupply, setEditingSupply] = useState<Supply | null>(null);
   const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
@@ -90,8 +104,11 @@ function AdminDashboardPage() {
   const [deleteBlog, setDeleteBlog] = useState<BlogPost | null>(null);
   const [formLoading, setFormLoading] = useState(false);
   const [blogFormLoading, setBlogFormLoading] = useState(false);
+  const [brandFormLoading, setBrandFormLoading] = useState(false);
   const [editingOffer, setEditingOffer] = useState<Offer | null>(null);
   const [quoteAmount, setQuoteAmount] = useState("");
+  const [brandToRename, setBrandToRename] = useState("");
+  const [newBrandName, setNewBrandName] = useState("");
 
   useEffect(() => {
     async function checkAuth() {
@@ -188,6 +205,76 @@ function AdminDashboardPage() {
     setDeleteSupply(null);
   }
 
+  function openBrandRenameForm() {
+    const selectedBrand = brandFilter !== ALL_BRANDS_VALUE ? brandFilter : availableBrands[0] || "";
+    setBrandToRename(selectedBrand);
+    setNewBrandName(selectedBrand);
+    setBrandFormOpen(true);
+  }
+
+  async function handleBrandRename(e: FormEvent) {
+    e.preventDefault();
+    const oldBrand = normalizeBrand(brandToRename);
+    const renamedBrand = normalizeBrand(newBrandName);
+
+    if (!oldBrand || !renamedBrand) {
+      toast.error("Please select a brand and enter a new brand name.");
+      return;
+    }
+
+    if (oldBrand === renamedBrand) {
+      toast.error("New brand name must be different.");
+      return;
+    }
+
+    const productsToUpdate = supplies.filter(
+      (supply) => normalizeBrand(supply.brand || "") === oldBrand,
+    );
+    if (productsToUpdate.length === 0) {
+      toast.error("No products found for this brand.");
+      return;
+    }
+
+    setBrandFormLoading(true);
+    const results = await Promise.all(
+      productsToUpdate.map((supply) =>
+        adminApi
+          .from("supplies")
+          .update({
+            brand: renamedBrand,
+            category: brandToCategory(renamedBrand),
+          })
+          .eq("id", supply.id),
+      ),
+    );
+    setBrandFormLoading(false);
+
+    const failed = results.find((result) => result.error);
+    if (failed?.error) {
+      toast.error("Failed to rename brand", { description: failed.error.message });
+      fetchData();
+      return;
+    }
+
+    setSupplies((prev) =>
+      prev.map((supply) =>
+        normalizeBrand(supply.brand || "") === oldBrand
+          ? { ...supply, brand: renamedBrand, category: brandToCategory(renamedBrand) }
+          : supply,
+      ),
+    );
+    setCustomBrands((prev) => [
+      ...prev.filter((brand) => normalizeBrand(brand) !== oldBrand),
+      renamedBrand,
+    ]);
+    setBrandFilter(renamedBrand);
+    setBrandFormOpen(false);
+    setBrandToRename("");
+    setNewBrandName("");
+    toast.success(`Renamed ${oldBrand} to ${renamedBrand}`);
+    fetchData();
+  }
+
   async function handleBlogSubmit(formData: BlogFormData) {
     setBlogFormLoading(true);
     const payload = {
@@ -248,13 +335,35 @@ function AdminDashboardPage() {
 
   const filteredSupplies = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return supplies;
-    return supplies.filter((supply) =>
-      `${supply.name} ${supply.brand || ""} ${supply.serial_number || ""} ${supply.category}`
-        .toLowerCase()
-        .includes(q),
-    );
-  }, [supplies, search]);
+    const selectedBrand = brandFilter === ALL_BRANDS_VALUE ? "" : normalizeBrand(brandFilter);
+    const rows = supplies.filter((supply) => {
+      const matchesSearch =
+        !q ||
+        `${supply.name} ${supply.brand || ""} ${supply.serial_number || ""} ${supply.category}`
+          .toLowerCase()
+          .includes(q);
+      const matchesBrand = !selectedBrand || normalizeBrand(supply.brand || "") === selectedBrand;
+      return matchesSearch && matchesBrand;
+    });
+
+    return [...rows].sort((left, right) => {
+      if (productSort === "oldest") {
+        return new Date(left.created_at).getTime() - new Date(right.created_at).getTime();
+      }
+      if (productSort === "name_asc") {
+        return left.name.localeCompare(right.name);
+      }
+      if (productSort === "brand_asc") {
+        return `${left.brand} ${left.name}`.localeCompare(`${right.brand} ${right.name}`);
+      }
+      if (productSort === "active_first") {
+        return (
+          Number(right.is_active) - Number(left.is_active) || left.name.localeCompare(right.name)
+        );
+      }
+      return new Date(right.created_at).getTime() - new Date(left.created_at).getTime();
+    });
+  }, [supplies, search, brandFilter, productSort]);
 
   const filteredOffers = useMemo(() => {
     const q = offerSearch.trim().toLowerCase();
@@ -366,7 +475,7 @@ function AdminDashboardPage() {
           </TabsList>
 
           <TabsContent value="products" className="space-y-4">
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="grid gap-3 lg:grid-cols-[1fr_220px_220px_auto_auto]">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -376,6 +485,41 @@ function AdminDashboardPage() {
                   className="pl-9"
                 />
               </div>
+              <Select value={brandFilter} onValueChange={setBrandFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Filter by brand" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL_BRANDS_VALUE}>All brands</SelectItem>
+                  {availableBrands.map((brand) => (
+                    <SelectItem key={brand} value={brand}>
+                      {brand}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select
+                value={productSort}
+                onValueChange={(value) => setProductSort(value as ProductSort)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sort products" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="newest">Newest first</SelectItem>
+                  <SelectItem value="oldest">Oldest first</SelectItem>
+                  <SelectItem value="name_asc">Product A-Z</SelectItem>
+                  <SelectItem value="brand_asc">Brand A-Z</SelectItem>
+                  <SelectItem value="active_first">Active first</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button
+                variant="outline"
+                disabled={availableBrands.length === 0}
+                onClick={openBrandRenameForm}
+              >
+                <Pencil className="h-4 w-4" /> Edit Brand
+              </Button>
               <Button
                 onClick={() => {
                   setEditingSupply(null);
@@ -490,6 +634,49 @@ function AdminDashboardPage() {
         onSubmit={handleBlogSubmit}
         loading={blogFormLoading}
       />
+
+      <Dialog open={brandFormOpen} onOpenChange={(open) => !open && setBrandFormOpen(false)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Brand Name</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleBrandRename} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="brand-to-rename">Current Brand</Label>
+              <Select value={brandToRename} onValueChange={setBrandToRename}>
+                <SelectTrigger id="brand-to-rename">
+                  <SelectValue placeholder="Select brand" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableBrands.map((brand) => (
+                    <SelectItem key={brand} value={brand}>
+                      {brand}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-brand-name">New Brand Name</Label>
+              <Input
+                id="new-brand-name"
+                value={newBrandName}
+                onChange={(event) => setNewBrandName(event.target.value.toUpperCase())}
+                placeholder="Enter new brand name"
+                required
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="outline" onClick={() => setBrandFormOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={brandFormLoading}>
+                {brandFormLoading ? "Saving..." : "Rename Brand"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       <AlertDialog open={!!deleteSupply} onOpenChange={(open) => !open && setDeleteSupply(null)}>
         <AlertDialogContent>

@@ -266,14 +266,32 @@
 }
 
 .reviews-marquee {
-  overflow-x: auto;
+  overflow: hidden;
   padding-block: 0.75rem;
-  -webkit-overflow-scrolling: touch;
+  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
 }
 
 .reviews-marquee-track {
   display: flex;
   width: max-content;
+  animation: reviews-marquee 42s linear infinite;
+  will-change: transform;
+}
+
+.reviews-marquee:hover .reviews-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reviews-marquee {
+    overflow-x: auto;
+    mask-image: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .reviews-marquee-track {
+    animation: none;
+  }
 }
 
 /* Rising medical particles (pulse dots) */

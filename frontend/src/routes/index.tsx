@@ -295,7 +295,7 @@ function Home() {
     <Layout>
       <section className="relative overflow-hidden gradient-soft">
         <MedicalBackground />
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 md:py-20">
+        <div className="mx-auto grid max-w-[1600px] items-center gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 md:py-20">
           <div className="space-y-6 animate-fade-in">
             <span className="inline-flex items-center gap-1 rounded-lg bg-accent px-3 py-1 text-sm font-bold text-accent-foreground">
               <ShieldCheck className="h-4 w-4" /> Verified buyer • Fast payment
@@ -324,7 +324,7 @@ function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+      <section className="mx-auto max-w-[1600px] px-4 py-14 sm:px-6">
         {error && <ProductListError message={error} />}
         <SectionHeading
           title="Browse by Brand"
@@ -375,7 +375,7 @@ function Home() {
       </section>
 
       <section className="py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="mx-auto max-w-[1600px] px-4 sm:px-6">
           <div className="mb-8 flex items-end justify-between gap-4">
             <SectionHeading
               title="Products We Buy"
@@ -401,7 +401,7 @@ function Home() {
       </section>
 
       <section className="bg-muted/40 py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="mx-auto max-w-[1600px] px-4 sm:px-6">
           <SectionHeading
             title="What Our Sellers Say"
             subtitle="15 seller reviews moving across the page in a smooth horizontal flow."
@@ -412,7 +412,7 @@ function Home() {
 
       <HowToGetPaidSection />
 
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+      <section className="mx-auto max-w-[1600px] px-4 py-14 sm:px-6">
         <SectionHeading
           title="Why Choose Diabetics King"
           subtitle="A warmer way to share your product details and get a clear follow-up."
@@ -437,7 +437,7 @@ function Home() {
 
       <LegalSection />
 
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+      <section className="mx-auto max-w-[1600px] px-4 py-16 sm:px-6">
         <div className="relative overflow-hidden rounded-3xl gradient-hero px-6 py-12 text-center text-primary-foreground shadow-card sm:px-12">
           <h2 className="text-3xl font-extrabold">Have Diabetic Supplies to Sell?</h2>
           <p className="mx-auto mt-3 max-w-xl text-primary-foreground/90">
@@ -491,7 +491,7 @@ function ReviewCard({ review }: { review: (typeof sellerReviews)[number] }) {
 
 function HowToGetPaidSection() {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+    <section className="mx-auto max-w-[1600px] px-4 py-16 sm:px-6">
       <div className="text-center">
         <h2 className="text-4xl font-black uppercase tracking-wide text-[#06345f] sm:text-5xl">
           How To Get Paid
