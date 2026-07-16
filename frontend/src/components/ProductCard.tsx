@@ -6,10 +6,11 @@ import { type Product, categoryName } from "@/lib/data";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
-    <div className="group flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-card">
+    <div className="group flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card shadow-soft transition-colors duration-300 hover:border-secondary/50">
       <Link
         to="/products/$id"
         params={{ id: product.id }}
+        preload={false}
         className="relative block aspect-square overflow-hidden bg-muted"
       >
         {product.image ? (
@@ -17,7 +18,7 @@ export function ProductCard({ product }: { product: Product }) {
             src={product.image}
             alt={product.name}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover"
           />
         ) : (
           <div className="grid h-full w-full place-items-center text-muted-foreground">
@@ -52,7 +53,7 @@ export function ProductCard({ product }: { product: Product }) {
 
         <div className="mt-auto grid grid-cols-1 gap-2 pt-2 sm:grid-cols-2">
           <Button asChild variant="outline" size="sm">
-            <Link to="/products/$id" params={{ id: product.id }}>
+            <Link to="/products/$id" params={{ id: product.id }} preload={false}>
               Details
             </Link>
           </Button>

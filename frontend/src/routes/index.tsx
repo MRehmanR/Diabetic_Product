@@ -309,7 +309,7 @@ function Home() {
             </p>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg">
-                <Link to="/products">
+                <Link to="/products" preload={false}>
                   Browse Products <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
@@ -336,7 +336,8 @@ function Home() {
               key={brand.name}
               to="/products"
               search={{ brand: brand.name }}
-              className="group overflow-hidden rounded-[2rem] border border-border/60 bg-card shadow-soft transition-all hover:-translate-y-1.5 hover:border-secondary/50 hover:shadow-card"
+              preload={false}
+              className="group overflow-hidden rounded-[2rem] border border-border/60 bg-card shadow-soft transition-colors hover:border-secondary/50"
             >
               <div className="relative overflow-hidden bg-white">
                 {brand.image ? (
@@ -344,7 +345,7 @@ function Home() {
                     src={brand.image}
                     alt={`${brand.name} diabetic supply brand`}
                     loading="lazy"
-                    className="h-56 w-full object-contain p-4 transition-transform duration-500 group-hover:scale-105 sm:h-64 lg:h-72"
+                    className="h-56 w-full object-contain p-4 sm:h-64 lg:h-72"
                   />
                 ) : (
                   <div className="grid h-56 w-full place-items-center text-secondary sm:h-64 lg:h-72">
@@ -378,7 +379,7 @@ function Home() {
               align="left"
             />
             <Button asChild variant="ghost" className="shrink-0">
-              <Link to="/products">
+              <Link to="/products" preload={false}>
                 View all <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
@@ -440,7 +441,7 @@ function Home() {
             WhatsApp with a real person.
           </p>
           <Button asChild size="lg" variant="secondary" className="mt-6">
-            <Link to="/products">
+            <Link to="/products" preload={false}>
               Browse Products <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>

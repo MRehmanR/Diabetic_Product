@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import freestyleProducts from "@/assets/WhatsApp Image 2026-07-14 at 20.38.19.jpeg";
 import dexcomProducts from "@/assets/WhatsApp Image 2026-07-14 at 17.31.47.jpeg";
@@ -42,24 +42,10 @@ const slides = [
 
 export function HeroSlideshow() {
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const regionRef = useRef<HTMLDivElement>(null);
 
   const go = useCallback((next: number) => {
     setIndex((i) => (next + slides.length) % slides.length);
   }, []);
-
-  useEffect(() => {
-    if (paused) return;
-    // Respect users who prefer reduced motion — no auto-advance.
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    )
-      return;
-    const id = setInterval(() => go(index + 1), 5000);
-    return () => clearInterval(id);
-  }, [paused, index, go]);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") {
@@ -77,43 +63,25 @@ export function HeroSlideshow() {
     <div className="relative">
       <div className="absolute -inset-4 -z-10 rounded-[2rem] gradient-hero opacity-20 blur-2xl" />
       <div
-        ref={regionRef}
         role="group"
         aria-roledescription="carousel"
         aria-label="Diabetes products we buy"
         tabIndex={0}
         onKeyDown={onKeyDown}
-        onFocus={() => setPaused(true)}
-        onBlur={() => setPaused(false)}
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
         className="group relative aspect-[5/4] w-full overflow-hidden rounded-3xl shadow-card ring-1 ring-border/50 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
-        {slides.map((s, i) => (
-          <div
-            key={s.src}
-            role="group"
-            aria-roledescription="slide"
-            aria-label={`${i + 1} of ${slides.length}: ${s.title}`}
-            aria-hidden={i !== index}
-            className={`absolute inset-0 transition-opacity duration-700 ${
-              i === index ? "opacity-100" : "pointer-events-none opacity-0"
-            }`}
-          >
-            <img
-              src={s.src}
-              alt={s.alt}
-              width={1280}
-              height={1024}
-              loading={i === 0 ? "eager" : "lazy"}
-              decoding="async"
-              fetchPriority={i === 0 ? "high" : "low"}
-              className={`h-full w-full bg-white transition-transform duration-[6000ms] ease-out motion-safe:group-hover:scale-105 ${
-                s.fit === "contain" ? "object-contain p-8 sm:p-10" : "object-cover"
-              }`}
-            />
-          </div>
-        ))}
+        <img
+          src={current.src}
+          alt={current.alt}
+          width={1280}
+          height={1024}
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          className={`h-full w-full bg-white ${
+            current.fit === "contain" ? "object-contain p-8 sm:p-10" : "object-cover"
+          }`}
+        />
 
         {/* Prev / Next controls */}
         <button
